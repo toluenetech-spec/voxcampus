@@ -80,11 +80,67 @@ store. That keeps the swap a one-line decision.
 | `submissions` | `assignmentId`, `courseId`, `studentId`, `status`, `score`                 |
 | `live_rooms`  | `roomId`, `courseId`, `topic`, `hostId`, `status` (`active`/`ended`)       |
 
-## Deployment notes
+## Deploying to Vercel
 
-- `public/_redirects` rewrites all paths to `index.html` (Netlify/Cloudflare).
-  Add the equivalent SPA rewrite for your host of choice.
+`vercel.json` is checked in and already contains the SPA rewrite, so no
+dashboard configuration is required beyond the environment variables.
+
+### Option A — Git integration (recommended)
+
+1. Go to <https://vercel.com/new> and import `toluenetech-spec/voxcampus`.
+2. Vercel detects Vite from `vercel.json`. Leave the defaults:
+
+   | Setting          | Value           |
+   | ---------------- | --------------- |
+   | Framework        | Vite            |
+   | Build command    | `npm run build` |
+   | Output directory | `dist`          |
+   | Install command  | `npm install`   |
+   | Node version     | 22 (see `engines` in `package.json`) |
+
+3. Add the environment variables below, then **Deploy**. Every push to `main`
+   (and every branch) gets its own preview URL from then on.
+
+### Option B — Vercel CLI
+
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+```
+
+### Environment variables
+
+Set these in **Project → Settings → Environment Variables**. All are optional:
+the app boots with the checked-in Firebase defaults and falls back to the
+built-in demo workspace when a backend is unreachable.
+
+| Variable                             | Required for        | Public?                          |
+| ------------------------------------ | ------------------- | -------------------------------- |
+| `VITE_FIREBASE_API_KEY`              | auth + Firestore    | Yes — safe in the browser        |
+| `VITE_FIREBASE_AUTH_DOMAIN`          | auth + Firestore    | Yes                              |
+| `VITE_FIREBASE_PROJECT_ID`           | auth + Firestore    | Yes                              |
+| `VITE_FIREBASE_STORAGE_BUCKET`       | auth + Firestore    | Yes                              |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID`  | auth + Firestore    | Yes                              |
+| `VITE_FIREBASE_APP_ID`               | auth + Firestore    | Yes                              |
+| `VITE_CLOUDINARY_CLOUD`              | audio/file uploads  | Yes                              |
+| `VITE_CLOUDINARY_PRESET`             | audio/file uploads  | Yes — use an *unsigned* preset   |
+| `VITE_ZEGO_APP_ID`                   | live audio rooms    | Yes                              |
+| `VITE_ZEGO_SERVER_SECRET`            | live audio rooms    | **No — see the warning below**   |
+
+> **Warning.** Anything prefixed `VITE_` is inlined into the client bundle and
+> is readable by anyone who loads the site. That is fine for the Firebase web
+> config (it is public by design and Firestore rules do the authorising), but
+> **not** for the Zego server secret, which can mint a token for *any* room on
+> the account. Move token minting into a serverless function that reads a
+> non-prefixed `ZEGO_SERVER_SECRET` before you go to production.
+
+### Other notes
+
+- `vercel.json` rewrites every path to `index.html`, which client-side routing
+  needs; without it `/dashboard` returns a 404 on a hard refresh.
+- Immutable assets under `/assets/` get a one-year cache header; `/sw.js` is
+  explicitly set to `must-revalidate` so the service worker can update.
 - The ZegoCloud SDK is ~5 MB, so the live room route is lazily loaded — it is
   fetched only when someone opens a room.
-- Rotate `VITE_ZEGO_SERVER_SECRET` before going to production; the server secret
-  can mint tokens for any room on the account.
+- Netlify/Cloudflare users can rely on `public/_redirects` instead.
