@@ -128,12 +128,15 @@ built-in demo workspace when a backend is unreachable.
 | `VITE_ZEGO_APP_ID`                   | live audio rooms    | Yes                              |
 | `VITE_ZEGO_SERVER_SECRET`            | live audio rooms    | **No — see the warning below**   |
 
+Live audio rooms are optional. Leave both Zego variables unset and the room page
+still renders — it just shows an explanatory panel instead of the audio bridge.
+
 > **Warning.** Anything prefixed `VITE_` is inlined into the client bundle and
 > is readable by anyone who loads the site. That is fine for the Firebase web
 > config (it is public by design and Firestore rules do the authorising), but
 > **not** for the Zego server secret, which can mint a token for *any* room on
-> the account. Move token minting into a serverless function that reads a
-> non-prefixed `ZEGO_SERVER_SECRET` before you go to production.
+> the account. Before enabling live rooms, move token minting into a serverless
+> function that reads a non-prefixed `ZEGO_SERVER_SECRET`.
 
 ### Other notes
 
@@ -142,5 +145,7 @@ built-in demo workspace when a backend is unreachable.
 - Immutable assets under `/assets/` get a one-year cache header; `/sw.js` is
   explicitly set to `must-revalidate` so the service worker can update.
 - The ZegoCloud SDK is ~5 MB, so the live room route is lazily loaded — it is
-  fetched only when someone opens a room.
+  fetched only when someone opens a room. When no Zego credentials are present
+  at build time the chunk is also excluded from the service-worker precache,
+  which keeps the install down to ~880 KiB instead of ~5.8 MB.
 - Netlify/Cloudflare users can rely on `public/_redirects` instead.
