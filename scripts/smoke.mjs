@@ -5,7 +5,7 @@
  * walks every route, asserting that each screen renders the content it should
  * and that nothing logs a React error along the way.
  *
- *   node smoke.mjs
+ *   npm run smoke
  *
  * It needs no network and no Firebase credentials, which makes it a quick
  * regression net while working on the UI.
