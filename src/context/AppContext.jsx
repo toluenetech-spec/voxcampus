@@ -60,6 +60,11 @@ const friendlyAuthError = (error) => {
   if (code === 'auth/popup-blocked') return 'Your browser blocked the Google pop-up. Allow pop-ups and try again.'
   if (code === 'auth/cancelled-popup-request') return 'The Google sign-in request was cancelled.'
   if (code === 'auth/operation-not-allowed') return 'That sign-in method is not enabled for this project yet.'
+  // Thrown when the deployment's domain is missing from Firebase Console →
+  // Authentication → Settings → Authorized domains. Very common right after
+  // deploying to a host like Vercel, and otherwise a cryptic failure.
+  if (code === 'auth/unauthorized-domain')
+    return `This domain (${window.location.hostname}) is not authorised for sign-in. Add it under Firebase Console → Authentication → Settings → Authorized domains.`
   return error?.message ?? 'Something went wrong. Please try again.'
 }
 
