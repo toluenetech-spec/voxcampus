@@ -8,29 +8,64 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      // Keep the SW out of the way while developing so stale chunks never mask a fix.
+      devOptions: { enabled: false },
+      includeAssets: ['favicon.svg', 'masked-icon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'VoxCampus',
+        name: 'VoxCampus — Academic Podcasts & Live Audio Rooms',
         short_name: 'VoxCampus',
-        description: 'Academic Podcasts and Live Audio Rooms',
+        description: 'Stream lectures, join live interactive audio rooms, and discover trending academic podcasts.',
         theme_color: '#0f172a',
         background_color: '#0f172a',
+        start_url: '/',
+        scope: '/',
         display: 'standalone',
         orientation: 'portrait',
+        categories: ['education', 'productivity'],
         icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      }
-    })
+          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+        ],
+      },
+      workbox: {
+        // The ZegoCloud live-audio SDK is a very large chunk; without raising this
+        // limit `vite build` fails outright instead of just warning.
+        maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
+        navigateFallback: 'index.html',
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+      },
+    }),
   ],
+  server: {
+    // Bind to all interfaces so the sandboxed live preview can reach the dev server.
+    host: true,
+    port: 5173,
+    strictPort: false,
+    // The preview is served from a generated *.e2b.app host; Vite 8 blocks unknown
+    // Host headers by default, which would return 403 for the whole preview.
+    allowedHosts: true,
+  },
+  preview: {
+    host: true,
+    port: 4173,
+    allowedHosts: true,
+  },
+  build: {
+    target: 'es2020',
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('@zegocloud')) return 'zego'
+          if (id.includes('node_modules/firebase') || id.includes('node_modules/@firebase')) return 'firebase'
+          if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) return 'react-vendor'
+          return undefined
+        },
+      },
+    },
+  },
 })
