@@ -159,6 +159,9 @@ const routeExpectations = [
   ['/course/demo-course-signals', /Signals & Systems 301/i, /Enrolled Students/i],
   ['/profile', /Your Profile/i, /Tunde Bakare/i],
   ['/room/LR7KX9', /Exam revision/i, /Live Room/i],
+  // With no VITE_ZEGO_* credentials (and none in demo mode) the room page must
+  // degrade to the explanatory panel rather than load the 5 MB live-audio SDK.
+  ['/room/LR7KX9', /audio bridge is not/i, /Sign in with an account/i],
   // Already signed in, so the auth layout bounces you to the dashboard.
   ['/login', /Dashboard/i, /Welcome back/i],
   ['/nope', /Page not found/i, /Page not found/i],
