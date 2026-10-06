@@ -4,8 +4,15 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig(({ mode }) => {
   // Build-time env, so the service worker can decide what is worth precaching.
-  const env = loadEnv(mode, '.', 'VITE_')
-  const zegoConfigured = Boolean(env.VITE_ZEGO_APP_ID && env.VITE_ZEGO_SERVER_SECRET)
+  //
+  // Two sources, because hosts differ: `loadEnv` only reads `.env` *files*
+  // (local dev), while platforms like Vercel inject variables straight into
+  // `process.env` with no file on disk. Checking only one silently misses the
+  // other. `globalThis.process` keeps ESLint's browser globals happy.
+  const fileEnv = loadEnv(mode, '.', 'VITE_')
+  const processEnv = globalThis.process?.env ?? {}
+  const read = (key) => fileEnv[key] ?? processEnv[key]
+  const zegoConfigured = Boolean(read('VITE_ZEGO_APP_ID') && read('VITE_ZEGO_SERVER_SECRET'))
 
   return {
     plugins: [
