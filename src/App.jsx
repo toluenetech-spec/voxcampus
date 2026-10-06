@@ -1,48 +1,48 @@
-import { lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom'
-import { AppProvider, useAppContext } from './context/AppContext'
-import Logo from './components/Logo'
-import BackendBanner from './components/BackendBanner'
-import RouteFallback from './components/RouteFallback'
+import { lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { AppProvider, useAppContext } from './context/AppContext';
+import Logo from './components/Logo';
+import BackendBanner from './components/BackendBanner';
+import RouteFallback from './components/RouteFallback';
 
 // Layouts
-import MainLayout from './layouts/MainLayout'
+import MainLayout from './layouts/MainLayout';
 
 // Views
-import SignInView from './views/SignInView'
-import SignUpView from './views/SignUpView'
-import LandingView from './views/LandingView'
-import Dashboard from './views/Dashboard'
-import LibraryView from './views/LibraryView'
-import LiveRoomsView from './views/LiveRoomsView'
-import CourseDetailView from './views/CourseDetailView'
-import ProfileView from './views/ProfileView'
-import NotFoundView from './views/NotFoundView'
+import SignInView from './views/SignInView';
+import SignUpView from './views/SignUpView';
+import LandingView from './views/LandingView';
+import Dashboard from './views/Dashboard';
+import LibraryView from './views/LibraryView';
+import LiveRoomsView from './views/LiveRoomsView';
+import CourseDetailView from './views/CourseDetailView';
+import ProfileView from './views/ProfileView';
+import NotFoundView from './views/NotFoundView';
 
 // The ZegoCloud live-audio SDK is ~5 MB. Loading it only when someone actually
 // opens a room keeps the initial bundle an order of magnitude smaller.
-const LiveRoomDetailView = lazy(() => import('./views/LiveRoomDetailView'))
+const LiveRoomDetailView = lazy(() => import('./views/LiveRoomDetailView'));
 
 // The assistant is its own route so its chat UI and helpers stay out of the
 // initial bundle too.
-const AIAssistantView = lazy(() => import('./views/AIAssistantView'))
+const AIAssistantView = lazy(() => import('./views/AIAssistantView'));
 
 const ProtectedRoute = () => {
-  const { currentUser } = useAppContext()
-  const location = useLocation()
+  const { currentUser } = useAppContext();
+  const location = useLocation();
 
   if (!currentUser) {
     // Remember where they were headed so sign-in can send them back.
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
-  return <Outlet />
-}
+  return <Outlet />;
+};
 
 // Layout for Authentication (No Navbars)
 const AuthLayout = () => {
-  const { currentUser } = useAppContext()
+  const { currentUser } = useAppContext();
 
-  if (currentUser) return <Navigate to="/dashboard" replace />
+  if (currentUser) return <Navigate to="/dashboard" replace />;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300 flex flex-col">
@@ -56,8 +56,8 @@ const AuthLayout = () => {
       </div>
       <Outlet />
     </div>
-  )
-}
+  );
+};
 
 const AppContent = () => {
   return (
@@ -92,8 +92,8 @@ const AppContent = () => {
         </Routes>
       </Suspense>
     </>
-  )
-}
+  );
+};
 
 function App() {
   return (
@@ -102,7 +102,7 @@ function App() {
         <AppContent />
       </Router>
     </AppProvider>
-  )
+  );
 }
 
-export default App
+export default App;

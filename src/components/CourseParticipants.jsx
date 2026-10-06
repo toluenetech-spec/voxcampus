@@ -1,48 +1,48 @@
-import { useEffect, useState } from 'react'
-import * as store from '../services/store'
-import { avatarDataUri } from '../lib/avatars'
+import { useEffect, useState } from 'react';
+import * as store from '../services/store';
+import { avatarDataUri } from '../lib/avatars';
 
 const CourseParticipants = ({ courseId }) => {
-  const [participants, setParticipants] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [participants, setParticipants] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!courseId) return undefined
+    if (!courseId) return undefined;
 
     // Enrolments are stored as an array of course ids on the user document.
     const enrollmentsQ = store.query(
       store.collection(store.db, 'users'),
       store.where('joinedCourses', 'array-contains', courseId),
-    )
+    );
 
     const unsubscribe = store.onSnapshot(
       enrollmentsQ,
       (snapshot) => {
         setParticipants(
           snapshot.docs.map((docSnap) => {
-            const userData = docSnap.data()
+            const userData = docSnap.data();
             return {
               id: docSnap.id,
               displayName: userData.fullName || userData.displayName || 'Unknown Student',
               avatarUrl: userData.avatarUrl || null,
-            }
+            };
           }),
-        )
-        setIsLoading(false)
+        );
+        setIsLoading(false);
       },
       (error) => {
-        console.error('Participants snapshot error:', error)
-        setIsLoading(false)
+        console.error('Participants snapshot error:', error);
+        setIsLoading(false);
       },
-    )
+    );
 
-    return unsubscribe
-  }, [courseId])
+    return unsubscribe;
+  }, [courseId]);
 
-  const totalStudents = participants.length
-  const displayLimit = 5
-  const visibleParticipants = participants.slice(0, displayLimit)
-  const remaining = totalStudents - displayLimit
+  const totalStudents = participants.length;
+  const displayLimit = 5;
+  const visibleParticipants = participants.slice(0, displayLimit);
+  const remaining = totalStudents - displayLimit;
 
   return (
     <div className="bg-white dark:bg-white/5 border hairline p-6 rounded-2xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-md transition-colors duration-300 w-full">
@@ -81,7 +81,7 @@ const CourseParticipants = ({ courseId }) => {
         <div className="text-slate-500 text-sm italic py-2">No students enrolled yet.</div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CourseParticipants
+export default CourseParticipants;

@@ -1,83 +1,83 @@
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Camera, Save, Loader2, User, LogOut, RotateCcw, GraduationCap, Presentation } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import * as store from '../services/store'
-import { uploadFile as uploadToStorage } from '../services/upload'
-import { avatarDataUri } from '../lib/avatars'
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Camera, Save, Loader2, User, LogOut, RotateCcw, GraduationCap, Presentation } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import * as store from '../services/store';
+import { uploadFile as uploadToStorage } from '../services/upload';
+import { avatarDataUri } from '../lib/avatars';
 
 const ProfileView = () => {
-  const { currentUser, patchUser, logout, isDemo, resetDemoData } = useAppContext()
-  const navigate = useNavigate()
+  const { currentUser, patchUser, logout, isDemo, resetDemoData } = useAppContext();
+  const navigate = useNavigate();
 
   // The form is a draft overlay: until a field is edited it mirrors the live
   // profile, so snapshot updates and role switches are picked up automatically.
-  const [draft, setDraft] = useState({ fullName: null, bio: null, institution: null, avatarUrl: null })
-  const [isSaving, setIsSaving] = useState(false)
-  const [isUploading, setIsUploading] = useState(false)
-  const [successMsg, setSuccessMsg] = useState('')
-  const [errorMsg, setErrorMsg] = useState('')
+  const [draft, setDraft] = useState({ fullName: null, bio: null, institution: null, avatarUrl: null });
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const fileInputRef = useRef(null)
-  const successTimer = useRef(null)
+  const fileInputRef = useRef(null);
+  const successTimer = useRef(null);
 
   const valueOf = (field) => {
-    const edited = draft[field]
-    if (edited !== null && edited !== undefined) return edited
-    return currentUser?.[field] ?? ''
-  }
+    const edited = draft[field];
+    if (edited !== null && edited !== undefined) return edited;
+    return currentUser?.[field] ?? '';
+  };
 
-  const updateDraft = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }))
+  const updateDraft = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }));
 
-  const clearDraft = () => setDraft({ fullName: null, bio: null, institution: null, avatarUrl: null })
+  const clearDraft = () => setDraft({ fullName: null, bio: null, institution: null, avatarUrl: null });
 
-  useEffect(() => () => clearTimeout(successTimer.current), [])
+  useEffect(() => () => clearTimeout(successTimer.current), []);
 
   const flash = (message, isError = false) => {
-    clearTimeout(successTimer.current)
-    if (isError) setErrorMsg(message)
-    else setSuccessMsg(message)
+    clearTimeout(successTimer.current);
+    if (isError) setErrorMsg(message);
+    else setSuccessMsg(message);
     successTimer.current = setTimeout(() => {
-      setSuccessMsg('')
-      setErrorMsg('')
-    }, 3000)
-  }
+      setSuccessMsg('');
+      setErrorMsg('');
+    }, 3000);
+  };
 
-  const handleAvatarClick = () => fileInputRef.current?.click()
+  const handleAvatarClick = () => fileInputRef.current?.click();
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      flash('Please choose an image file.', true)
-      return
+      flash('Please choose an image file.', true);
+      return;
     }
 
-    setIsUploading(true)
-    setSuccessMsg('')
-    setErrorMsg('')
+    setIsUploading(true);
+    setSuccessMsg('');
+    setErrorMsg('');
 
     try {
-      const newUrl = await uploadToStorage(file)
-      updateDraft('avatarUrl', newUrl)
-      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), { avatarUrl: newUrl })
-      patchUser({ avatarUrl: newUrl })
-      flash('Profile photo updated.')
+      const newUrl = await uploadToStorage(file);
+      updateDraft('avatarUrl', newUrl);
+      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), { avatarUrl: newUrl });
+      patchUser({ avatarUrl: newUrl });
+      flash('Profile photo updated.');
     } catch (error) {
-      console.error('Avatar upload failed', error)
-      flash(error.message ?? 'Could not upload that image.', true)
+      console.error('Avatar upload failed', error);
+      flash(error.message ?? 'Could not upload that image.', true);
     } finally {
-      setIsUploading(false)
-      e.target.value = ''
+      setIsUploading(false);
+      e.target.value = '';
     }
-  }
+  };
 
   const handleSaveProfile = async (e) => {
-    e.preventDefault()
-    setIsSaving(true)
-    setSuccessMsg('')
-    setErrorMsg('')
+    e.preventDefault();
+    setIsSaving(true);
+    setSuccessMsg('');
+    setErrorMsg('');
 
     try {
       const updates = {
@@ -85,41 +85,41 @@ const ProfileView = () => {
         bio: valueOf('bio').trim(),
         institution: valueOf('institution').trim(),
         avatarUrl: valueOf('avatarUrl'),
-      }
+      };
       if (!updates.fullName) {
-        flash('Please enter your name.', true)
-        return
+        flash('Please enter your name.', true);
+        return;
       }
-      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), updates)
-      patchUser(updates)
-      clearDraft()
-      flash('Profile updated successfully!')
+      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), updates);
+      patchUser(updates);
+      clearDraft();
+      flash('Profile updated successfully!');
     } catch (error) {
-      console.error('Failed to save profile', error)
-      flash('Could not save your profile. Please try again.', true)
+      console.error('Failed to save profile', error);
+      flash('Could not save your profile. Please try again.', true);
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleRoleChange = async (role) => {
-    if (role === currentUser?.role) return
+    if (role === currentUser?.role) return;
     try {
-      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), { role })
-      patchUser({ role })
-      flash(`You are now set up as an ${role}.`)
+      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), { role });
+      patchUser({ role });
+      flash(`You are now set up as an ${role}.`);
     } catch (error) {
-      console.error('Failed to change role', error)
-      flash('Could not change your role. Please try again.', true)
+      console.error('Failed to change role', error);
+      flash('Could not change your role. Please try again.', true);
     }
-  }
+  };
 
   const handleSignOut = async () => {
-    await logout()
-    navigate('/', { replace: true })
-  }
+    await logout();
+    navigate('/', { replace: true });
+  };
 
-  if (!currentUser) return null
+  if (!currentUser) return null;
 
   return (
     <div className="p-6 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-950 pb-32 max-w-4xl mx-auto w-full transition-colors duration-300">
@@ -156,8 +156,8 @@ const ProfileView = () => {
               onClick={handleAvatarClick}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  handleAvatarClick()
+                  e.preventDefault();
+                  handleAvatarClick();
                 }
               }}
               className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 bg-slate-200 dark:bg-slate-900 cursor-pointer group shadow-xl transition-all hover:border-cyan-400"
@@ -188,10 +188,7 @@ const ProfileView = () => {
 
           <div className="space-y-6">
             <div>
-              <label
-                htmlFor="profile-name"
-                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2"
-              >
+              <label htmlFor="profile-name" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">
                 Full Name
               </label>
               <input
@@ -238,9 +235,7 @@ const ProfileView = () => {
             </div>
 
             <div>
-              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">
-                Account Type
-              </span>
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">Account Type</span>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { value: 'student', label: 'Student', icon: GraduationCap },
@@ -264,10 +259,7 @@ const ProfileView = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="profile-bio"
-                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2"
-              >
+              <label htmlFor="profile-bio" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">
                 Bio
               </label>
               <textarea
@@ -329,7 +321,7 @@ const ProfileView = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileView
+export default ProfileView;

@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
-import { Compass } from 'lucide-react'
-import Logo from '../components/Logo'
+import { Link } from 'react-router-dom';
+import { Compass } from 'lucide-react';
+import Logo from '../components/Logo';
 
 const NotFoundView = () => (
   <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center px-6 text-center transition-colors duration-300">
@@ -31,6 +31,6 @@ const NotFoundView = () => (
       </Link>
     </div>
   </div>
-)
+);
 
-export default NotFoundView
+export default NotFoundView;

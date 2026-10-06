@@ -1,77 +1,77 @@
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { signOut } from 'firebase/auth'
-import { Timer, Lock } from 'lucide-react'
-import { auth } from '../firebase/config'
-import { useAppContext } from '../context/AppContext'
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { Timer, Lock } from 'lucide-react';
+import { auth } from '../firebase/config';
+import { useAppContext } from '../context/AppContext';
 
-const TIMEOUT_MS = 30 * 60 * 1000 // 30 minutes of inactivity
-const WARNING_MS = 2 * 60 * 1000 // warn with 2 minutes to spare
-const TICK_MS = 1000
+const TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes of inactivity
+const WARNING_MS = 2 * 60 * 1000; // warn with 2 minutes to spare
+const TICK_MS = 1000;
 
-const ACTIVITY_EVENTS = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click']
+const ACTIVITY_EVENTS = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
 
 const SessionTimeout = () => {
-  const navigate = useNavigate()
-  const { setCurrentUser } = useAppContext()
+  const navigate = useNavigate();
+  const { setCurrentUser } = useAppContext();
 
-  const [secondsLeft, setSecondsLeft] = useState(null)
-  const [isExpired, setIsExpired] = useState(false)
-  const lastActivityRef = useRef(0)
-  const busyRef = useRef(false)
+  const [secondsLeft, setSecondsLeft] = useState(null);
+  const [isExpired, setIsExpired] = useState(false);
+  const lastActivityRef = useRef(0);
+  const busyRef = useRef(false);
 
   useEffect(() => {
-    lastActivityRef.current = Date.now()
+    lastActivityRef.current = Date.now();
     const markActivity = () => {
-      lastActivityRef.current = Date.now()
-      setSecondsLeft((prev) => (prev === null ? prev : null))
-    }
+      lastActivityRef.current = Date.now();
+      setSecondsLeft((prev) => (prev === null ? prev : null));
+    };
 
     const logoutUser = async () => {
-      if (busyRef.current) return
-      busyRef.current = true
+      if (busyRef.current) return;
+      busyRef.current = true;
       try {
-        await signOut(auth)
+        await signOut(auth);
       } catch (error) {
-        console.error('Error signing out due to inactivity:', error)
+        console.error('Error signing out due to inactivity:', error);
       } finally {
-        setCurrentUser(null)
-        setSecondsLeft(null)
-        setIsExpired(true)
+        setCurrentUser(null);
+        setSecondsLeft(null);
+        setIsExpired(true);
       }
-    }
+    };
 
     const interval = setInterval(() => {
-      if (isExpired) return
-      const idleFor = Date.now() - lastActivityRef.current
-      const remaining = TIMEOUT_MS - idleFor
+      if (isExpired) return;
+      const idleFor = Date.now() - lastActivityRef.current;
+      const remaining = TIMEOUT_MS - idleFor;
 
       if (remaining <= 0) {
-        logoutUser()
-        return
+        logoutUser();
+        return;
       }
       // Reading state through a ref-free comparison keeps the interval honest
       // even after several re-renders.
-      setSecondsLeft(remaining <= WARNING_MS ? Math.ceil(remaining / TICK_MS) : null)
-    }, TICK_MS)
+      setSecondsLeft(remaining <= WARNING_MS ? Math.ceil(remaining / TICK_MS) : null);
+    }, TICK_MS);
 
-    ACTIVITY_EVENTS.forEach((event) => window.addEventListener(event, markActivity, { passive: true }))
+    ACTIVITY_EVENTS.forEach((event) => window.addEventListener(event, markActivity, { passive: true }));
 
     return () => {
-      clearInterval(interval)
-      ACTIVITY_EVENTS.forEach((event) => window.removeEventListener(event, markActivity))
-    }
-  }, [isExpired, setCurrentUser])
+      clearInterval(interval);
+      ACTIVITY_EVENTS.forEach((event) => window.removeEventListener(event, markActivity));
+    };
+  }, [isExpired, setCurrentUser]);
 
   const handleStaySignedIn = () => {
-    lastActivityRef.current = Date.now()
-    setSecondsLeft(null)
-  }
+    lastActivityRef.current = Date.now();
+    setSecondsLeft(null);
+  };
 
   const handleDismiss = () => {
-    setIsExpired(false)
-    navigate('/login', { replace: true })
-  }
+    setIsExpired(false);
+    navigate('/login', { replace: true });
+  };
 
   if (isExpired) {
     return (
@@ -93,10 +93,10 @@ const SessionTimeout = () => {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
-  if (secondsLeft === null) return null
+  if (secondsLeft === null) return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-[9998] w-[min(22rem,calc(100vw-3rem))]">
@@ -109,8 +109,8 @@ const SessionTimeout = () => {
           <h3 className="font-bold text-slate-900 dark:text-white">Still there?</h3>
         </div>
         <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-          You will be signed out in <span className="font-mono font-bold text-amber-600 dark:text-amber-400">{secondsLeft}s</span>{' '}
-          of inactivity.
+          You will be signed out in{' '}
+          <span className="font-mono font-bold text-amber-600 dark:text-amber-400">{secondsLeft}s</span> of inactivity.
         </p>
         <button
           type="button"
@@ -121,7 +121,7 @@ const SessionTimeout = () => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SessionTimeout
+export default SessionTimeout;

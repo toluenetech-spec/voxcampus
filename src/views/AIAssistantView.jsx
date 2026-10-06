@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle,
   Bot,
@@ -21,10 +21,10 @@ import {
   User,
   WifiOff,
   X,
-} from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import * as store from '../services/store'
-import { AI_TASKS, classifyAiError, requestAi } from '../services/ai'
+} from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import * as store from '../services/store';
+import { AI_TASKS, classifyAiError, requestAi } from '../services/ai';
 
 /* ------------------------------------------------------------------ tools */
 
@@ -71,44 +71,44 @@ const TOOLS = [
       instructor: 'Topic to turn into flashcards',
     },
   },
-]
+];
 
 /* ------------------------------------------------------- chat persistence */
 
-const CHAT_KEY_PREFIX = 'vox_ai_chats_'
-const MAX_CHATS = 40
-const TITLE_LENGTH = 44
+const CHAT_KEY_PREFIX = 'vox_ai_chats_';
+const MAX_CHATS = 40;
+const TITLE_LENGTH = 44;
 
-const storageKey = (uid) => `${CHAT_KEY_PREFIX}${uid ?? 'anon'}`
+const storageKey = (uid) => `${CHAT_KEY_PREFIX}${uid ?? 'anon'}`;
 
 const loadChats = (uid) => {
   try {
-    const parsed = JSON.parse(localStorage.getItem(storageKey(uid)) ?? '[]')
-    return Array.isArray(parsed) ? parsed.filter((chat) => chat && Array.isArray(chat.messages)) : []
+    const parsed = JSON.parse(localStorage.getItem(storageKey(uid)) ?? '[]');
+    return Array.isArray(parsed) ? parsed.filter((chat) => chat && Array.isArray(chat.messages)) : [];
   } catch {
-    return []
+    return [];
   }
-}
+};
 
 const saveChats = (uid, chats) => {
   try {
-    localStorage.setItem(storageKey(uid), JSON.stringify(chats.slice(0, MAX_CHATS)))
+    localStorage.setItem(storageKey(uid), JSON.stringify(chats.slice(0, MAX_CHATS)));
   } catch {
     /* storage full or unavailable — chats simply won't persist */
   }
-}
+};
 
-let idCounter = 0
+let idCounter = 0;
 const nextId = () => {
-  idCounter += 1
-  return `${Date.now().toString(36)}${idCounter.toString(36)}`
-}
+  idCounter += 1;
+  return `${Date.now().toString(36)}${idCounter.toString(36)}`;
+};
 
 /** Pure: appends a message, creating the chat on first use. */
 const withMessage = (chats, chatId, message, title, now) => {
-  const index = chats.findIndex((chat) => chat.id === chatId)
+  const index = chats.findIndex((chat) => chat.id === chatId);
   if (index === -1) {
-    const heading = (title ?? 'New chat').trim()
+    const heading = (title ?? 'New chat').trim();
     return [
       {
         id: chatId,
@@ -117,16 +117,16 @@ const withMessage = (chats, chatId, message, title, now) => {
         updatedAt: now,
       },
       ...chats,
-    ].slice(0, MAX_CHATS)
+    ].slice(0, MAX_CHATS);
   }
-  const next = [...chats]
+  const next = [...chats];
   next[index] = {
     ...next[index],
     messages: [...next[index].messages, message],
     updatedAt: now,
-  }
-  return next
-}
+  };
+  return next;
+};
 
 /* ---------------------------------------------------------- error surface */
 
@@ -161,11 +161,11 @@ const ERROR_PRESENTATION = {
     body: 'The AI request did not complete. Try again, and if it keeps failing, check the function logs.',
     hint: 'try again',
   },
-}
+};
 
 const ErrorPanel = ({ message, onRetry, onDismiss }) => {
-  const state = classifyAiError(message)
-  const { icon: Icon, title, body, hint } = ERROR_PRESENTATION[state]
+  const state = classifyAiError(message);
+  const { icon: Icon, title, body, hint } = ERROR_PRESENTATION[state];
   return (
     <div className="relative flex flex-col items-center justify-center text-center p-8 gap-3 rounded-3xl border border-amber-500/30 bg-amber-500/5">
       {onDismiss && (
@@ -183,9 +183,7 @@ const ErrorPanel = ({ message, onRetry, onDismiss }) => {
       </div>
       <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
       <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md leading-relaxed">{body}</p>
-      {message && state === 'error' && (
-        <p className="text-xs text-slate-500 dark:text-slate-500 max-w-md">{message}</p>
-      )}
+      {message && state === 'error' && <p className="text-xs text-slate-500 dark:text-slate-500 max-w-md">{message}</p>}
       <code className="text-xs font-mono px-2 py-1 rounded bg-slate-900/60 border border-white/10 text-slate-300">
         {hint}
       </code>
@@ -199,41 +197,39 @@ const ErrorPanel = ({ message, onRetry, onDismiss }) => {
         </button>
       )}
     </div>
-  )
-}
+  );
+};
 
 /* ------------------------------------------------------------------ view */
 
 const AIAssistantView = () => {
-  const { currentUser, courses, isDemo } = useAppContext()
+  const { currentUser, courses, isDemo } = useAppContext();
 
-  const role = currentUser?.role ?? 'student'
-  const isInstructor = role === 'instructor'
-  const uid = currentUser?.uid
+  const role = currentUser?.role ?? 'student';
+  const isInstructor = role === 'instructor';
+  const uid = currentUser?.uid;
 
   const myCourses = useMemo(
     () =>
       (courses ?? []).filter((course) =>
-        isInstructor
-          ? course.instructorId === uid
-          : Boolean(currentUser?.joinedCourses?.includes(course.id)),
+        isInstructor ? course.instructorId === uid : Boolean(currentUser?.joinedCourses?.includes(course.id)),
       ),
     [courses, isInstructor, uid, currentUser?.joinedCourses],
-  )
+  );
 
   // Firestore `in` queries accept at most 10 values.
-  const courseIds = useMemo(() => myCourses.map((course) => course.id).slice(0, 10), [myCourses])
-  const courseKey = courseIds.join(',')
+  const courseIds = useMemo(() => myCourses.map((course) => course.id).slice(0, 10), [myCourses]);
+  const courseKey = courseIds.join(',');
 
-  const [podcasts, setPodcasts] = useState([])
-  const [materials, setMaterials] = useState([])
-  const [assignments, setAssignments] = useState([])
+  const [podcasts, setPodcasts] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  const [assignments, setAssignments] = useState([]);
 
   useEffect(() => {
-    if (!courseKey) return undefined
-    const ids = courseKey.split(',')
-    const read = (snap) => snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-    const noop = () => {}
+    if (!courseKey) return undefined;
+    const ids = courseKey.split(',');
+    const read = (snap) => snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const noop = () => {};
     const unsubscribers = [
       store.onSnapshot(
         store.query(store.collection(store.db, 'podcasts'), store.where('courseId', 'in', ids)),
@@ -250,9 +246,9 @@ const AIAssistantView = () => {
         (snap) => setAssignments(read(snap)),
         noop,
       ),
-    ]
-    return () => unsubscribers.forEach((unsubscribe) => unsubscribe())
-  }, [courseKey])
+    ];
+    return () => unsubscribers.forEach((unsubscribe) => unsubscribe());
+  }, [courseKey]);
 
   /** What the assistant is allowed to know about the user's courses. */
   const aiContext = useMemo(
@@ -276,68 +272,65 @@ const AIAssistantView = () => {
       })),
     }),
     [currentUser?.fullName, currentUser?.institution, role, myCourses, podcasts, materials, assignments],
-  )
+  );
 
   /* ------------------------------------------------------------ chat state */
 
-  const [chats, setChats] = useState(() => loadChats(uid))
-  const [activeId, setActiveId] = useState(null)
-  const [draft, setDraft] = useState('')
-  const [task, setTask] = useState(AI_TASKS.ask)
-  const [pending, setPending] = useState(false)
-  const [error, setError] = useState('')
-  const [copiedId, setCopiedId] = useState('')
+  const [chats, setChats] = useState(() => loadChats(uid));
+  const [activeId, setActiveId] = useState(null);
+  const [draft, setDraft] = useState('');
+  const [task, setTask] = useState(AI_TASKS.ask);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState('');
+  const [copiedId, setCopiedId] = useState('');
 
   useEffect(() => {
-    saveChats(uid, chats)
-  }, [uid, chats])
+    saveChats(uid, chats);
+  }, [uid, chats]);
 
-  const activeChat = useMemo(
-    () => chats.find((chat) => chat.id === activeId) ?? null,
-    [chats, activeId],
-  )
-  const messages = useMemo(() => activeChat?.messages ?? [], [activeChat])
+  const activeChat = useMemo(() => chats.find((chat) => chat.id === activeId) ?? null, [chats, activeId]);
+  const messages = useMemo(() => activeChat?.messages ?? [], [activeChat]);
 
-  const scrollRef = useRef(null)
+  const scrollRef = useRef(null);
   useEffect(() => {
-    const node = scrollRef.current
-    if (node) node.scrollTop = node.scrollHeight
-  }, [messages.length, pending])
+    const node = scrollRef.current;
+    if (node) node.scrollTop = node.scrollHeight;
+  }, [messages.length, pending]);
 
-  const activeTool = TOOLS.find((tool) => tool.id === task) ?? TOOLS[0]
-  const placeholder = activeTool.placeholder[isInstructor ? 'instructor' : 'student']
+  const activeTool = TOOLS.find((tool) => tool.id === task) ?? TOOLS[0];
+  const placeholder = activeTool.placeholder[isInstructor ? 'instructor' : 'student'];
 
   /* --------------------------------------------------------------- actions */
 
   const startNewChat = useCallback(() => {
-    setActiveId(null)
-    setDraft('')
-    setError('')
-  }, [])
+    setActiveId(null);
+    setDraft('');
+    setError('');
+  }, []);
 
   const removeChat = useCallback((id) => {
-    setChats((prev) => prev.filter((chat) => chat.id !== id))
-    setActiveId((current) => (current === id ? null : current))
-  }, [])
+    setChats((prev) => prev.filter((chat) => chat.id !== id));
+    setActiveId((current) => (current === id ? null : current));
+  }, []);
 
   const submit = useCallback(
     async (retryText) => {
-      const text = (retryText ?? draft).trim()
-      if (!text || pending) return
+      const text = (retryText ?? draft).trim();
+      if (!text || pending) return;
 
-      const now = Date.now()
-      const chatId = activeId ?? nextId()
-      const userMessage = { id: nextId(), role: 'user', text, task, at: now }
-      const assistantId = nextId()
+      const now = Date.now();
+      const chatId = activeId ?? nextId();
+      const userMessage = { id: nextId(), role: 'user', text, task, at: now };
+      const assistantId = nextId();
 
-      setError('')
-      setPending(true)
-      setChats((prev) => withMessage(prev, chatId, userMessage, text, now))
-      setActiveId(chatId)
-      setDraft('')
+      setError('');
+      setPending(true);
+      setChats((prev) => withMessage(prev, chatId, userMessage, text, now));
+      setActiveId(chatId);
+      setDraft('');
 
       try {
-        const result = await requestAi({ task, prompt: text, context: aiContext })
+        const result = await requestAi({ task, prompt: text, context: aiContext });
         setChats((prev) =>
           withMessage(
             prev,
@@ -346,30 +339,30 @@ const AIAssistantView = () => {
             text,
             Date.now(),
           ),
-        )
+        );
       } catch (requestError) {
-        setError(requestError?.message ?? 'The AI request failed.')
+        setError(requestError?.message ?? 'The AI request failed.');
       } finally {
-        setPending(false)
+        setPending(false);
       }
     },
     [draft, pending, activeId, task, aiContext],
-  )
+  );
 
   const regenerate = useCallback(() => {
-    const lastUserMessage = [...messages].reverse().find((message) => message.role === 'user')
-    if (lastUserMessage) submit(lastUserMessage.text)
-  }, [messages, submit])
+    const lastUserMessage = [...messages].reverse().find((message) => message.role === 'user');
+    if (lastUserMessage) submit(lastUserMessage.text);
+  }, [messages, submit]);
 
   const copyMessage = useCallback((id, text) => {
     navigator.clipboard
       ?.writeText(text)
       .then(() => {
-        setCopiedId(id)
-        setTimeout(() => setCopiedId((current) => (current === id ? '' : current)), 1500)
+        setCopiedId(id);
+        setTimeout(() => setCopiedId((current) => (current === id ? '' : current)), 1500);
       })
-      .catch(() => {})
-  }, [])
+      .catch(() => {});
+  }, []);
 
   /* ---------------------------------------------------------------- render */
 
@@ -382,9 +375,9 @@ const AIAssistantView = () => {
             AI Assistant
           </h1>
           <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
-            {placeholder}. Grounded in the {myCourses.length || 'no'}{' '}
-            {myCourses.length === 1 ? 'course' : 'courses'} you
-            {isInstructor ? ' teach' :"'re enrolled in"}.
+            {placeholder}. Grounded in the {myCourses.length || 'no'} {myCourses.length === 1 ? 'course' : 'courses'}{' '}
+            you
+            {isInstructor ? ' teach' : "'re enrolled in"}.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -409,22 +402,18 @@ const AIAssistantView = () => {
 
       {isDemo && (
         <p className="mb-4 text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 inset-well rounded-card px-4 py-3">
-          You are in the demo workspace. The AI endpoint is not available here — sign in with a real
-          account to use the assistant.
+          You are in the demo workspace. The AI endpoint is not available here — sign in with a real account to use the
+          assistant.
         </p>
       )}
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4">
         {/* ------------------------------------------------------ history */}
         <aside className="hidden lg:flex flex-col min-h-0 material-regular rounded-panel p-4">
-          <h2 className="eyebrow mb-3 px-1">
-            Chat history
-          </h2>
+          <h2 className="eyebrow mb-3 px-1">Chat history</h2>
           <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-1 pr-1">
             {chats.length === 0 && (
-              <p className="text-xs text-slate-400 dark:text-slate-500 px-1">
-                No conversations yet.
-              </p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 px-1">No conversations yet.</p>
             )}
             {chats.map((chat) => (
               <div
@@ -438,8 +427,8 @@ const AIAssistantView = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setActiveId(chat.id)
-                    setError('')
+                    setActiveId(chat.id);
+                    setError('');
                   }}
                   className="flex-1 text-left min-w-0"
                 >
@@ -464,8 +453,8 @@ const AIAssistantView = () => {
         <section className="flex flex-col min-h-0 material-regular rounded-panel overflow-hidden">
           <div className="flex gap-1 p-2 border-b hairline overflow-x-auto custom-scrollbar">
             {TOOLS.map((tool) => {
-              const Icon = tool.icon
-              const selected = tool.id === task
+              const Icon = tool.icon;
+              const selected = tool.id === task;
               return (
                 <button
                   key={tool.id}
@@ -480,7 +469,7 @@ const AIAssistantView = () => {
                   <Icon className="w-3.5 h-3.5" />
                   {tool.label}
                 </button>
-              )
+              );
             })}
           </div>
 
@@ -494,14 +483,13 @@ const AIAssistantView = () => {
                   {isInstructor ? 'Plan, draft and assess' : 'Study smarter'}
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 text-sm max-w-sm">
-                  {placeholder}. The assistant can see your course titles, lectures, materials and
-                  assignments.
+                  {placeholder}. The assistant can see your course titles, lectures, materials and assignments.
                 </p>
               </div>
             )}
 
             {messages.map((message) => {
-              const mine = message.role === 'user'
+              const mine = message.role === 'user';
               return (
                 <div key={message.id} className={`flex gap-3 ${mine ? 'justify-end' : ''}`}>
                   {!mine && (
@@ -543,7 +531,7 @@ const AIAssistantView = () => {
                     </span>
                   )}
                 </div>
-              )
+              );
             })}
 
             {pending && (
@@ -568,8 +556,8 @@ const AIAssistantView = () => {
 
           <form
             onSubmit={(event) => {
-              event.preventDefault()
-              submit()
+              event.preventDefault();
+              submit();
             }}
             className="p-3 border-t hairline"
           >
@@ -579,8 +567,8 @@ const AIAssistantView = () => {
                 onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault()
-                    submit()
+                    event.preventDefault();
+                    submit();
                   }
                 }}
                 rows={2}
@@ -594,11 +582,7 @@ const AIAssistantView = () => {
                 aria-label="Send message"
                 className="h-11 w-11 shrink-0 rounded-2xl bg-aqua-500 text-slate-950 flex items-center justify-center hover:bg-aqua-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {pending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Send className="w-4 h-4" />
-                )}
+                {pending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               </button>
             </div>
             <p className="mt-2 px-1 text-xs text-slate-400 dark:text-slate-500">
@@ -620,9 +604,8 @@ const AIAssistantView = () => {
           </form>
         </section>
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export default AIAssistantView
+export default AIAssistantView;

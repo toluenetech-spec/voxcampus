@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import Logo from './Logo'
+import { Link } from 'react-router-dom';
+import Logo from './Logo';
 
 const Footer = () => {
-  const year = new Date().getFullYear()
+  const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-white/10 bg-slate-950 pt-20 pb-8 mt-24">
@@ -10,9 +10,7 @@ const Footer = () => {
         {/* Column 1 (Brand) */}
         <div className="flex flex-col items-start">
           <Logo className="scale-75 origin-left mb-2" />
-          <p className="text-slate-400 mt-4 leading-relaxed">
-            The next generation of interactive audio learning.
-          </p>
+          <p className="text-slate-400 mt-4 leading-relaxed">The next generation of interactive audio learning.</p>
         </div>
 
         {/* Column 2 (Platform) */}
@@ -63,7 +61,7 @@ const Footer = () => {
         <div>Designed &amp; Developed by Toluwalase Samuel.</div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

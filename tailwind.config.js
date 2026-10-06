@@ -1,4 +1,4 @@
-import animate from 'tailwindcss-animate'
+import animate from 'tailwindcss-animate';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -37,8 +37,7 @@ export default {
       // Shadows read from the CSS material variables so light and dark stay
       // in step without a `dark:` variant on every element.
       boxShadow: {
-        material:
-          'inset 0 1px 0 0 var(--specular), var(--shadow-ambient), var(--shadow-contact)',
+        material: 'inset 0 1px 0 0 var(--specular), var(--shadow-ambient), var(--shadow-contact)',
         'material-lg': 'inset 0 1px 0 0 var(--specular), 0 24px 60px -12px rgb(0 0 0 / 0.45), var(--shadow-contact)',
         contact: 'var(--shadow-contact)',
       },
@@ -67,4 +66,4 @@ export default {
     },
   },
   plugins: [animate],
-}
+};

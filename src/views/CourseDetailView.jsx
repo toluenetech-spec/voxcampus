@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   BookOpen,
@@ -16,33 +16,33 @@ import {
   XCircle,
   Square,
   Lock,
-} from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import * as store from '../services/store'
-import { uploadFile as uploadToStorage } from '../services/upload'
-import CourseParticipants from '../components/CourseParticipants'
-import AudioPlayer from '../components/AudioPlayer'
+} from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import * as store from '../services/store';
+import { uploadFile as uploadToStorage } from '../services/upload';
+import CourseParticipants from '../components/CourseParticipants';
+import AudioPlayer from '../components/AudioPlayer';
 
 const timestampOf = (value) => {
-  if (!value) return 0
-  if (typeof value.toMillis === 'function') return value.toMillis()
-  if (typeof value.toDate === 'function') return value.toDate().getTime()
-  if (value instanceof Date) return value.getTime()
-  const parsed = Date.parse(value)
-  return Number.isNaN(parsed) ? 0 : parsed
-}
+  if (!value) return 0;
+  if (typeof value.toMillis === 'function') return value.toMillis();
+  if (typeof value.toDate === 'function') return value.toDate().getTime();
+  if (value instanceof Date) return value.getTime();
+  const parsed = Date.parse(value);
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
 
 const formatDateTime = (value) => {
-  const ms = timestampOf(value)
-  if (!ms) return 'No due date'
+  const ms = timestampOf(value);
+  if (!ms) return 'No due date';
   return new Date(ms).toLocaleString(undefined, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  })
-}
+  });
+};
 
 const CoursePodcastCard = ({ pod, isInstructor, openEditModal, requestDelete, speaking, onToggleSpeech }) => (
   <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border hairline transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.15)] group relative overflow-hidden flex flex-col">
@@ -104,151 +104,151 @@ const CoursePodcastCard = ({ pod, isInstructor, openEditModal, requestDelete, sp
       )}
     </button>
   </div>
-)
+);
 
 const CourseDetailView = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { courses, currentUser, patchUser } = useAppContext()
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { courses, currentUser, patchUser } = useAppContext();
 
-  const course = courses.find((c) => c.id === id)
-  const isInstructor = Boolean(course) && currentUser?.uid === course.instructorId
-  const isEnrolled = Boolean(course) && Boolean(currentUser?.joinedCourses?.includes(course.id))
-  const canView = isInstructor || isEnrolled
+  const course = courses.find((c) => c.id === id);
+  const isInstructor = Boolean(course) && currentUser?.uid === course.instructorId;
+  const isEnrolled = Boolean(course) && Boolean(currentUser?.joinedCourses?.includes(course.id));
+  const canView = isInstructor || isEnrolled;
 
-  const [activeTab, setActiveTab] = useState('podcasts')
+  const [activeTab, setActiveTab] = useState('podcasts');
 
-  const [podcasts, setPodcasts] = useState([])
-  const [materials, setMaterials] = useState([])
-  const [assignments, setAssignments] = useState([])
-  const [submissions, setSubmissions] = useState([])
-  const [loadingMedia, setLoadingMedia] = useState(true)
+  const [podcasts, setPodcasts] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
+  const [loadingMedia, setLoadingMedia] = useState(true);
   // Refreshed on a timer so"Past Due" flips over without a manual reload.
-  const [nowMs, setNowMs] = useState(() => Date.now())
-  const [localError, setLocalError] = useState('')
-  const [speakingId, setSpeakingId] = useState(null)
-  const [actionError, setActionError] = useState('')
+  const [nowMs, setNowMs] = useState(() => Date.now());
+  const [localError, setLocalError] = useState('');
+  const [speakingId, setSpeakingId] = useState(null);
+  const [actionError, setActionError] = useState('');
 
   // Universal Modals
-  const [showUploadModal, setShowUploadModal] = useState(false)
-  const [uploadType, setUploadType] = useState('podcast')
-  const [uploadTitle, setUploadTitle] = useState('')
-  const [uploadDesc, setUploadDesc] = useState('')
-  const [uploadFile, setUploadFile] = useState(null)
-  const [isUploading, setIsUploading] = useState(false)
-  const [isPublic, setIsPublic] = useState(false)
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadType, setUploadType] = useState('podcast');
+  const [uploadTitle, setUploadTitle] = useState('');
+  const [uploadDesc, setUploadDesc] = useState('');
+  const [uploadFile, setUploadFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
 
-  const [showAssignmentModal, setShowAssignmentModal] = useState(false)
-  const [assignmentTitle, setAssignmentTitle] = useState('')
-  const [assignmentDesc, setAssignmentDesc] = useState('')
-  const [assignmentDue, setAssignmentDue] = useState('')
-  const [isCreatingAssignment, setIsCreatingAssignment] = useState(false)
+  const [showAssignmentModal, setShowAssignmentModal] = useState(false);
+  const [assignmentTitle, setAssignmentTitle] = useState('');
+  const [assignmentDesc, setAssignmentDesc] = useState('');
+  const [assignmentDue, setAssignmentDue] = useState('');
+  const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
 
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [editItem, setEditItem] = useState({ id: '', type: '', title: '', desc: '', due: '' })
-  const [isEditing, setIsEditing] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editItem, setEditItem] = useState({ id: '', type: '', title: '', desc: '', due: '' });
+  const [isEditing, setIsEditing] = useState(false);
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [itemToDelete, setItemToDelete] = useState({ id: '', type: '' })
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState({ id: '', type: '' });
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const [downloadingId, setDownloadingId] = useState(null)
-  const [enrolling, setEnrolling] = useState(false)
+  const [downloadingId, setDownloadingId] = useState(null);
+  const [enrolling, setEnrolling] = useState(false);
 
   // --- SUBMISSION MODAL STATES ---
-  const [showSubmitModal, setShowSubmitModal] = useState(false)
-  const [activeAssignmentId, setActiveAssignmentId] = useState('')
-  const [submitText, setSubmitText] = useState('')
-  const [submitFile, setSubmitFile] = useState(null)
-  const [isSubmittingWork, setIsSubmittingWork] = useState(false)
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [activeAssignmentId, setActiveAssignmentId] = useState('');
+  const [submitText, setSubmitText] = useState('');
+  const [submitFile, setSubmitFile] = useState(null);
+  const [isSubmittingWork, setIsSubmittingWork] = useState(false);
 
   // --- GRADING DASHBOARD STATES ---
-  const [showGradingModal, setShowGradingModal] = useState(false)
-  const [gradingAssignmentId, setGradingAssignmentId] = useState('')
-  const [gradingScores, setGradingScores] = useState({})
-  const [isGrading, setIsGrading] = useState(false)
+  const [showGradingModal, setShowGradingModal] = useState(false);
+  const [gradingAssignmentId, setGradingAssignmentId] = useState('');
+  const [gradingScores, setGradingScores] = useState({});
+  const [isGrading, setIsGrading] = useState(false);
 
-  const byNewest = (a, b) => timestampOf(b.createdAt) - timestampOf(a.createdAt)
+  const byNewest = (a, b) => timestampOf(b.createdAt) - timestampOf(a.createdAt);
 
   useEffect(() => {
-    if (!canView) return undefined
+    if (!canView) return undefined;
 
     const unsubPodcasts = store.onSnapshot(
       store.query(store.collection(store.db, 'podcasts'), store.where('courseId', '==', id)),
       (snapshot) => setPodcasts(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byNewest)),
       (error) => console.error('Podcasts snapshot error:', error),
-    )
+    );
 
     const unsubMaterials = store.onSnapshot(
       store.query(store.collection(store.db, 'materials'), store.where('courseId', '==', id)),
       (snapshot) => setMaterials(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byNewest)),
       (error) => console.error('Materials snapshot error:', error),
-    )
+    );
 
     const unsubAssignments = store.onSnapshot(
       store.query(store.collection(store.db, 'assignments'), store.where('courseId', '==', id)),
       (snapshot) => setAssignments(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byNewest)),
       (error) => console.error('Assignments snapshot error:', error),
-    )
+    );
 
     const unsubSubmissions = store.onSnapshot(
       store.query(store.collection(store.db, 'submissions'), store.where('courseId', '==', id)),
       (snapshot) => {
-        setSubmissions(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
-        setLoadingMedia(false)
+        setSubmissions(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+        setLoadingMedia(false);
       },
       (error) => {
-        console.error('Submissions snapshot error:', error)
-        setLoadingMedia(false)
+        console.error('Submissions snapshot error:', error);
+        setLoadingMedia(false);
       },
-    )
+    );
 
     return () => {
-      unsubPodcasts()
-      unsubMaterials()
-      unsubAssignments()
-      unsubSubmissions()
-    }
-  }, [id, canView])
+      unsubPodcasts();
+      unsubMaterials();
+      unsubAssignments();
+      unsubSubmissions();
+    };
+  }, [id, canView]);
 
   useEffect(
     () => () => {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel()
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     },
     [],
-  )
+  );
 
   useEffect(() => {
-    const interval = setInterval(() => setNowMs(Date.now()), 60_000)
-    return () => clearInterval(interval)
-  }, [])
+    const interval = setInterval(() => setNowMs(Date.now()), 60_000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleToggleSpeech = (itemId, text) => {
     if (speakingId === itemId) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel()
-      setSpeakingId(null)
-      return
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      setSpeakingId(null);
+      return;
     }
     if (!('speechSynthesis' in window)) {
-      setActionError('Text-to-speech is not supported in this browser.')
-      return
+      setActionError('Text-to-speech is not supported in this browser.');
+      return;
     }
-    if (!text) return
-    window.speechSynthesis.cancel()
-    window.speechSynthesis.speak(new SpeechSynthesisUtterance(text))
-    setSpeakingId(itemId)
-  }
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    setSpeakingId(itemId);
+  };
 
   const handleUploadSubmit = async (e) => {
-    e.preventDefault()
-    if (!uploadFile) return
-    setIsUploading(true)
-    setLocalError('')
+    e.preventDefault();
+    if (!uploadFile) return;
+    setIsUploading(true);
+    setLocalError('');
 
     try {
-      const secureUrl = await uploadToStorage(uploadFile)
-      const extension = uploadFile.name.split('.').pop()
-      const collectionName = uploadType === 'podcast' ? 'podcasts' : 'materials'
+      const secureUrl = await uploadToStorage(uploadFile);
+      const extension = uploadFile.name.split('.').pop();
+      const collectionName = uploadType === 'podcast' ? 'podcasts' : 'materials';
 
       await store.addDoc(store.collection(store.db, collectionName), {
         courseId: id,
@@ -260,25 +260,25 @@ const CourseDetailView = () => {
         instructorName: currentUser.fullName,
         createdAt: store.serverTimestamp(),
         ...(uploadType === 'podcast' && { isPublic, likes: [], playCount: 0 }),
-      })
+      });
 
-      setShowUploadModal(false)
-      setUploadTitle('')
-      setUploadDesc('')
-      setUploadFile(null)
-      setIsPublic(false)
+      setShowUploadModal(false);
+      setUploadTitle('');
+      setUploadDesc('');
+      setUploadFile(null);
+      setIsPublic(false);
     } catch (err) {
-      console.error(err)
-      setLocalError(err.message ?? 'Upload failed.')
+      console.error(err);
+      setLocalError(err.message ?? 'Upload failed.');
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
     }
-  }
+  };
 
   const handleCreateAssignment = async (e) => {
-    e.preventDefault()
-    setIsCreatingAssignment(true)
-    setLocalError('')
+    e.preventDefault();
+    setIsCreatingAssignment(true);
+    setLocalError('');
     try {
       await store.addDoc(store.collection(store.db, 'assignments'), {
         courseId: id,
@@ -287,110 +287,110 @@ const CourseDetailView = () => {
         dueDate: assignmentDue,
         instructorId: currentUser.uid,
         createdAt: store.serverTimestamp(),
-      })
-      setShowAssignmentModal(false)
-      setAssignmentTitle('')
-      setAssignmentDesc('')
-      setAssignmentDue('')
+      });
+      setShowAssignmentModal(false);
+      setAssignmentTitle('');
+      setAssignmentDesc('');
+      setAssignmentDue('');
     } catch (err) {
-      console.error(err)
-      setLocalError(err.message ?? 'Could not post the assignment.')
+      console.error(err);
+      setLocalError(err.message ?? 'Could not post the assignment.');
     } finally {
-      setIsCreatingAssignment(false)
+      setIsCreatingAssignment(false);
     }
-  }
+  };
 
   const isOverdue = (dueDateString) => {
-    const ms = timestampOf(dueDateString)
-    return ms > 0 && (nowMs || Number.POSITIVE_INFINITY) > ms
-  }
+    const ms = timestampOf(dueDateString);
+    return ms > 0 && (nowMs || Number.POSITIVE_INFINITY) > ms;
+  };
 
   const requestDelete = (itemId, type) => {
-    setItemToDelete({ id: itemId, type })
-    setShowDeleteConfirm(true)
-  }
+    setItemToDelete({ id: itemId, type });
+    setShowDeleteConfirm(true);
+  };
 
   const confirmDelete = async () => {
-    setIsDeleting(true)
-    setLocalError('')
+    setIsDeleting(true);
+    setLocalError('');
     try {
-      await store.deleteDoc(store.doc(store.db, itemToDelete.type, itemToDelete.id))
-      setShowDeleteConfirm(false)
+      await store.deleteDoc(store.doc(store.db, itemToDelete.type, itemToDelete.id));
+      setShowDeleteConfirm(false);
     } catch (err) {
-      console.error(err)
-      setLocalError('Failed to delete: ' + err.message)
+      console.error(err);
+      setLocalError('Failed to delete: ' + err.message);
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   const openEditModal = (item, type) => {
-    setEditItem({ id: item.id, type, title: item.title, desc: item.description, due: item.dueDate || '' })
-    setShowEditModal(true)
-  }
+    setEditItem({ id: item.id, type, title: item.title, desc: item.description, due: item.dueDate || '' });
+    setShowEditModal(true);
+  };
 
   const handleEditSubmit = async (e) => {
-    e.preventDefault()
-    setIsEditing(true)
-    setLocalError('')
+    e.preventDefault();
+    setIsEditing(true);
+    setLocalError('');
     try {
-      const updateData = { title: editItem.title.trim(), description: editItem.desc }
-      if (editItem.type === 'assignments') updateData.dueDate = editItem.due
-      await store.updateDoc(store.doc(store.db, editItem.type, editItem.id), updateData)
-      setShowEditModal(false)
+      const updateData = { title: editItem.title.trim(), description: editItem.desc };
+      if (editItem.type === 'assignments') updateData.dueDate = editItem.due;
+      await store.updateDoc(store.doc(store.db, editItem.type, editItem.id), updateData);
+      setShowEditModal(false);
     } catch (err) {
-      console.error(err)
-      setLocalError('Failed to update: ' + err.message)
+      console.error(err);
+      setLocalError('Failed to update: ' + err.message);
     } finally {
-      setIsEditing(false)
+      setIsEditing(false);
     }
-  }
+  };
 
   const handleDownload = async (fileUrl, title, extension, itemId) => {
-    setDownloadingId(itemId)
+    setDownloadingId(itemId);
     try {
-      const response = await fetch(fileUrl, { mode: 'cors' }).catch(() => null)
-      if (!response || !response.ok) throw new Error('Direct download blocked')
+      const response = await fetch(fileUrl, { mode: 'cors' }).catch(() => null);
+      if (!response || !response.ok) throw new Error('Direct download blocked');
 
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${title}.${extension || 'pdf'}`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${title}.${extension || 'pdf'}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.warn('Streaming download failed, opening the file instead', error)
-      window.open(fileUrl, '_blank', 'noopener,noreferrer')
+      console.warn('Streaming download failed, opening the file instead', error);
+      window.open(fileUrl, '_blank', 'noopener,noreferrer');
     } finally {
-      setDownloadingId(null)
+      setDownloadingId(null);
     }
-  }
+  };
 
   const handleEnroll = async () => {
-    setEnrolling(true)
-    setActionError('')
+    setEnrolling(true);
+    setActionError('');
     try {
-      const nextCourses = [...(currentUser.joinedCourses ?? []), id]
-      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), { joinedCourses: nextCourses })
-      patchUser({ joinedCourses: nextCourses })
+      const nextCourses = [...(currentUser.joinedCourses ?? []), id];
+      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), { joinedCourses: nextCourses });
+      patchUser({ joinedCourses: nextCourses });
     } catch (err) {
-      console.error(err)
-      setActionError('Could not join this course. Please try again.')
+      console.error(err);
+      setActionError('Could not join this course. Please try again.');
     } finally {
-      setEnrolling(false)
+      setEnrolling(false);
     }
-  }
+  };
 
   const handleStudentSubmit = async (e) => {
-    e.preventDefault()
-    setIsSubmittingWork(true)
-    setLocalError('')
+    e.preventDefault();
+    setIsSubmittingWork(true);
+    setLocalError('');
     try {
-      let finalFileUrl = null
-      if (submitFile) finalFileUrl = await uploadToStorage(submitFile)
+      let finalFileUrl = null;
+      if (submitFile) finalFileUrl = await uploadToStorage(submitFile);
 
       await store.addDoc(store.collection(store.db, 'submissions'), {
         assignmentId: activeAssignmentId,
@@ -402,37 +402,37 @@ const CourseDetailView = () => {
         status: 'pending',
         score: null,
         submittedAt: store.serverTimestamp(),
-      })
+      });
 
-      setShowSubmitModal(false)
-      setSubmitText('')
-      setSubmitFile(null)
+      setShowSubmitModal(false);
+      setSubmitText('');
+      setSubmitFile(null);
     } catch (err) {
-      console.error(err)
-      setLocalError(err.message ?? 'Submission failed.')
+      console.error(err);
+      setLocalError(err.message ?? 'Submission failed.');
     } finally {
-      setIsSubmittingWork(false)
+      setIsSubmittingWork(false);
     }
-  }
+  };
 
   const handleGradeSubmission = async (subId, status) => {
-    setIsGrading(true)
+    setIsGrading(true);
     try {
-      const raw = gradingScores[subId]
-      const parsed = raw === '' || raw === undefined ? 0 : Number(raw)
-      const score = status === 'graded' ? Math.min(100, Math.max(0, Math.round(parsed))) : null
-      await store.updateDoc(store.doc(store.db, 'submissions', subId), { status, score })
+      const raw = gradingScores[subId];
+      const parsed = raw === '' || raw === undefined ? 0 : Number(raw);
+      const score = status === 'graded' ? Math.min(100, Math.max(0, Math.round(parsed))) : null;
+      await store.updateDoc(store.doc(store.db, 'submissions', subId), { status, score });
     } catch (err) {
-      console.error(err)
+      console.error(err);
     } finally {
-      setIsGrading(false)
+      setIsGrading(false);
     }
-  }
+  };
 
   const gradingSubmissions = useMemo(
     () => submissions.filter((s) => s.assignmentId === gradingAssignmentId),
     [submissions, gradingAssignmentId],
-  )
+  );
 
   // While the courses collection is still loading, `course` is undefined — don't
   // accuse the user of a bad link before we have actually looked it up.
@@ -442,7 +442,7 @@ const CourseDetailView = () => {
         <Loader2 className="w-10 h-10 text-cyan-500 animate-spin mb-4" />
         <p className="text-slate-500 font-semibold tracking-wider uppercase text-sm">Loading course…</p>
       </div>
-    )
+    );
   }
 
   if (!canView) {
@@ -475,7 +475,7 @@ const CourseDetailView = () => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -640,10 +640,10 @@ const CourseDetailView = () => {
                 <p className="text-slate-500 text-center py-12 col-span-full">No assignments posted yet.</p>
               ) : (
                 assignments.map((asg) => {
-                  const isLate = isOverdue(asg.dueDate)
+                  const isLate = isOverdue(asg.dueDate);
                   const mySubmission = submissions.find(
                     (s) => s.assignmentId === asg.id && s.studentId === currentUser?.uid,
-                  )
+                  );
 
                   return (
                     <div
@@ -703,9 +703,7 @@ const CourseDetailView = () => {
                                 ) : (
                                   <Loader2 className="w-5 h-5 text-cyan-500 mr-2 animate-spin" />
                                 )}
-                                <span className="uppercase text-xs tracking-widest text-slate-500 mr-2">
-                                  Status:
-                                </span>
+                                <span className="uppercase text-xs tracking-widest text-slate-500 mr-2">Status:</span>
                                 <span className="capitalize">{mySubmission.status}</span>
                               </span>
                               {mySubmission.score !== null && mySubmission.score !== undefined && (
@@ -718,8 +716,8 @@ const CourseDetailView = () => {
                             <button
                               type="button"
                               onClick={() => {
-                                setActiveAssignmentId(asg.id)
-                                setShowSubmitModal(true)
+                                setActiveAssignmentId(asg.id);
+                                setShowSubmitModal(true);
                               }}
                               className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl shadow-contact hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:-translate-y-1 transition-all duration-300text-xs"
                             >
@@ -732,8 +730,8 @@ const CourseDetailView = () => {
                           <button
                             type="button"
                             onClick={() => {
-                              setGradingAssignmentId(asg.id)
-                              setShowGradingModal(true)
+                              setGradingAssignmentId(asg.id);
+                              setShowGradingModal(true);
                             }}
                             className="w-full py-4 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-white font-bold rounded-2xl border hairline transition-all hover:-translate-y-1 text-xsflex items-center justify-center space-x-2"
                           >
@@ -745,7 +743,7 @@ const CourseDetailView = () => {
                         </div>
                       )}
                     </div>
-                  )
+                  );
                 })
               )}
             </>
@@ -759,8 +757,8 @@ const CourseDetailView = () => {
           <button
             type="button"
             onClick={() => {
-              setLocalError('')
-              setShowAssignmentModal(true)
+              setLocalError('');
+              setShowAssignmentModal(true);
             }}
             aria-label="Create assignment"
             title="Create assignment"
@@ -771,9 +769,9 @@ const CourseDetailView = () => {
           <button
             type="button"
             onClick={() => {
-              setLocalError('')
-              setUploadType('podcast')
-              setShowUploadModal(true)
+              setLocalError('');
+              setUploadType('podcast');
+              setShowUploadModal(true);
             }}
             aria-label="Upload podcast"
             title="Upload podcast"
@@ -784,9 +782,9 @@ const CourseDetailView = () => {
           <button
             type="button"
             onClick={() => {
-              setLocalError('')
-              setUploadType('material')
-              setShowUploadModal(true)
+              setLocalError('');
+              setUploadType('material');
+              setShowUploadModal(true);
             }}
             aria-label="Upload material"
             title="Upload material"
@@ -1340,7 +1338,7 @@ const CourseDetailView = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CourseDetailView
+export default CourseDetailView;

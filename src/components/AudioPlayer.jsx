@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import { Pause, Play, AlertTriangle } from 'lucide-react'
-import { claimAudio, releaseAudio, formatTime } from '../lib/audioManager'
+import { useEffect, useRef, useState } from 'react';
+import { Pause, Play, AlertTriangle } from 'lucide-react';
+import { claimAudio, releaseAudio, formatTime } from '../lib/audioManager';
 
 /**
  * Shared podcast player.
@@ -10,17 +10,17 @@ import { claimAudio, releaseAudio, formatTime } from '../lib/audioManager'
  * episode can play at a time.
  */
 const AudioPlayer = ({ src, title, onPlay }) => {
-  const audioRef = useRef(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [failed, setFailed] = useState(false)
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    const audio = audioRef.current
-    return () => releaseAudio(audio)
-  }, [])
+    const audio = audioRef.current;
+    return () => releaseAudio(audio);
+  }, []);
 
   if (!src) {
     return (
@@ -28,56 +28,56 @@ const AudioPlayer = ({ src, title, onPlay }) => {
         <AlertTriangle className="w-4 h-4 shrink-0" />
         Audio link is missing from the database.
       </p>
-    )
+    );
   }
 
   const togglePlay = () => {
-    const audio = audioRef.current
-    if (!audio) return
+    const audio = audioRef.current;
+    if (!audio) return;
 
     if (isPlaying) {
-      audio.pause()
-      setIsPlaying(false)
-      releaseAudio(audio)
-      return
+      audio.pause();
+      setIsPlaying(false);
+      releaseAudio(audio);
+      return;
     }
 
-    claimAudio(audio)
+    claimAudio(audio);
     audio
       .play()
       .then(() => {
-        setIsPlaying(true)
-        onPlay?.()
+        setIsPlaying(true);
+        onPlay?.();
       })
       .catch((error) => {
-        console.error('Playback failed', error)
-        setIsPlaying(false)
-        setFailed(true)
-      })
-  }
+        console.error('Playback failed', error);
+        setIsPlaying(false);
+        setFailed(true);
+      });
+  };
 
   const handleTimeUpdate = () => {
-    const audio = audioRef.current
-    if (!audio) return
-    setCurrentTime(audio.currentTime)
+    const audio = audioRef.current;
+    if (!audio) return;
+    setCurrentTime(audio.currentTime);
     if (audio.duration && Number.isFinite(audio.duration)) {
-      setProgress((audio.currentTime / audio.duration) * 100)
+      setProgress((audio.currentTime / audio.duration) * 100);
     }
-  }
+  };
 
   const handleLoadedMetadata = () => {
-    const audio = audioRef.current
-    if (audio) setDuration(audio.duration)
-  }
+    const audio = audioRef.current;
+    if (audio) setDuration(audio.duration);
+  };
 
   const handleSeek = (event) => {
-    const audio = audioRef.current
-    if (!audio || !audio.duration || !Number.isFinite(audio.duration)) return
-    const next = (Number(event.target.value) / 100) * audio.duration
-    audio.currentTime = next
-    setCurrentTime(next)
-    setProgress(Number(event.target.value))
-  }
+    const audio = audioRef.current;
+    if (!audio || !audio.duration || !Number.isFinite(audio.duration)) return;
+    const next = (Number(event.target.value) / 100) * audio.duration;
+    audio.currentTime = next;
+    setCurrentTime(next);
+    setProgress(Number(event.target.value));
+  };
 
   return (
     <div className="flex items-center space-x-4 w-full">
@@ -125,17 +125,17 @@ const AudioPlayer = ({ src, title, onPlay }) => {
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={() => {
-          setIsPlaying(false)
-          setProgress(0)
-          setCurrentTime(0)
+          setIsPlaying(false);
+          setProgress(0);
+          setCurrentTime(0);
         }}
         onError={() => {
-          setFailed(true)
-          setIsPlaying(false)
+          setFailed(true);
+          setIsPlaying(false);
         }}
       />
     </div>
-  )
-}
+  );
+};
 
-export default AudioPlayer
+export default AudioPlayer;

@@ -1,62 +1,58 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { BookOpen, Plus, Loader2, X, GraduationCap, Copy, CheckCircle2 } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import * as store from '../services/store'
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BookOpen, Plus, Loader2, X, GraduationCap, Copy, CheckCircle2 } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import * as store from '../services/store';
 
 const Dashboard = () => {
-  const navigate = useNavigate()
-  const { currentUser, courses, patchUser } = useAppContext()
-  const isInstructor = currentUser?.role === 'instructor'
+  const navigate = useNavigate();
+  const { currentUser, courses, patchUser } = useAppContext();
+  const isInstructor = currentUser?.role === 'instructor';
 
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [courseTitle, setCourseTitle] = useState('')
-  const [courseDesc, setCourseDesc] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [localError, setLocalError] = useState('')
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [courseTitle, setCourseTitle] = useState('');
+  const [courseDesc, setCourseDesc] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [localError, setLocalError] = useState('');
 
-  const [showJoinModal, setShowJoinModal] = useState(false)
-  const [joinCode, setJoinCode] = useState('')
-  const [isJoining, setIsJoining] = useState(false)
-  const [joinError, setJoinError] = useState('')
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [joinCode, setJoinCode] = useState('');
+  const [isJoining, setIsJoining] = useState(false);
+  const [joinError, setJoinError] = useState('');
 
   // Toast State
-  const [toast, setToast] = useState({ show: false, message: '' })
-  const toastTimer = useRef(null)
+  const [toast, setToast] = useState({ show: false, message: '' });
+  const toastTimer = useRef(null);
 
-  useEffect(() => () => clearTimeout(toastTimer.current), [])
+  useEffect(() => () => clearTimeout(toastTimer.current), []);
 
   const showToast = useCallback((message) => {
-    setToast({ show: true, message })
-    clearTimeout(toastTimer.current)
-    toastTimer.current = setTimeout(() => setToast({ show: false, message: '' }), 3000)
-  }, [])
+    setToast({ show: true, message });
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast({ show: false, message: '' }), 3000);
+  }, []);
 
   // Students see the courses they enrolled in; instructors see their own.
   const displayedCourses = isInstructor
     ? courses.filter((c) => c.instructorId === currentUser?.uid)
-    : courses.filter((c) => currentUser?.joinedCourses?.includes(c.id))
+    : courses.filter((c) => currentUser?.joinedCourses?.includes(c.id));
 
-  const generateCode = () =>
-    Math.random()
-      .toString(36)
-      .substring(2, 8)
-      .toUpperCase()
+  const generateCode = () => Math.random().toString(36).substring(2, 8).toUpperCase();
 
   const handleCreateCourse = async (e) => {
-    e.preventDefault()
-    if (!courseTitle.trim()) return
-    setIsSubmitting(true)
-    setLocalError('')
+    e.preventDefault();
+    if (!courseTitle.trim()) return;
+    setIsSubmitting(true);
+    setLocalError('');
 
     try {
-      let newCourseCode = generateCode()
+      let newCourseCode = generateCode();
       // Extremely unlikely, but a duplicate code makes"join by code" ambiguous.
-      const taken = new Set(courses.map((c) => (c.courseCode ?? '').toUpperCase()))
-      let guard = 0
+      const taken = new Set(courses.map((c) => (c.courseCode ?? '').toUpperCase()));
+      let guard = 0;
       while (taken.has(newCourseCode) && guard < 10) {
-        newCourseCode = generateCode()
-        guard += 1
+        newCourseCode = generateCode();
+        guard += 1;
       }
 
       await store.addDoc(store.collection(store.db, 'courses'), {
@@ -66,64 +62,62 @@ const Dashboard = () => {
         instructorName: currentUser.fullName,
         courseCode: newCourseCode,
         createdAt: store.serverTimestamp(),
-      })
+      });
 
-      setShowCreateModal(false)
-      setCourseTitle('')
-      setCourseDesc('')
-      showToast('Course created successfully!')
+      setShowCreateModal(false);
+      setCourseTitle('');
+      setCourseDesc('');
+      showToast('Course created successfully!');
     } catch (err) {
-      console.error(err)
-      setLocalError('Failed to create course: ' + err.message)
+      console.error(err);
+      setLocalError('Failed to create course: ' + err.message);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleJoinCourse = async (e) => {
-    e.preventDefault()
-    if (!joinCode.trim()) return
-    setIsJoining(true)
-    setJoinError('')
+    e.preventDefault();
+    if (!joinCode.trim()) return;
+    setIsJoining(true);
+    setJoinError('');
 
     try {
-      const targetCourse = courses.find(
-        (c) => (c.courseCode ?? '').toUpperCase() === joinCode.trim().toUpperCase(),
-      )
+      const targetCourse = courses.find((c) => (c.courseCode ?? '').toUpperCase() === joinCode.trim().toUpperCase());
 
-      if (!targetCourse) throw new Error('Invalid course code. Please check and try again.')
+      if (!targetCourse) throw new Error('Invalid course code. Please check and try again.');
 
-      const alreadyJoined = (currentUser.joinedCourses ?? []).includes(targetCourse.id)
-      if (alreadyJoined) throw new Error('You are already enrolled in this course.')
+      const alreadyJoined = (currentUser.joinedCourses ?? []).includes(targetCourse.id);
+      if (alreadyJoined) throw new Error('You are already enrolled in this course.');
 
-      const nextCourses = [...(currentUser.joinedCourses ?? []), targetCourse.id]
+      const nextCourses = [...(currentUser.joinedCourses ?? []), targetCourse.id];
 
       await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), {
         joinedCourses: nextCourses,
-      })
+      });
 
       // Keep the dashboard in sync immediately instead of waiting for a reload.
-      patchUser({ joinedCourses: nextCourses })
+      patchUser({ joinedCourses: nextCourses });
 
-      setShowJoinModal(false)
-      setJoinCode('')
-      showToast('Successfully joined course!')
+      setShowJoinModal(false);
+      setJoinCode('');
+      showToast('Successfully joined course!');
     } catch (err) {
-      console.error(err)
-      setJoinError(err.message)
+      console.error(err);
+      setJoinError(err.message);
     } finally {
-      setIsJoining(false)
+      setIsJoining(false);
     }
-  }
+  };
 
   const copyToClipboard = async (code) => {
     try {
-      await navigator.clipboard.writeText(code)
-      showToast(`Code copied: ${code}`)
+      await navigator.clipboard.writeText(code);
+      showToast(`Code copied: ${code}`);
     } catch {
-      showToast(`Invite code: ${code}`)
+      showToast(`Invite code: ${code}`);
     }
-  }
+  };
 
   return (
     <div className="p-6 md:p-10 min-h-screen relative">
@@ -157,8 +151,8 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => {
-                setLocalError('')
-                setShowCreateModal(true)
+                setLocalError('');
+                setShowCreateModal(true);
               }}
               className="py-4 px-8 bg-cyan-500 text-slate-950 font-bold rounded-2xl shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_30px_rgba(0,229,255,0.6)] hover:-translate-y-1 transition-all duration-300flex items-center justify-center"
             >
@@ -168,8 +162,8 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => {
-                setJoinError('')
-                setShowJoinModal(true)
+                setJoinError('');
+                setShowJoinModal(true);
               }}
               className="py-4 px-8 bg-cyan-500/10 border border-cyan-500/50 text-cyan-600 dark:text-cyan-400 font-bold rounded-2xl shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:bg-cyan-500/20 hover:-translate-y-1 transition-all duration-300flex items-center justify-center"
             >
@@ -188,14 +182,14 @@ const Dashboard = () => {
             <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-md mx-auto">
               {isInstructor
                 ? 'Start building your digital classroom. Create a course to generate a unique invite code for your students.'
-                :"You haven't joined any classes yet. Ask your instructor for a Course Code to get started."}
+                : "You haven't joined any classes yet. Ask your instructor for a Course Code to get started."}
             </p>
             {isInstructor ? (
               <button
                 type="button"
                 onClick={() => {
-                  setLocalError('')
-                  setShowCreateModal(true)
+                  setLocalError('');
+                  setShowCreateModal(true);
                 }}
                 className="text-cyan-600 dark:text-cyan-400 font-bold tracking-widest uppercase hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors flex items-center"
               >
@@ -205,8 +199,8 @@ const Dashboard = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setJoinError('')
-                  setShowJoinModal(true)
+                  setJoinError('');
+                  setShowJoinModal(true);
                 }}
                 className="text-cyan-600 dark:text-cyan-400 font-bold tracking-widest uppercase hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors flex items-center"
               >
@@ -226,8 +220,8 @@ const Dashboard = () => {
               onClick={() => navigate(`/course/${course.id}`)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  navigate(`/course/${course.id}`)
+                  e.preventDefault();
+                  navigate(`/course/${course.id}`);
                 }
               }}
               className="bg-white dark:bg-white/5 backdrop-blur-xl border hairline p-6 md:p-8 rounded-[2rem] shadow-lg dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-xl dark:hover:shadow-[0_10px_40px_rgba(0,229,255,0.15)] transition-all duration-300 hover:-translate-y-2 cursor-pointer group flex flex-col h-full relative overflow-hidden"
@@ -262,8 +256,8 @@ const Dashboard = () => {
                     <button
                       type="button"
                       onClick={(e) => {
-                        e.stopPropagation()
-                        copyToClipboard(course.courseCode)
+                        e.stopPropagation();
+                        copyToClipboard(course.courseCode);
                       }}
                       className="flex items-center space-x-2 bg-slate-100 dark:bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors group/btn"
                     >
@@ -440,7 +434,7 @@ const Dashboard = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

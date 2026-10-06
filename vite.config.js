@@ -1,6 +1,6 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ mode }) => {
   // Build-time env, so the service worker can decide what is worth precaching.
@@ -9,10 +9,10 @@ export default defineConfig(({ mode }) => {
   // (local dev), while platforms like Vercel inject variables straight into
   // `process.env` with no file on disk. Checking only one silently misses the
   // other. `globalThis.process` keeps ESLint's browser globals happy.
-  const fileEnv = loadEnv(mode, '.', 'VITE_')
-  const processEnv = globalThis.process?.env ?? {}
-  const read = (key) => fileEnv[key] ?? processEnv[key]
-  const zegoConfigured = Boolean(read('VITE_ZEGO_APP_ID') && read('VITE_ZEGO_SERVER_SECRET'))
+  const fileEnv = loadEnv(mode, '.', 'VITE_');
+  const processEnv = globalThis.process?.env ?? {};
+  const read = (key) => fileEnv[key] ?? processEnv[key];
+  const zegoConfigured = Boolean(read('VITE_ZEGO_APP_ID') && read('VITE_ZEGO_SERVER_SECRET'));
 
   return {
     plugins: [
@@ -25,8 +25,7 @@ export default defineConfig(({ mode }) => {
         manifest: {
           name: 'VoxCampus — Academic Podcasts & Live Audio Rooms',
           short_name: 'VoxCampus',
-          description:
-            'Stream lectures, join live interactive audio rooms, and discover trending academic podcasts.',
+          description: 'Stream lectures, join live interactive audio rooms, and discover trending academic podcasts.',
           theme_color: '#0f172a',
           background_color: '#0f172a',
           start_url: '/',
@@ -76,15 +75,13 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('@zegocloud')) return 'zego'
-            if (id.includes('node_modules/firebase') || id.includes('node_modules/@firebase'))
-              return 'firebase'
-            if (id.includes('node_modules/react') || id.includes('node_modules/scheduler'))
-              return 'react-vendor'
-            return undefined
+            if (id.includes('@zegocloud')) return 'zego';
+            if (id.includes('node_modules/firebase') || id.includes('node_modules/@firebase')) return 'firebase';
+            if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) return 'react-vendor';
+            return undefined;
           },
         },
       },
     },
-  }
-})
+  };
+});

@@ -11,7 +11,7 @@ const ParticleBackground = () => {
     if (!canvas || !ctx) return undefined;
     let animationFrameId;
     let particles = [];
-    
+
     const setCanvasSize = () => {
       if (canvas.parentElement) {
         canvas.width = canvas.parentElement.offsetWidth;
@@ -73,14 +73,24 @@ const ParticleBackground = () => {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            
-            const opacity = 1 - (distance / 100);
-            
+
+            const opacity = 1 - distance / 100;
+
             // Create gradient line between the two particles
             const gradient = ctx.createLinearGradient(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
-            gradient.addColorStop(0, `${particles[i].color}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`);
-            gradient.addColorStop(1, `${particles[j].color}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`);
-            
+            gradient.addColorStop(
+              0,
+              `${particles[i].color}${Math.floor(opacity * 255)
+                .toString(16)
+                .padStart(2, '0')}`,
+            );
+            gradient.addColorStop(
+              1,
+              `${particles[j].color}${Math.floor(opacity * 255)
+                .toString(16)
+                .padStart(2, '0')}`,
+            );
+
             ctx.strokeStyle = gradient;
             ctx.lineWidth = 1;
             ctx.stroke();
@@ -95,12 +105,12 @@ const ParticleBackground = () => {
 
     const handleResize = () => {
       setCanvasSize();
-      particles.forEach(p => {
+      particles.forEach((p) => {
         if (p.x > canvas.width) p.x = canvas.width;
         if (p.y > canvas.height) p.y = canvas.height;
       });
     };
-    
+
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -109,12 +119,7 @@ const ParticleBackground = () => {
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
-    />
-  );
+  return <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full pointer-events-none z-0" />;
 };
 
 export default ParticleBackground;

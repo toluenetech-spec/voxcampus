@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
 
-const TOUR_KEY = 'voxcampus_tour_done'
+const TOUR_KEY = 'voxcampus_tour_done';
 
 const steps = [
   {
@@ -18,39 +18,39 @@ const steps = [
     content:
       'Tap the Live icon to see currently active study groups. If you are an instructor, you can start hosting your own virtual office hours.',
   },
-]
+];
 
 const GuidedTour = () => {
-  const [isVisible, setIsVisible] = useState(false)
-  const [currentStep, setCurrentStep] = useState(0)
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    if (localStorage.getItem(TOUR_KEY)) return undefined
+    if (localStorage.getItem(TOUR_KEY)) return undefined;
     // Small delay so the dashboard paints before the tour covers it.
-    const timer = setTimeout(() => setIsVisible(true), 1200)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setIsVisible(true), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const closeTour = useCallback(() => {
-    localStorage.setItem(TOUR_KEY, 'true')
-    setIsVisible(false)
-  }, [])
+    localStorage.setItem(TOUR_KEY, 'true');
+    setIsVisible(false);
+  }, []);
 
   useEffect(() => {
-    if (!isVisible) return undefined
+    if (!isVisible) return undefined;
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') closeTour()
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [isVisible, closeTour])
+      if (event.key === 'Escape') closeTour();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isVisible, closeTour]);
 
   const handleNext = () => {
-    if (currentStep < steps.length - 1) setCurrentStep((prev) => prev + 1)
-    else closeTour()
-  }
+    if (currentStep < steps.length - 1) setCurrentStep((prev) => prev + 1);
+    else closeTour();
+  };
 
-  if (!isVisible) return null
+  if (!isVisible) return null;
 
   return (
     <div
@@ -88,7 +88,7 @@ const GuidedTour = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default GuidedTour
+export default GuidedTour;

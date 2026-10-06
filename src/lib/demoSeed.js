@@ -5,9 +5,9 @@
  * avatars are inline SVGs, so the demo works with no network at all.
  */
 
-const DAY = 24 * 60 * 60 * 1000
-const now = Date.now()
-const ago = (days) => ({ __localTimestamp: now - days * DAY })
+const DAY = 24 * 60 * 60 * 1000;
+const now = Date.now();
+const ago = (days) => ({ __localTimestamp: now - days * DAY });
 
 const STUDENT_NAMES = [
   'Tunde Bakare',
@@ -24,7 +24,7 @@ const STUDENT_NAMES = [
   'Zainab Aliyu',
   'Damilola Ajayi',
   'Grace Okonjo',
-]
+];
 
 export const DEMO_ACCOUNTS = {
   instructor: {
@@ -49,12 +49,12 @@ export const DEMO_ACCOUNTS = {
     avatarUrl: '',
     joinedCourses: ['demo-course-signals', 'demo-course-ml'],
   },
-}
+};
 
 export function buildDemoSeed() {
-  const users = {}
+  const users = {};
   STUDENT_NAMES.forEach((name, index) => {
-    const id = `demo-stu-${index + 1}`
+    const id = `demo-stu-${index + 1}`;
     users[id] = {
       uid: id,
       email: `${name.toLowerCase().replace(/[^a-z]+/g, '.')}@voxcampus.edu`,
@@ -70,11 +70,11 @@ export function buildDemoSeed() {
           : index % 3 === 1
             ? ['demo-course-signals', 'demo-course-ml']
             : ['demo-course-thermo', 'demo-course-ml'],
-    }
-  })
+    };
+  });
 
-  users['demo-instructor'] = { ...DEMO_ACCOUNTS.instructor }
-  users['demo-student'] = { ...DEMO_ACCOUNTS.student }
+  users['demo-instructor'] = { ...DEMO_ACCOUNTS.instructor };
+  users['demo-student'] = { ...DEMO_ACCOUNTS.student };
 
   const courses = {
     'demo-course-signals': {
@@ -104,7 +104,7 @@ export function buildDemoSeed() {
       courseCode: 'THM9DP',
       createdAt: ago(14),
     },
-  }
+  };
 
   const podcasts = {
     'demo-pod-1': {
@@ -205,7 +205,7 @@ export function buildDemoSeed() {
       playCount: 322,
       createdAt: ago(4),
     },
-  }
+  };
 
   const materials = {
     'demo-mat-1': {
@@ -248,7 +248,7 @@ export function buildDemoSeed() {
       instructorName: 'Dr. Amara Okafor',
       createdAt: ago(9),
     },
-  }
+  };
 
   const assignments = {
     'demo-asg-1': {
@@ -278,7 +278,7 @@ export function buildDemoSeed() {
       instructorId: 'demo-instructor',
       createdAt: ago(3),
     },
-  }
+  };
 
   const submissions = {
     'demo-sub-1': {
@@ -342,7 +342,7 @@ export function buildDemoSeed() {
       submittedAt: ago(1),
       createdAt: ago(1),
     },
-  }
+  };
 
   const live_rooms = {
     'demo-room-1': {
@@ -354,7 +354,7 @@ export function buildDemoSeed() {
       status: 'active',
       createdAt: ago(0),
     },
-  }
+  };
 
-  return { users, courses, podcasts, materials, assignments, submissions, live_rooms }
+  return { users, courses, podcasts, materials, assignments, submissions, live_rooms };
 }

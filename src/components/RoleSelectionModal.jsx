@@ -1,32 +1,32 @@
-import { useState } from 'react'
-import { Loader2, GraduationCap, Presentation, AlertCircle } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import * as store from '../services/store'
+import { useState } from 'react';
+import { Loader2, GraduationCap, Presentation, AlertCircle } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import * as store from '../services/store';
 
 const RoleSelectionModal = () => {
-  const { currentUser, patchUser } = useAppContext()
-  const [loadingRole, setLoadingRole] = useState(null)
-  const [error, setError] = useState('')
+  const { currentUser, patchUser } = useAppContext();
+  const [loadingRole, setLoadingRole] = useState(null);
+  const [error, setError] = useState('');
 
   const handleSelectRole = async (role) => {
-    if (!currentUser?.uid || loadingRole) return
-    setLoadingRole(role)
-    setError('')
+    if (!currentUser?.uid || loadingRole) return;
+    setLoadingRole(role);
+    setError('');
 
     try {
-      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), { role })
+      await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), { role });
       // Update context straight away so the modal unmounts without waiting for
       // the snapshot round-trip (which can be slow or blocked offline).
-      patchUser({ role })
+      patchUser({ role });
     } catch (err) {
-      console.error('Error updating role:', err)
+      console.error('Error updating role:', err);
       setError(
         'We could not save your role. Check your connection and try again — you need a role before you can continue.',
-      )
+      );
     } finally {
-      setLoadingRole(null)
+      setLoadingRole(null);
     }
-  }
+  };
 
   const options = [
     {
@@ -41,7 +41,7 @@ const RoleSelectionModal = () => {
       title: 'Instructor',
       blurb: 'Host live rooms, upload podcasts, and teach.',
     },
-  ]
+  ];
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4">
@@ -79,11 +79,7 @@ const RoleSelectionModal = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <div className="w-20 h-20 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                {loadingRole === role ? (
-                  <Loader2 className="w-10 h-10 animate-spin" />
-                ) : (
-                  <Icon className="w-10 h-10" />
-                )}
+                {loadingRole === role ? <Loader2 className="w-10 h-10 animate-spin" /> : <Icon className="w-10 h-10" />}
               </div>
 
               <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
@@ -93,7 +89,7 @@ const RoleSelectionModal = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RoleSelectionModal
+export default RoleSelectionModal;

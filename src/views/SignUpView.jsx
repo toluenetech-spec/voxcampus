@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { createUserWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth'
-import { Loader2 } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import { auth, googleProvider, isFirebaseConfigured } from '../firebase/config'
-import * as store from '../services/store'
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { createUserWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth';
+import { Loader2 } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import { auth, googleProvider, isFirebaseConfigured } from '../firebase/config';
+import * as store from '../services/store';
 
 const SignUpView = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [fullName, setFullName] = useState('')
-  const [role, setRole] = useState('student')
-  const [institution, setInstitution] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [role, setRole] = useState('student');
+  const [institution, setInstitution] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { reportBackendError } = useAppContext()
-  const navigate = useNavigate()
+  const { reportBackendError } = useAppContext();
+  const navigate = useNavigate();
 
   const buildProfile = (userId, fallbackEmail) => ({
     uid: userId,
@@ -30,53 +30,53 @@ const SignUpView = () => {
     avatarUrl: '',
     joinedCourses: [],
     createdAt: store.serverTimestamp(),
-  })
+  });
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
 
     try {
-      if (!auth) throw new Error('Authentication is not configured. Add your Firebase keys to .env.')
+      if (!auth) throw new Error('Authentication is not configured. Add your Firebase keys to .env.');
 
-      const credential = await createUserWithEmailAndPassword(auth, email, password)
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
 
       if (fullName.trim() && updateProfile) {
-        await updateProfile(credential.user, { displayName: fullName.trim() }).catch(() => {})
+        await updateProfile(credential.user, { displayName: fullName.trim() }).catch(() => {});
       }
 
       // Write the profile before navigating so the dashboard never renders
       // without a role and flashes the role-selection modal.
-      await store.setDoc(store.doc(store.db, 'users', credential.user.uid), buildProfile(credential.user.uid, email))
+      await store.setDoc(store.doc(store.db, 'users', credential.user.uid), buildProfile(credential.user.uid, email));
 
-      navigate('/dashboard', { replace: true })
+      navigate('/dashboard', { replace: true });
     } catch (err) {
-      console.error('Sign up error:', err)
-      setError(reportBackendError(err))
+      console.error('Sign up error:', err);
+      setError(reportBackendError(err));
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleGoogleSignUp = async () => {
-    setError('')
-    setIsLoading(true)
+    setError('');
+    setIsLoading(true);
     try {
-      if (!auth) throw new Error('Authentication is not configured. Add your Firebase keys to .env.')
-      const credential = await signInWithPopup(auth, googleProvider)
-      const profile = buildProfile(credential.user.uid, credential.user.email)
-      profile.fullName = credential.user.displayName || profile.fullName
-      profile.avatarUrl = credential.user.photoURL || ''
-      await store.setDoc(store.doc(store.db, 'users', credential.user.uid), profile, { merge: true })
-      navigate('/dashboard', { replace: true })
+      if (!auth) throw new Error('Authentication is not configured. Add your Firebase keys to .env.');
+      const credential = await signInWithPopup(auth, googleProvider);
+      const profile = buildProfile(credential.user.uid, credential.user.email);
+      profile.fullName = credential.user.displayName || profile.fullName;
+      profile.avatarUrl = credential.user.photoURL || '';
+      await store.setDoc(store.doc(store.db, 'users', credential.user.uid), profile, { merge: true });
+      navigate('/dashboard', { replace: true });
     } catch (err) {
-      console.error(err)
-      setError(reportBackendError(err))
+      console.error(err);
+      setError(reportBackendError(err));
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-6 pb-16">
@@ -183,9 +183,7 @@ const SignUpView = () => {
           </div>
 
           <div>
-            <span className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
-              I am a…
-            </span>
+            <span className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">I am a…</span>
             <div className="grid grid-cols-2 gap-3">
               {[
                 { value: 'student', label: 'Student', hint: 'Listen & submit work' },
@@ -226,9 +224,7 @@ const SignUpView = () => {
 
         <div className="relative flex items-center py-5">
           <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
-          <span className="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-xs font-semibold">
-            Or
-          </span>
+          <span className="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-xs font-semibold">Or</span>
           <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
         </div>
 
@@ -270,7 +266,7 @@ const SignUpView = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignUpView
+export default SignUpView;

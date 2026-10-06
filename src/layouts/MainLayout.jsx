@@ -1,25 +1,25 @@
-import { useEffect, useMemo } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { Home, Headphones, Radio, User, LogOut, Sun, Moon, Sparkles } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import { avatarDataUri } from '../lib/avatars'
-import Logo from '../components/Logo'
-import GuidedTour from '../components/GuidedTour'
-import RoleSelectionModal from '../components/RoleSelectionModal'
-import SessionTimeout from '../components/SessionTimeout'
+import { useEffect, useMemo } from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Home, Headphones, Radio, User, LogOut, Sun, Moon, Sparkles } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import { avatarDataUri } from '../lib/avatars';
+import Logo from '../components/Logo';
+import GuidedTour from '../components/GuidedTour';
+import RoleSelectionModal from '../components/RoleSelectionModal';
+import SessionTimeout from '../components/SessionTimeout';
 
 const MainLayout = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { currentUser, logout, theme, toggleTheme, isDemo, startDemo, exitDemo } = useAppContext()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { currentUser, logout, theme, toggleTheme, isDemo, startDemo, exitDemo } = useAppContext();
 
   // The live room is meant to be immersive: no sidebar, no bottom nav, and no
   // inactivity timer yanking the mic out from under someone mid-sentence.
-  const isImmersive = location.pathname.startsWith('/room/')
+  const isImmersive = location.pathname.startsWith('/room/');
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' })
-  }, [location.pathname])
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [location.pathname]);
 
   const navItems = useMemo(
     () => [
@@ -30,26 +30,26 @@ const MainLayout = () => {
       { icon: Sparkles, label: 'AI Assistant', path: '/ai' },
     ],
     [],
-  )
+  );
 
   const isActive = (path) =>
     path === '/dashboard'
       ? location.pathname === '/dashboard' || location.pathname.startsWith('/course/')
-      : location.pathname.startsWith(path)
+      : location.pathname.startsWith(path);
 
   const handleLogout = async () => {
-    await logout()
-    navigate('/', { replace: true })
-  }
+    await logout();
+    navigate('/', { replace: true });
+  };
 
-  const needsRole = Boolean(currentUser) && !currentUser.role
+  const needsRole = Boolean(currentUser) && !currentUser.role;
 
   if (isImmersive) {
     return (
       <div className="min-h-screen bg-slate-950 text-white">
         <Outlet />
       </div>
-    )
+    );
   }
 
   return (
@@ -97,7 +97,7 @@ const MainLayout = () => {
             {/* Navigation Links */}
             <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto custom-scrollbar">
               {navItems.map(({ icon: Icon, label, path }) => {
-                const active = isActive(path)
+                const active = isActive(path);
                 return (
                   <button
                     key={label}
@@ -112,7 +112,7 @@ const MainLayout = () => {
                     <Icon size={20} strokeWidth={active ? 2.25 : 2} />
                     <span>{label}</span>
                   </button>
-                )
+                );
               })}
             </nav>
 
@@ -164,22 +164,20 @@ const MainLayout = () => {
           {/* MOBILE BOTTOM NAVIGATION (Hidden on desktop) */}
           <nav className="md:hidden fixed bottom-0 left-0 w-full material-chrome border-t hairline px-2 py-2 flex justify-between items-center z-50 pb-safe transition-colors duration-300">
             {navItems.map(({ icon: Icon, label, path }) => {
-              const active = isActive(path)
+              const active = isActive(path);
               return (
                 <button
                   key={label}
                   onClick={() => navigate(path)}
                   aria-current={active ? 'page' : undefined}
                   className={`flex flex-1 flex-col items-center gap-1 py-1.5 rounded-card transition-colors duration-200 ${
-                    active
-                      ? 'text-aqua-600 dark:text-aqua-300'
-                      : 'text-slate-500 dark:text-slate-400'
+                    active ? 'text-aqua-600 dark:text-aqua-300' : 'text-slate-500 dark:text-slate-400'
                   }`}
                 >
                   <Icon size={22} strokeWidth={active ? 2.25 : 2} />
                   <span className="text-[11px] font-medium">{label}</span>
                 </button>
-              )
+              );
             })}
             {/* Mobile Theme Toggle */}
             <button
@@ -195,7 +193,7 @@ const MainLayout = () => {
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default MainLayout
+export default MainLayout;

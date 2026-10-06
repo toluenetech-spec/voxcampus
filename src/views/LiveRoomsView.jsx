@@ -1,80 +1,76 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Radio, Users, Loader2, X, Plus, PlayCircle, PhoneOff } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import * as store from '../services/store'
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Radio, Users, Loader2, X, Plus, PlayCircle, PhoneOff } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import * as store from '../services/store';
 
 const LiveRoomsView = () => {
-  const navigate = useNavigate()
-  const { currentUser, courses } = useAppContext()
-  const isInstructor = currentUser?.role === 'instructor'
+  const navigate = useNavigate();
+  const { currentUser, courses } = useAppContext();
+  const isInstructor = currentUser?.role === 'instructor';
 
-  const [liveRooms, setLiveRooms] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [liveRooms, setLiveRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Instructor Create Room Modal States
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedCourseId, setSelectedCourseId] = useState('')
-  const [roomTopic, setRoomTopic] = useState('')
-  const [isCreating, setIsCreating] = useState(false)
-  const [localError, setLocalError] = useState('')
-  const [endingId, setEndingId] = useState(null)
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState('');
+  const [roomTopic, setRoomTopic] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const [localError, setLocalError] = useState('');
+  const [endingId, setEndingId] = useState(null);
 
   // Instructor's active courses for the dropdown
-  const myCourses = courses.filter((c) => c.instructorId === currentUser?.uid)
+  const myCourses = courses.filter((c) => c.instructorId === currentUser?.uid);
 
   useEffect(() => {
-    if (!currentUser) return undefined
+    if (!currentUser) return undefined;
 
     const unsubscribe = store.onSnapshot(
       store.collection(store.db, 'live_rooms'),
       (snapshot) => {
-        const allRooms = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+        const allRooms = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 
         const filtered = allRooms.filter((room) => {
-          if (room.status === 'ended') return false
-          if (isInstructor) return room.hostId === currentUser.uid
-          return currentUser.joinedCourses?.includes(room.courseId)
-        })
+          if (room.status === 'ended') return false;
+          if (isInstructor) return room.hostId === currentUser.uid;
+          return currentUser.joinedCourses?.includes(room.courseId);
+        });
 
-        setLiveRooms(filtered)
-        setLoading(false)
+        setLiveRooms(filtered);
+        setLoading(false);
       },
       (error) => {
-        console.error('Live rooms snapshot error:', error)
-        setLoading(false)
+        console.error('Live rooms snapshot error:', error);
+        setLoading(false);
       },
-    )
+    );
 
-    return unsubscribe
-  }, [currentUser, isInstructor])
+    return unsubscribe;
+  }, [currentUser, isInstructor]);
 
   // A course can disappear from under an open dialog; treat that as"nothing selected".
-  const validCourseId = myCourses.some((c) => c.id === selectedCourseId) ? selectedCourseId : ''
+  const validCourseId = myCourses.some((c) => c.id === selectedCourseId) ? selectedCourseId : '';
 
-  const generateRoomId = () =>
-    Math.random()
-      .toString(36)
-      .substring(2, 8)
-      .toUpperCase()
+  const generateRoomId = () => Math.random().toString(36).substring(2, 8).toUpperCase();
 
   const handleCreateRoom = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!validCourseId || !roomTopic.trim()) {
-      setLocalError('Please select a course and enter a topic.')
-      return
+      setLocalError('Please select a course and enter a topic.');
+      return;
     }
 
-    setIsCreating(true)
-    setLocalError('')
+    setIsCreating(true);
+    setLocalError('');
 
     try {
-      const taken = new Set(liveRooms.map((r) => r.roomId))
-      let newRoomId = generateRoomId()
-      let guard = 0
+      const taken = new Set(liveRooms.map((r) => r.roomId));
+      let newRoomId = generateRoomId();
+      let guard = 0;
       while (taken.has(newRoomId) && guard < 10) {
-        newRoomId = generateRoomId()
-        guard += 1
+        newRoomId = generateRoomId();
+        guard += 1;
       }
 
       await store.addDoc(store.collection(store.db, 'live_rooms'), {
@@ -85,31 +81,31 @@ const LiveRoomsView = () => {
         hostName: currentUser.fullName,
         status: 'active',
         createdAt: store.serverTimestamp(),
-      })
+      });
 
-      setShowCreateModal(false)
-      setRoomTopic('')
-      setSelectedCourseId('')
+      setShowCreateModal(false);
+      setRoomTopic('');
+      setSelectedCourseId('');
       // Drop the host straight into the room they just opened.
-      navigate(`/room/${newRoomId}`)
+      navigate(`/room/${newRoomId}`);
     } catch (err) {
-      console.error(err)
-      setLocalError(err.message)
+      console.error(err);
+      setLocalError(err.message);
     } finally {
-      setIsCreating(false)
+      setIsCreating(false);
     }
-  }
+  };
 
   const handleEndRoom = async (room) => {
-    setEndingId(room.id)
+    setEndingId(room.id);
     try {
-      await store.updateDoc(store.doc(store.db, 'live_rooms', room.id), { status: 'ended' })
+      await store.updateDoc(store.doc(store.db, 'live_rooms', room.id), { status: 'ended' });
     } catch (err) {
-      console.error('Failed to end room:', err)
+      console.error('Failed to end room:', err);
     } finally {
-      setEndingId(null)
+      setEndingId(null);
     }
-  }
+  };
 
   return (
     <div className="p-6 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors pb-32 max-w-5xl mx-auto w-full relative">
@@ -132,8 +128,8 @@ const LiveRoomsView = () => {
           <button
             type="button"
             onClick={() => {
-              setLocalError('')
-              setShowCreateModal(true)
+              setLocalError('');
+              setShowCreateModal(true);
             }}
             className="py-3 px-6 bg-cyan-500 text-slate-950 font-bold rounded-xl shadow-contact hover:bg-cyan-400 transition-allflex items-center justify-center shrink-0"
           >
@@ -153,14 +149,14 @@ const LiveRoomsView = () => {
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 transition-colors">No Active Rooms</h3>
           <p className="text-slate-600 dark:text-slate-500 transition-colors">
             {isInstructor
-              ?"You aren't hosting any live rooms right now."
+              ? "You aren't hosting any live rooms right now."
               : 'None of your instructors are currently live.'}
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {liveRooms.map((room) => {
-            const relatedCourse = courses.find((c) => c.id === room.courseId)
+            const relatedCourse = courses.find((c) => c.id === room.courseId);
 
             return (
               <div
@@ -175,9 +171,7 @@ const LiveRoomsView = () => {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
                     </span>
-                    <span className="text-green-600 dark:text-green-400 text-sm font-semibold">
-                      Live Now
-                    </span>
+                    <span className="text-green-600 dark:text-green-400 text-sm font-semibold">Live Now</span>
                   </div>
                   <span className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-lg text-xs font-mono text-slate-600 dark:text-slate-300 transition-colors">
                     ID: {room.roomId}
@@ -191,8 +185,7 @@ const LiveRoomsView = () => {
                 <div className="flex items-center text-slate-600 dark:text-slate-400 text-sm mb-6 space-x-2 transition-colors">
                   <Users className="w-4 h-4" />
                   <span>
-                    Host:{' '}
-                    <span className="text-cyan-600 dark:text-cyan-400 font-medium">{room.hostName}</span>
+                    Host: <span className="text-cyan-600 dark:text-cyan-400 font-medium">{room.hostName}</span>
                   </span>
                 </div>
 
@@ -234,7 +227,7 @@ const LiveRoomsView = () => {
                   )}
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       )}
@@ -271,8 +264,7 @@ const LiveRoomsView = () => {
 
             {myCourses.length === 0 ? (
               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                You need at least one course before you can host a live room. Create a course from your dashboard
-                first.
+                You need at least one course before you can host a live room. Create a course from your dashboard first.
               </p>
             ) : (
               <form onSubmit={handleCreateRoom} className="space-y-5">
@@ -332,7 +324,7 @@ const LiveRoomsView = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default LiveRoomsView
+export default LiveRoomsView;

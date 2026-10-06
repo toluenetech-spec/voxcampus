@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
-import { Loader2, Sparkles } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import { auth, googleProvider, isFirebaseConfigured } from '../firebase/config'
+import { useState } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { Loader2, Sparkles } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import { auth, googleProvider, isFirebaseConfigured } from '../firebase/config';
 
 const GoogleMark = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
@@ -24,64 +24,64 @@ const GoogleMark = () => (
       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
     />
   </svg>
-)
+);
 
 const SignInView = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { reportBackendError, startDemo, isDemo } = useAppContext()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const redirectTo = location.state?.from ?? '/dashboard'
+  const { reportBackendError, startDemo, isDemo } = useAppContext();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.from ?? '/dashboard';
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
 
     try {
-      if (!auth) throw new Error('Authentication is not configured. Add your Firebase keys to .env.')
-      await signInWithEmailAndPassword(auth, email, password)
-      navigate(redirectTo, { replace: true })
+      if (!auth) throw new Error('Authentication is not configured. Add your Firebase keys to .env.');
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate(redirectTo, { replace: true });
     } catch (err) {
-      console.error(err)
-      setError(reportBackendError(err))
+      console.error(err);
+      setError(reportBackendError(err));
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleGoogleSignIn = async () => {
-    setError('')
-    setIsLoading(true)
+    setError('');
+    setIsLoading(true);
     try {
-      if (!auth) throw new Error('Authentication is not configured. Add your Firebase keys to .env.')
-      await signInWithPopup(auth, googleProvider)
-      navigate(redirectTo, { replace: true })
+      if (!auth) throw new Error('Authentication is not configured. Add your Firebase keys to .env.');
+      await signInWithPopup(auth, googleProvider);
+      navigate(redirectTo, { replace: true });
     } catch (err) {
-      console.error(err)
-      setError(reportBackendError(err))
+      console.error(err);
+      setError(reportBackendError(err));
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleDemo = async (role) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await startDemo(role)
-      navigate('/dashboard', { replace: true })
+      await startDemo(role);
+      navigate('/dashboard', { replace: true });
     } catch (err) {
-      console.error(err)
-      setError(err.message ?? 'Could not start the demo.')
+      console.error(err);
+      setError(err.message ?? 'Could not start the demo.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-6 pb-16">
@@ -89,9 +89,7 @@ const SignInView = () => {
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50" />
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 text-center">Sign in to VoxCampus</h2>
-        <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-6">
-          Pick up where you left off.
-        </p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-6">Pick up where you left off.</p>
 
         {error && (
           <div
@@ -161,9 +159,7 @@ const SignInView = () => {
 
         <div className="relative flex items-center py-5">
           <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
-          <span className="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-xs font-semibold">
-            Or
-          </span>
+          <span className="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-xs font-semibold">Or</span>
           <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
         </div>
 
@@ -212,7 +208,7 @@ const SignInView = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignInView
+export default SignInView;

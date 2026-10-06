@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { Loader2, AlertCircle, PhoneOff, ArrowLeft, Radio } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import * as store from '../services/store'
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Loader2, AlertCircle, PhoneOff, ArrowLeft, Radio } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import * as store from '../services/store';
 
 // The ZegoCloud app id / server secret identify the live-audio project. Move
 // them to .env for anything beyond local testing — the server secret can mint
@@ -10,22 +10,22 @@ import * as store from '../services/store'
 // No credentials are bundled: the server secret can mint tokens for any room on
 // the account, so it has to come from the environment. Without it the room page
 // still renders everything except the live audio bridge.
-const ZEGO_APP_ID = Number(import.meta.env.VITE_ZEGO_APP_ID)
-const ZEGO_SERVER_SECRET = import.meta.env.VITE_ZEGO_SERVER_SECRET
-const ZEGO_CONFIGURED = Number.isFinite(ZEGO_APP_ID) && ZEGO_APP_ID > 0 && Boolean(ZEGO_SERVER_SECRET)
+const ZEGO_APP_ID = Number(import.meta.env.VITE_ZEGO_APP_ID);
+const ZEGO_SERVER_SECRET = import.meta.env.VITE_ZEGO_SERVER_SECRET;
+const ZEGO_CONFIGURED = Number.isFinite(ZEGO_APP_ID) && ZEGO_APP_ID > 0 && Boolean(ZEGO_SERVER_SECRET);
 
 const InviteBox = ({ roomId }) => {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(roomId)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      await navigator.clipboard.writeText(roomId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
-      setCopied(false)
+      setCopied(false);
     }
-  }
+  };
 
   return (
     <button
@@ -35,100 +35,100 @@ const InviteBox = ({ roomId }) => {
     >
       {copied ? 'Copied!' : `Invite ID: ${roomId}`}
     </button>
-  )
-}
+  );
+};
 
 const LiveRoomDetailView = () => {
-  const { roomId } = useParams()
-  const navigate = useNavigate()
-  const { currentUser, courses, isDemo } = useAppContext()
+  const { roomId } = useParams();
+  const navigate = useNavigate();
+  const { currentUser, courses, isDemo } = useAppContext();
 
-  const [room, setRoom] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [accessDenied, setAccessDenied] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isEnding, setIsEnding] = useState(false)
-  const [isExiting, setIsExiting] = useState(false)
-  const [zegoError, setZegoError] = useState('')
+  const [room, setRoom] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [accessDenied, setAccessDenied] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isEnding, setIsEnding] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const [zegoError, setZegoError] = useState('');
 
-  const zpRef = useRef(null)
-  const containerRef = useRef(null)
-  const exitingRef = useRef(false)
+  const zpRef = useRef(null);
+  const containerRef = useRef(null);
+  const exitingRef = useRef(false);
 
   const destroyZego = useCallback(() => {
     if (zpRef.current) {
       try {
-        zpRef.current.destroy()
+        zpRef.current.destroy();
       } catch (error) {
-        console.error('Failed to tear down the live session', error)
+        console.error('Failed to tear down the live session', error);
       }
-      zpRef.current = null
+      zpRef.current = null;
     }
-  }, [])
+  }, []);
 
   const handleGracefulExit = useCallback(() => {
-    if (exitingRef.current) return
-    exitingRef.current = true
-    setIsExiting(true)
-    destroyZego()
-    setTimeout(() => navigate('/live', { replace: true }), 120)
-  }, [destroyZego, navigate])
+    if (exitingRef.current) return;
+    exitingRef.current = true;
+    setIsExiting(true);
+    destroyZego();
+    setTimeout(() => navigate('/live', { replace: true }), 120);
+  }, [destroyZego, navigate]);
 
-  useEffect(() => () => destroyZego(), [destroyZego])
+  useEffect(() => () => destroyZego(), [destroyZego]);
 
   useEffect(() => {
-    if (!roomId || !currentUser) return undefined
+    if (!roomId || !currentUser) return undefined;
 
-    const q = store.query(store.collection(store.db, 'live_rooms'), store.where('roomId', '==', roomId))
+    const q = store.query(store.collection(store.db, 'live_rooms'), store.where('roomId', '==', roomId));
 
     const unsubscribe = store.onSnapshot(
       q,
       (snapshot) => {
         if (!snapshot.empty) {
-          const roomData = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() }
+          const roomData = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
 
           // Trapdoor: everyone leaves as soon as the host ends the session.
           if (roomData.status === 'ended') {
-            handleGracefulExit()
-            return
+            handleGracefulExit();
+            return;
           }
 
-          const isHost = currentUser.uid === roomData.hostId
-          const isEnrolled = currentUser.joinedCourses?.includes(roomData.courseId)
+          const isHost = currentUser.uid === roomData.hostId;
+          const isEnrolled = currentUser.joinedCourses?.includes(roomData.courseId);
 
           if (!isHost && !isEnrolled) {
-            setAccessDenied(true)
-            setErrorMessage('Access Denied: You must be enrolled in this course to join the live session.')
+            setAccessDenied(true);
+            setErrorMessage('Access Denied: You must be enrolled in this course to join the live session.');
           } else {
-            setRoom(roomData)
+            setRoom(roomData);
           }
         } else {
-          setRoom(null)
-          setErrorMessage('Room not found or the host has ended the session.')
+          setRoom(null);
+          setErrorMessage('Room not found or the host has ended the session.');
         }
-        setLoading(false)
+        setLoading(false);
       },
       (error) => {
-        console.error('Room snapshot error:', error)
-        setErrorMessage('Failed to connect to the server.')
-        setLoading(false)
+        console.error('Room snapshot error:', error);
+        setErrorMessage('Failed to connect to the server.');
+        setLoading(false);
       },
-    )
+    );
 
-    return unsubscribe
-  }, [roomId, currentUser, handleGracefulExit])
+    return unsubscribe;
+  }, [roomId, currentUser, handleGracefulExit]);
 
   const handleEndClass = async () => {
-    if (!room || currentUser?.uid !== room.hostId) return
-    setIsEnding(true)
+    if (!room || currentUser?.uid !== room.hostId) return;
+    setIsEnding(true);
     try {
-      await store.updateDoc(store.doc(store.db, 'live_rooms', room.id), { status: 'ended' })
+      await store.updateDoc(store.doc(store.db, 'live_rooms', room.id), { status: 'ended' });
       // The snapshot listener catches the change and walks everyone out.
     } catch (error) {
-      console.error('Failed to end class:', error)
-      setIsEnding(false)
+      console.error('Failed to end class:', error);
+      setIsEnding(false);
     }
-  }
+  };
 
   /**
    * Ref callback that joins the ZegoCloud room.
@@ -139,15 +139,15 @@ const LiveRoomDetailView = () => {
    */
   const joinMeeting = useCallback(
     (element) => {
-      containerRef.current = element
+      containerRef.current = element;
 
-      if (!element || !room || accessDenied || isDemo || !ZEGO_CONFIGURED || zpRef.current) return
+      if (!element || !room || accessDenied || isDemo || !ZEGO_CONFIGURED || zpRef.current) return;
 
-      let cancelled = false
+      let cancelled = false;
 
       import('@zegocloud/zego-uikit-prebuilt')
         .then(({ ZegoUIKitPrebuilt }) => {
-          if (cancelled || !containerRef.current) return
+          if (cancelled || !containerRef.current) return;
 
           const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
             ZEGO_APP_ID,
@@ -155,12 +155,12 @@ const LiveRoomDetailView = () => {
             roomId,
             currentUser.uid,
             currentUser?.fullName || 'User',
-          )
+          );
 
-          const zp = ZegoUIKitPrebuilt.create(kitToken)
-          zpRef.current = zp
+          const zp = ZegoUIKitPrebuilt.create(kitToken);
+          zpRef.current = zp;
 
-          const role = currentUser.uid === room.hostId ? ZegoUIKitPrebuilt.Host : ZegoUIKitPrebuilt.Audience
+          const role = currentUser.uid === room.hostId ? ZegoUIKitPrebuilt.Host : ZegoUIKitPrebuilt.Audience;
 
           zp.joinRoom({
             container: containerRef.current,
@@ -173,21 +173,21 @@ const LiveRoomDetailView = () => {
             showScreenSharingButton: false,
             showUserList: true,
             onLeaveRoom: () => handleGracefulExit(),
-          })
+          });
         })
         .catch((error) => {
-          console.error('Could not load the live audio SDK:', error)
-          if (!cancelled) setZegoError('The live audio SDK could not be loaded. Check your connection and retry.')
-        })
+          console.error('Could not load the live audio SDK:', error);
+          if (!cancelled) setZegoError('The live audio SDK could not be loaded. Check your connection and retry.');
+        });
 
       return () => {
-        cancelled = true
-      }
+        cancelled = true;
+      };
     },
     // `room` is intentionally included: the SDK needs the resolved host id, and
     // the guard above prevents a second join once a session exists.
     [room, accessDenied, isDemo, roomId, currentUser, handleGracefulExit],
-  )
+  );
 
   if (loading) {
     return (
@@ -195,7 +195,7 @@ const LiveRoomDetailView = () => {
         <Loader2 className="w-12 h-12 text-cyan-400 animate-spin mb-4" />
         <p className="text-cyan-500/50 text-sm font-semibold">Verifying Access…</p>
       </div>
-    )
+    );
   }
 
   // Error State (Room doesn't exist OR Access Denied)
@@ -218,24 +218,22 @@ const LiveRoomDetailView = () => {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
-  const relatedCourse = courses.find((c) => c.id === room.courseId)
-  const isHost = currentUser?.uid === room.hostId
+  const relatedCourse = courses.find((c) => c.id === room.courseId);
+  const isHost = currentUser?.uid === room.hostId;
 
   if (room.status === 'ended' || isExiting) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-10 text-center text-white">
         <Loader2 className="w-12 h-12 text-cyan-400 animate-spin mb-4" />
-        <p className="text-cyan-500/50 text-sm font-semibold">
-          Closing session and releasing your microphone…
-        </p>
+        <p className="text-cyan-500/50 text-sm font-semibold">Closing session and releasing your microphone…</p>
       </div>
-    )
+    );
   }
 
-  const liveAudioAvailable = ZEGO_CONFIGURED && !isDemo
+  const liveAudioAvailable = ZEGO_CONFIGURED && !isDemo;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 text-white flex flex-col relative overflow-hidden selection:bg-cyan-500/30">
@@ -314,7 +312,7 @@ const LiveRoomDetailView = () => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default LiveRoomDetailView
+export default LiveRoomDetailView;

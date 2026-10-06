@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Headphones,
   Loader2,
@@ -14,27 +14,27 @@ import {
   Filter,
   TrendingUp,
   Square,
-} from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
-import * as store from '../services/store'
-import AudioPlayer from '../components/AudioPlayer'
+} from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import * as store from '../services/store';
+import AudioPlayer from '../components/AudioPlayer';
 
 const timestampOf = (value) => {
-  if (!value) return 0
-  if (typeof value.toMillis === 'function') return value.toMillis()
-  if (typeof value.toDate === 'function') return value.toDate().getTime()
-  if (value instanceof Date) return value.getTime()
-  const parsed = Date.parse(value)
-  return Number.isNaN(parsed) ? 0 : parsed
-}
+  if (!value) return 0;
+  if (typeof value.toMillis === 'function') return value.toMillis();
+  if (typeof value.toDate === 'function') return value.toDate().getTime();
+  if (value instanceof Date) return value.getTime();
+  const parsed = Date.parse(value);
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
 
 const speak = (text) => {
-  if (!text) return false
-  if (!('speechSynthesis' in window)) return false
-  window.speechSynthesis.cancel()
-  window.speechSynthesis.speak(new SpeechSynthesisUtterance(text))
-  return true
-}
+  if (!text) return false;
+  if (!('speechSynthesis' in window)) return false;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+  return true;
+};
 
 const LibraryPodcastCard = ({
   pod,
@@ -50,12 +50,12 @@ const LibraryPodcastCard = ({
   enrollingId,
   isEnrolled,
 }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const isMyPodcast = pod.instructorId === currentUser?.uid
-  const likes = Array.isArray(pod.likes) ? pod.likes : []
-  const hasLiked = currentUser?.uid ? likes.includes(currentUser.uid) : false
-  const playCount = pod.playCount || 0
+  const isMyPodcast = pod.instructorId === currentUser?.uid;
+  const likes = Array.isArray(pod.likes) ? pod.likes : [];
+  const hasLiked = currentUser?.uid ? likes.includes(currentUser.uid) : false;
+  const playCount = pod.playCount || 0;
 
   return (
     <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border hairline transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/50 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.15)] group relative overflow-hidden flex flex-col">
@@ -118,7 +118,12 @@ const LibraryPodcastCard = ({
 
       {/* Playback */}
       <div className="mt-4 mb-6">
-        <AudioPlayer key={pod.fileUrl ?? pod.id} src={pod.fileUrl} title={pod.title} onPlay={() => onAudioPlay(pod.id)} />
+        <AudioPlayer
+          key={pod.fileUrl ?? pod.id}
+          src={pod.fileUrl}
+          title={pod.title}
+          onPlay={() => onAudioPlay(pod.id)}
+        />
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-center border-t hairline pt-6 gap-4 transition-colors">
@@ -169,110 +174,110 @@ const LibraryPodcastCard = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const LibraryView = () => {
-  const { currentUser, patchUser } = useAppContext()
-  const isInstructor = currentUser?.role === 'instructor'
+  const { currentUser, patchUser } = useAppContext();
+  const isInstructor = currentUser?.role === 'instructor';
 
-  const [podcasts, setPodcasts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [enrollingId, setEnrollingId] = useState(null)
-  const [activeTab, setActiveTab] = useState('latest') // 'latest' | 'trending'
-  const [playedPodcasts, setPlayedPodcasts] = useState(() => new Set())
-  const [animatingHeart, setAnimatingHeart] = useState(null)
-  const [speakingId, setSpeakingId] = useState(null)
-  const [speechSupported] = useState(() => typeof window !== 'undefined' && 'speechSynthesis' in window)
+  const [podcasts, setPodcasts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [enrollingId, setEnrollingId] = useState(null);
+  const [activeTab, setActiveTab] = useState('latest'); // 'latest' | 'trending'
+  const [playedPodcasts, setPlayedPodcasts] = useState(() => new Set());
+  const [animatingHeart, setAnimatingHeart] = useState(null);
+  const [speakingId, setSpeakingId] = useState(null);
+  const [speechSupported] = useState(() => typeof window !== 'undefined' && 'speechSynthesis' in window);
 
   useEffect(
     () => () => {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel()
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     },
     [],
-  )
+  );
 
   useEffect(() => {
-    if (!currentUser) return undefined
+    if (!currentUser) return undefined;
 
     const unsubscribe = store.onSnapshot(
       store.collection(store.db, 'podcasts'),
       (snapshot) => {
-        const allDocs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+        const allDocs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
         const filtered = allDocs.filter((pod) => {
-          if (pod.isPublic === true) return true
+          if (pod.isPublic === true) return true;
           // Owners always see their own unpublished drafts.
-          if (isInstructor && pod.instructorId === currentUser.uid) return true
-          return false
-        })
-        setPodcasts(filtered)
-        setLoading(false)
+          if (isInstructor && pod.instructorId === currentUser.uid) return true;
+          return false;
+        });
+        setPodcasts(filtered);
+        setLoading(false);
       },
       (error) => {
-        console.error('Library snapshot error:', error)
-        setLoading(false)
+        console.error('Library snapshot error:', error);
+        setLoading(false);
       },
-    )
+    );
 
-    return unsubscribe
-  }, [currentUser, isInstructor])
+    return unsubscribe;
+  }, [currentUser, isInstructor]);
 
   const handleEnroll = async (courseId) => {
-    if (!courseId) return
-    setEnrollingId(courseId)
+    if (!courseId) return;
+    setEnrollingId(courseId);
     try {
-      const nextCourses = [...(currentUser.joinedCourses ?? []), courseId]
+      const nextCourses = [...(currentUser.joinedCourses ?? []), courseId];
       await store.updateDoc(store.doc(store.db, 'users', currentUser.uid), {
         joinedCourses: nextCourses,
-      })
-      patchUser({ joinedCourses: nextCourses })
+      });
+      patchUser({ joinedCourses: nextCourses });
     } catch (error) {
-      console.error('Failed to enroll:', error)
+      console.error('Failed to enroll:', error);
     } finally {
-      setEnrollingId(null)
+      setEnrollingId(null);
     }
-  }
+  };
 
   const handleToggleLike = async (podcastId, hasLiked) => {
-    if (!currentUser?.uid) return
-    setAnimatingHeart(podcastId)
-    setTimeout(() => setAnimatingHeart(null), 300)
+    if (!currentUser?.uid) return;
+    setAnimatingHeart(podcastId);
+    setTimeout(() => setAnimatingHeart(null), 300);
 
     try {
-      const podRef = store.doc(store.db, 'podcasts', podcastId)
+      const podRef = store.doc(store.db, 'podcasts', podcastId);
       await store.updateDoc(podRef, {
         likes: hasLiked ? store.arrayRemove(currentUser.uid) : store.arrayUnion(currentUser.uid),
-      })
+      });
     } catch (err) {
-      console.error('Failed to toggle like:', err)
+      console.error('Failed to toggle like:', err);
     }
-  }
+  };
 
   const handleAudioPlay = async (podcastId) => {
-    if (playedPodcasts.has(podcastId)) return // Prevent spamming
-    setPlayedPodcasts((prev) => new Set(prev).add(podcastId))
+    if (playedPodcasts.has(podcastId)) return; // Prevent spamming
+    setPlayedPodcasts((prev) => new Set(prev).add(podcastId));
     try {
       await store.updateDoc(store.doc(store.db, 'podcasts', podcastId), {
         playCount: store.increment(1),
-      })
+      });
     } catch (err) {
-      console.error('Failed to increment play count:', err)
+      console.error('Failed to increment play count:', err);
     }
-  }
+  };
 
   const handleToggleSpeech = (podcastId, text) => {
     if (speakingId === podcastId) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel()
-      setSpeakingId(null)
-      return
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      setSpeakingId(null);
+      return;
     }
-    const started = speak(text)
-    if (started) setSpeakingId(podcastId)
-  }
+    const started = speak(text);
+    if (started) setSpeakingId(podcastId);
+  };
 
   const displayedPodcasts = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase()
+    const term = searchTerm.trim().toLowerCase();
     const filtered = term
       ? podcasts.filter((p) =>
           [p.title, p.description, p.instructorName].some((field) =>
@@ -281,18 +286,18 @@ const LibraryView = () => {
               .includes(term),
           ),
         )
-      : podcasts
+      : podcasts;
 
     return [...filtered].sort((a, b) => {
       if (activeTab === 'trending') {
-        const score = (pod) => (Array.isArray(pod.likes) ? pod.likes.length : 0) * 3 + (pod.playCount || 0)
-        return score(b) - score(a)
+        const score = (pod) => (Array.isArray(pod.likes) ? pod.likes.length : 0) * 3 + (pod.playCount || 0);
+        return score(b) - score(a);
       }
-      return timestampOf(b.createdAt) - timestampOf(a.createdAt)
-    })
-  }, [podcasts, searchTerm, activeTab])
+      return timestampOf(b.createdAt) - timestampOf(a.createdAt);
+    });
+  }, [podcasts, searchTerm, activeTab]);
 
-  if (!currentUser) return null
+  if (!currentUser) return null;
 
   return (
     <div className="p-6 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors pb-32 max-w-6xl mx-auto w-full">
@@ -303,16 +308,14 @@ const LibraryView = () => {
           <div className="flex-1">
             <div className="flex items-center space-x-3 mb-4 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-2xl border hairline shadow-inner w-fit transition-colors">
               <Globe2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-              <span className="text-cyan-600 dark:text-cyan-400 text-xs font-semibold">
-                Public Directory
-              </span>
+              <span className="text-cyan-600 dark:text-cyan-400 text-xs font-semibold">Public Directory</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight transition-colors">
               Global Discovery Hub
             </h1>
             <p className="text-slate-600 dark:text-slate-300 text-base md:text-lg max-w-2xl leading-relaxed transition-colors">
-              Explore and listen to public lectures from instructors across the campus. Find your next favorite
-              course and dive straight into the audio!
+              Explore and listen to public lectures from instructors across the campus. Find your next favorite course
+              and dive straight into the audio!
             </p>
           </div>
           <div className="hidden md:flex p-6 bg-cyan-500/10 rounded-[2rem] border border-cyan-500/20 shadow-[0_0_30px_rgba(0,229,255,0.1)]">
@@ -394,7 +397,7 @@ const LibraryView = () => {
             </h2>
             <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto text-lg transition-colors">
               {searchTerm
-                ?"Try adjusting your search terms to find what you're looking for."
+                ? "Try adjusting your search terms to find what you're looking for."
                 : 'No public podcasts have been published by any instructors yet.'}
             </p>
             {searchTerm && (
@@ -436,7 +439,7 @@ const LibraryView = () => {
         </p>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default LibraryView
+export default LibraryView;
