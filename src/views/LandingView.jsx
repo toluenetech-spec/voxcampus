@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { Mic, Globe, BookOpen, Headphones, Sparkles, Database, Terminal, Code } from 'lucide-react';
@@ -61,8 +61,9 @@ const AnimatedCounter = ({ target, duration = 2000, suffix = "+" }) => {
 };
 
 const LandingView = () => {
-  const { currentUser } = useAppContext();
+  const { currentUser, startDemo } = useAppContext();
   const navigate = useNavigate();
+  const [startingDemo, setStartingDemo] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -72,12 +73,6 @@ const LandingView = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white relative flex flex-col font-sans">
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
       
       {/* Navbar (Minimal) */}
       <nav className="relative z-20 w-full p-6 flex justify-between items-center max-w-7xl mx-auto">
@@ -158,6 +153,24 @@ const LandingView = () => {
               Login
             </Link>
           </div>
+
+          <button
+            type="button"
+            onClick={async () => {
+              setStartingDemo(true);
+              try {
+                await startDemo('student');
+                navigate('/dashboard', { replace: true });
+              } catch (error) {
+                console.error(error);
+                setStartingDemo(false);
+              }
+            }}
+            disabled={startingDemo}
+            className="text-sm font-semibold text-slate-400 hover:text-cyan-300 transition-colors underline underline-offset-8 mb-24 disabled:opacity-60"
+          >
+            {startingDemo ? 'Opening the demo…' : 'Or explore the demo workspace — no account needed'}
+          </button>
         </div>
 
         {/* Features Grid */}
@@ -204,7 +217,7 @@ const LandingView = () => {
       <section className="w-full max-w-7xl mx-auto py-20 md:py-32 border-t border-white/10 text-center relative z-10 px-6">
         <p className="text-slate-400 font-semibold tracking-widest uppercase mb-12">Trusted by Top Institutions & Tech Academies</p>
         <div className="overflow-hidden w-full relative flex items-center [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex gap-16 md:gap-24 animate-[marquee_30s_linear_infinite] w-max py-4">
+          <div className="flex gap-16 md:gap-24 animate-marquee w-max py-4">
             
             {/* FIRST SET */}
             <span className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold tracking-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse" style={{ animationDuration: '3s' }}>Google</span>

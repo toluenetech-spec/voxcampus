@@ -1,0 +1,99 @@
+rules_version = '2';
+
+// VoxCampus Firestore security rules.
+//
+// Deploy with:  firebase deploy --only firestore:rules
+// Or paste into: Firebase Console → Firestore Database → Rules.
+//
+// Model: every signed-in user can read course content; instructors own their
+// courses and everything attached to them; students own their own profile and
+// their own submissions.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // The caller's own profile document.
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isInstructor() {
+      return isSignedIn() && userDoc().get('role', '') == 'instructor';
+    }
+
+    function isStudent() {
+      return isSignedIn() && userDoc().get('role', '') == 'student';
+    }
+
+    // Resolve who teaches a course, so writes can be authorised across docs.
+    function teachesCourse(courseId) {
+      return isSignedIn()
+        && get(/databases/$(database)/documents/courses/$(courseId)).data.instructorId == request.auth.uid;
+    }
+
+    function enrolledIn(courseId) {
+      return isSignedIn() && courseId in userDoc().get('joinedCourses', []);
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSelf(userId);
+      allow update, delete: if isSelf(userId);
+    }
+
+    match /courses/{courseId} {
+      allow read: if isSignedIn();
+      allow create: if isInstructor()
+        && request.resource.data.instructorId == request.auth.uid;
+      allow update, delete: if isInstructor()
+        && resource.data.instructorId == request.auth.uid;
+    }
+
+    match /podcasts/{podcastId} {
+      allow read: if isSignedIn();
+      allow create: if teachesCourse(request.resource.data.courseId);
+      allow update, delete: if teachesCourse(resource.data.courseId);
+    }
+
+    match /materials/{materialId} {
+      allow read: if isSignedIn();
+      allow create: if teachesCourse(request.resource.data.courseId);
+      allow update, delete: if teachesCourse(resource.data.courseId);
+    }
+
+    match /assignments/{assignmentId} {
+      allow read: if isSignedIn();
+      allow create: if teachesCourse(request.resource.data.courseId);
+      allow update, delete: if teachesCourse(resource.data.courseId);
+    }
+
+    match /submissions/{submissionId} {
+      // A student sees their own work; the course instructor sees everyone's.
+      allow read: if isSignedIn()
+        && (resource.data.studentId == request.auth.uid
+            || teachesCourse(resource.data.courseId));
+      allow create: if isStudent()
+        && request.resource.data.studentId == request.auth.uid
+        && enrolledIn(request.resource.data.courseId);
+      // Grading is instructor-only.
+      allow update: if teachesCourse(resource.data.courseId);
+      allow delete: if isSignedIn() && resource.data.studentId == request.auth.uid;
+    }
+
+    match /live_rooms/{roomId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.hostId == request.auth.uid;
+      allow update, delete: if isSignedIn()
+        && resource.data.hostId == request.auth.uid;
+    }
+  }
+}

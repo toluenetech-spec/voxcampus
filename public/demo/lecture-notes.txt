@@ -1,0 +1,15 @@
+VoxCampus — Sample Course Material
+==================================
+
+This is a placeholder document used by the built-in demo workspace so the
+"Materials" tab has something real to download.
+
+In a live deployment this file is replaced by whatever the instructor uploads
+(PDF, slides, code, datasets) — the download button streams the real file from
+Cloudinary with the original name and extension preserved.
+
+Topics covered in this sample
+  1. Course overview and expectations
+  2. Weekly reading list
+  3. Assessment breakdown
+  4. Office hours and live room schedule

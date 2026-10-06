@@ -1,0 +1,223 @@
+/**
+ * Headless smoke test.
+ *
+ * Boots the real application in jsdom against the in-memory demo backend and
+ * walks every route, asserting that each screen renders the content it should
+ * and that nothing logs a React error along the way.
+ *
+ *   npm run smoke
+ *
+ * It needs no network and no Firebase credentials, which makes it a quick
+ * regression net while working on the UI.
+ */
+import { JSDOM } from 'jsdom'
+
+const dom = new JSDOM('<!doctype html><html><body><div id="root"></div></body></html>', {
+  url: 'http://localhost:5173/dashboard',
+  pretendToBeVisual: true,
+})
+const { window } = dom
+
+globalThis.window = window
+globalThis.document = window.document
+Object.defineProperty(globalThis, 'navigator', {
+  value: window.navigator,
+  configurable: true,
+  writable: true,
+})
+globalThis.HTMLElement = window.HTMLElement
+globalThis.HTMLCanvasElement = window.HTMLCanvasElement
+globalThis.Element = window.Element
+globalThis.Node = window.Node
+globalThis.Event = window.Event
+globalThis.CustomEvent = window.CustomEvent
+globalThis.getComputedStyle = window.getComputedStyle.bind(window)
+globalThis.requestAnimationFrame = (cb) => setTimeout(() => cb(Date.now()), 16)
+globalThis.cancelAnimationFrame = (id) => clearTimeout(id)
+globalThis.localStorage = window.localStorage
+globalThis.sessionStorage = window.sessionStorage
+Object.defineProperty(globalThis, 'location', { value: window.location, configurable: true, writable: true })
+globalThis.history = window.history
+window.matchMedia =
+  window.matchMedia ||
+  ((q) => ({
+    matches: false,
+    media: q,
+    addEventListener() {},
+    removeEventListener() {},
+    addListener() {},
+    removeListener() {},
+    onchange: null,
+    dispatchEvent: () => false,
+  }))
+class IO {
+  constructor(cb) {
+    this.cb = cb
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return []
+  }
+}
+globalThis.IntersectionObserver = window.IntersectionObserver = IO
+window.ResizeObserver = globalThis.ResizeObserver = IO
+window.speechSynthesis = { speak() {}, cancel() {}, getVoices: () => [] }
+globalThis.SpeechSynthesisUtterance = window.SpeechSynthesisUtterance = class {
+  constructor(t) {
+    this.text = t
+  }
+}
+globalThis.IS_REACT_ACT_ENVIRONMENT = true
+
+// jsdom has no layout/canvas; those "Not implemented" notices are noise here.
+const IGNORED = /Not implemented|not wrapped in act|HTMLCanvasElement's getContext/
+
+let errors = []
+const originalError = console.error
+console.error = (...args) => {
+  const message = args.map(String).join(' ')
+  if (!IGNORED.test(message)) errors.push(message)
+}
+
+const vite = await import('vite')
+const server = await vite.createServer({
+  root: process.cwd(),
+  server: { middlewareMode: true },
+  appType: 'custom',
+  logLevel: 'error',
+})
+
+const React = (await import('react')).default
+const { createRoot } = await import('react-dom/client')
+const { act } = await import('react')
+
+const { default: App } = await server.ssrLoadModule('/src/App.jsx')
+const { localDb } = await server.ssrLoadModule('/src/lib/localDb.js')
+
+let root = null
+let container = null
+
+// Fresh mount per route: BrowserRouter only reads the URL when it mounts.
+const visit = async (path) => {
+  if (root) {
+    await act(async () => {
+      root.unmount()
+    })
+  }
+  window.history.pushState({}, '', path)
+  container = document.createElement('div')
+  container.id = 'root'
+  document.body.appendChild(container)
+  root = createRoot(container)
+  await act(async () => {
+    root.render(React.createElement(App))
+  })
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 350))
+  })
+  return container.textContent || ''
+}
+
+const checks = []
+const expect = (label, ok, detail = '') => checks.push([label, Boolean(ok), detail])
+
+/** Clicks the first button whose text matches, then lets effects settle. */
+const clickText = async (pattern) => {
+  // Badges (e.g. "Tasks+6") are stripped before matching.
+  const normalise = (b) => (b.textContent || '').replace(/[+\d]/g, '').trim()
+  const button = [...document.querySelectorAll('button')].find((b) => pattern.test(normalise(b)))
+  if (!button) return false
+  await act(async () => {
+    button.dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
+  })
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 200))
+  })
+  return true
+}
+
+/* ---------------- student persona ---------------- */
+localStorage.setItem('voxcampus_mode', 'demo')
+localStorage.setItem('voxcampus_demo_user', JSON.stringify({ uid: 'demo-student', role: 'student' }))
+localStorage.setItem('voxcampus_theme', 'dark')
+localStorage.setItem('voxcampus_tour_done', 'true')
+
+const dashboardText = await visit('/dashboard')
+expect('dashboard renders', dashboardText.length > 200)
+expect('dashboard greets the student', /Welcome back, Tunde Bakare/i.test(dashboardText), dashboardText.slice(0, 200))
+expect('enrolled courses listed', /Signals & Systems 301/i.test(dashboardText), dashboardText.slice(0, 400))
+expect('sidebar rendered', /Home/.test(dashboardText) && /Library/.test(dashboardText))
+expect('demo banner visible', /Demo workspace/i.test(dashboardText))
+expect('demo store seeded', localDb.rawDocs('courses').length === 3, `courses=${localDb.rawDocs('courses').length}`)
+expect('no console errors on dashboard', errors.length === 0, errors.join(' | '))
+
+const routeExpectations = [
+  ['/library', /Global Discovery Hub/i, /Entropy explained properly/i],
+  ['/live', /Live Audio Rooms/i, /Exam revision/i],
+  ['/course/demo-course-signals', /Signals & Systems 301/i, /Enrolled Students/i],
+  ['/profile', /Your Profile/i, /Tunde Bakare/i],
+  ['/room/LR7KX9', /Exam revision/i, /Live Room/i],
+  // With no VITE_ZEGO_* credentials (and none in demo mode) the room page must
+  // degrade to the explanatory panel rather than load the 5 MB live-audio SDK.
+  ['/room/LR7KX9', /audio bridge is not/i, /Sign in with an account/i],
+  // Already signed in, so the auth layout bounces you to the dashboard.
+  ['/login', /Dashboard/i, /Welcome back/i],
+  ['/nope', /Page not found/i, /Page not found/i],
+]
+
+for (const [path, ...patterns] of routeExpectations) {
+  errors = []
+  let text
+  try {
+    text = await visit(path)
+  } catch (error) {
+    expect(`${path} renders`, false, error.message)
+    continue
+  }
+  expect(
+    `${path} renders expected content`,
+    patterns.every((pattern) => pattern.test(text)),
+    `pathname=${window.location.pathname} :: ${text.slice(0, 300)}`,
+  )
+  expect(`${path} logs no errors`, errors.length === 0, errors.join(' | '))
+}
+
+/* ---------------- instructor persona ---------------- */
+localStorage.setItem('voxcampus_demo_user', JSON.stringify({ uid: 'demo-instructor', role: 'instructor' }))
+const instructorText = await visit('/dashboard')
+expect('instructor sees Create Course', /Create Course/i.test(instructorText), instructorText.slice(0, 300))
+await visit('/course/demo-course-signals')
+expect('tasks tab is reachable', await clickText(/^Tasks$/), 'no Tasks tab button found')
+const tasksText = container.textContent || ''
+expect(
+  'instructor sees grading controls',
+  /Grade Submissions/i.test(tasksText),
+  tasksText.slice(400, 900),
+)
+expect('assignments listed', /Problem Set 2/i.test(tasksText), tasksText.slice(400, 900))
+
+/* ---------------- signed out ---------------- */
+localStorage.removeItem('voxcampus_demo_user')
+localStorage.removeItem('voxcampus_mode')
+const landingText = await visit('/')
+expect('landing page renders hero', /Audio Learning/i.test(landingText), landingText.slice(0, 300))
+const signInText = await visit('/login')
+expect('sign-in form renders', /Sign in to VoxCampus/i.test(signInText), signInText.slice(0, 300))
+const signUpText = await visit('/signup')
+expect('sign-up form renders', /Create your account/i.test(signUpText), signUpText.slice(0, 300))
+
+/* ---------------- report ---------------- */
+let failed = false
+for (const [label, ok, detail] of checks) {
+  console.log(`${ok ? 'ok   -' : 'FAIL -'} ${label}`)
+  if (!ok) {
+    failed = true
+    if (detail) console.log(`       ${String(detail).slice(0, 500)}`)
+  }
+}
+console.log(`\n${checks.filter(([, ok]) => ok).length}/${checks.length} checks passed`)
+
+await server.close()
+process.exit(failed ? 1 : 0)

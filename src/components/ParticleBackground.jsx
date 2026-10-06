@@ -1,11 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const ParticleBackground = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas?.getContext?.('2d');
+    // Environments without a real 2D context (jsdom, blocked canvas) just skip
+    // the animation rather than crashing the landing page.
+    if (!canvas || !ctx) return undefined;
     let animationFrameId;
     let particles = [];
     
