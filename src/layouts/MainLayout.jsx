@@ -27,6 +27,7 @@ const MainLayout = () => {
       { icon: Headphones, label: 'Library', path: '/library' },
       { icon: Radio, label: 'Live', path: '/live' },
       { icon: User, label: 'Profile', path: '/profile' },
+      { icon: Sparkles, label: 'AI Assistant', path: '/ai' },
     ],
     [],
   )

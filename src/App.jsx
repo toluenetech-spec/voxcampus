@@ -23,6 +23,10 @@ import NotFoundView from './views/NotFoundView'
 // opens a room keeps the initial bundle an order of magnitude smaller.
 const LiveRoomDetailView = lazy(() => import('./views/LiveRoomDetailView'))
 
+// The assistant is its own route so its chat UI and helpers stay out of the
+// initial bundle too.
+const AIAssistantView = lazy(() => import('./views/AIAssistantView'))
+
 const ProtectedRoute = () => {
   const { currentUser } = useAppContext()
   const location = useLocation()
@@ -80,6 +84,7 @@ const AppContent = () => {
               {/* MainLayout intentionally keeps its chrome out of the room view. */}
               <Route path="/room/:roomId" element={<LiveRoomDetailView />} />
               <Route path="/profile" element={<ProfileView />} />
+              <Route path="/ai" element={<AIAssistantView />} />
             </Route>
           </Route>
 

@@ -68,6 +68,35 @@ Views never import `firebase/firestore` directly — they import from
 `src/services/store.js`, which resolves to either the real backend or the demo
 store. That keeps the swap a one-line decision.
 
+## AI assistant
+
+Route `/ai` (lazy-loaded, ~19 KB). The UI lives in `src/views/AIAssistantView.jsx`
+and talks to the serverless function in `api/ai.js` at `POST /api/ai`.
+
+**Tools:** Ask, Outline lecture, Draft feedback, Quiz, Flashcards. Prompts are
+role-aware — instructors see *"Ask anything about teaching your courses"*,
+students *"Ask anything about your studies"*.
+
+**Context sent to the function:** the user's name, role and institution, their
+course titles, and per-course podcasts, materials and assignments. Nothing else
+leaves the browser.
+
+**Chats** persist per user in `localStorage` under `vox_ai_chats_<uid>`, capped
+at 40 conversations.
+
+**Errors** are classified from the server's message into `offline`,
+`unconfigured`, `billing`, `unauthorized` or `error`, each with its own panel.
+The classifier matches on phrases, so keep `not configured`,
+`payment method`/`billing`/`credits` and `authoriz` in the function's messages.
+
+### Enabling it
+
+Without `OPENCODE_API_KEY` the function returns 503 and the UI shows its
+"AI not configured" state — the assistant degrades cleanly rather than
+breaking. Add the key in your host's environment variables to switch it on.
+
+The endpoint is not available in the demo workspace, and the view says so.
+
 ## Data model (Firestore)
 
 | Collection    | Key fields                                                                |

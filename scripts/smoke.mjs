@@ -158,6 +158,7 @@ const routeExpectations = [
   ['/live', /Live Audio Rooms/i, /Exam revision/i],
   ['/course/demo-course-signals', /Signals & Systems 301/i, /Enrolled Students/i],
   ['/profile', /Your Profile/i, /Tunde Bakare/i],
+  ['/ai', /AI Assistant/i, /Ask anything about your studies/i],
   ['/room/LR7KX9', /Exam revision/i, /Live Room/i],
   // With no VITE_ZEGO_* credentials (and none in demo mode) the room page must
   // degrade to the explanatory panel rather than load the 5 MB live-audio SDK.
@@ -183,6 +184,17 @@ for (const [path, ...patterns] of routeExpectations) {
   )
   expect(`${path} logs no errors`, errors.length === 0, errors.join(' | '))
 }
+
+/* ---------------- AI assistant tools ---------------- */
+await visit('/ai')
+const toolChecks = []
+for (const label of ['Outline', 'Quiz', 'Flashcards']) {
+  const switched = await clickText(new RegExp(`^${label}$`))
+  toolChecks.push([`AI tool tab "${label}" switches`, switched, 'tab button not found'])
+}
+const afterTools = container.textContent || ''
+expect('AI assistant keeps its course context line', /course/i.test(afterTools), afterTools.slice(0, 300))
+for (const [label, ok, detail] of toolChecks) expect(label, ok, detail)
 
 /* ---------------- instructor persona ---------------- */
 localStorage.setItem('voxcampus_demo_user', JSON.stringify({ uid: 'demo-instructor', role: 'instructor' }))
