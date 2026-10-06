@@ -49,7 +49,7 @@ const LiveRoomsView = () => {
     return unsubscribe
   }, [currentUser, isInstructor])
 
-  // A course can disappear from under an open dialog; treat that as "nothing selected".
+  // A course can disappear from under an open dialog; treat that as"nothing selected".
   const validCourseId = myCourses.some((c) => c.id === selectedCourseId) ? selectedCourseId : ''
 
   const generateRoomId = () =>
@@ -135,7 +135,7 @@ const LiveRoomsView = () => {
               setLocalError('')
               setShowCreateModal(true)
             }}
-            className="py-3 px-6 bg-cyan-500 text-slate-950 font-bold rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:bg-cyan-400 transition-all uppercase tracking-wider flex items-center justify-center shrink-0"
+            className="py-3 px-6 bg-cyan-500 text-slate-950 font-bold rounded-xl shadow-contact hover:bg-cyan-400 transition-allflex items-center justify-center shrink-0"
           >
             <Plus className="w-5 h-5 mr-2" /> Create Live Room
           </button>
@@ -153,7 +153,7 @@ const LiveRoomsView = () => {
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 transition-colors">No Active Rooms</h3>
           <p className="text-slate-600 dark:text-slate-500 transition-colors">
             {isInstructor
-              ? "You aren't hosting any live rooms right now."
+              ?"You aren't hosting any live rooms right now."
               : 'None of your instructors are currently live.'}
           </p>
         </div>
@@ -175,7 +175,7 @@ const LiveRoomsView = () => {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
                     </span>
-                    <span className="text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-widest">
+                    <span className="text-green-600 dark:text-green-400 text-sm font-semibold">
                       Live Now
                     </span>
                   </div>
@@ -199,7 +199,7 @@ const LiveRoomsView = () => {
                 {relatedCourse && (
                   <div className="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-slate-800 mb-6 flex items-center justify-between transition-colors">
                     <div>
-                      <p className="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1">Course</p>
+                      <p className="text-xs text-slate-500font-bold mb-1">Course</p>
                       <p className="text-sm font-semibold text-slate-900 dark:text-slate-200 truncate pr-4 transition-colors">
                         {relatedCourse.title}
                       </p>
@@ -279,7 +279,7 @@ const LiveRoomsView = () => {
                 <div>
                   <label
                     htmlFor="room-course"
-                    className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest"
+                    className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2"
                   >
                     Course
                   </label>
@@ -304,7 +304,7 @@ const LiveRoomsView = () => {
                 <div>
                   <label
                     htmlFor="room-topic"
-                    className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest"
+                    className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2"
                   >
                     Session Topic
                   </label>
@@ -322,7 +322,7 @@ const LiveRoomsView = () => {
                 <button
                   type="submit"
                   disabled={isCreating}
-                  className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl hover:bg-cyan-400 transition-colors uppercase tracking-widest flex justify-center items-center disabled:opacity-50"
+                  className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl hover:bg-cyan-400 transition-colorsflex justify-center items-center disabled:opacity-50"
                 >
                   {isCreating ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Start Broadcasting'}
                 </button>

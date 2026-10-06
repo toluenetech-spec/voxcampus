@@ -45,7 +45,7 @@ const CourseParticipants = ({ courseId }) => {
   const remaining = totalStudents - displayLimit
 
   return (
-    <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 rounded-2xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-md transition-colors duration-300 w-full">
+    <div className="bg-white dark:bg-white/5 border hairline p-6 rounded-2xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-md transition-colors duration-300 w-full">
       <div>
         <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight transition-colors">
           Enrolled Students
@@ -57,7 +57,7 @@ const CourseParticipants = ({ courseId }) => {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center p-2 text-cyan-600 dark:text-cyan-400 font-bold uppercase tracking-widest text-xs animate-pulse">
+        <div className="flex items-center justify-center p-2 text-cyan-600 dark:text-cyan-400 font-semibold text-sm animate-pulse">
           Loading…
         </div>
       ) : totalStudents > 0 ? (

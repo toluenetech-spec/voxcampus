@@ -421,14 +421,14 @@ export const AppProvider = ({ children }) => {
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="flex-1 py-3.5 rounded-2xl bg-cyan-500 text-slate-950 font-bold uppercase tracking-widest text-xs hover:bg-cyan-400 transition-colors"
+              className="flex-1 py-3 rounded-card bg-aqua-500 text-slate-950 font-semibold text-sm hover:bg-aqua-400 active:scale-[0.98] transition-all"
             >
               Retry
             </button>
             <button
               type="button"
               onClick={() => startDemo('student')}
-              className="flex-1 py-3.5 rounded-2xl border border-cyan-500/40 text-cyan-600 dark:text-cyan-400 font-bold uppercase tracking-widest text-xs hover:bg-cyan-500/10 transition-colors"
+              className="flex-1 py-3 rounded-card border border-aqua-400/40 text-aqua-600 dark:text-aqua-400 font-semibold text-sm hover:bg-aqua-500/10 transition-colors"
             >
               Explore demo
             </button>

@@ -85,7 +85,7 @@ const SignInView = () => {
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-6 pb-16">
-      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.08)] w-full max-w-md p-8 rounded-3xl relative overflow-hidden transition-colors duration-300">
+      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-cyan-500/30 w-full max-w-md p-8 rounded-3xl relative overflow-hidden transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50" />
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 text-center">Sign in to VoxCampus</h2>
@@ -106,7 +106,7 @@ const SignInView = () => {
           <div>
             <label
               htmlFor="signin-email"
-              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide"
+              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1"
             >
               Email
             </label>
@@ -125,7 +125,7 @@ const SignInView = () => {
           <div>
             <label
               htmlFor="signin-password"
-              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide"
+              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1"
             >
               Password
             </label>
@@ -143,7 +143,7 @@ const SignInView = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold uppercase tracking-widest text-slate-500 hover:text-cyan-500 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500 hover:text-cyan-500 transition-colors"
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
@@ -161,7 +161,7 @@ const SignInView = () => {
 
         <div className="relative flex items-center py-5">
           <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
-          <span className="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-widest">
+          <span className="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-xs font-semibold">
             Or
           </span>
           <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
@@ -187,8 +187,8 @@ const SignInView = () => {
           </p>
         </div>
 
-        <div className="mt-6 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-2xl p-4">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 text-center">
+        <div className="mt-6 bg-slate-50 dark:bg-slate-950/50 border hairline rounded-2xl p-4">
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-3 text-center">
             {isDemo ? 'You are in the demo' : 'No account? Try the demo'}
           </p>
           <div className="flex gap-2">
@@ -196,7 +196,7 @@ const SignInView = () => {
               type="button"
               onClick={() => handleDemo('student')}
               disabled={isLoading}
-              className="flex-1 py-2.5 rounded-xl border border-cyan-500/40 text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-widest hover:bg-cyan-500/10 transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
+              className="flex-1 py-2.5 rounded-xl border border-cyan-500/40 text-cyan-600 dark:text-cyan-400 text-sm font-semibold hover:bg-cyan-500/10 transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5" /> Student
             </button>
@@ -204,7 +204,7 @@ const SignInView = () => {
               type="button"
               onClick={() => handleDemo('instructor')}
               disabled={isLoading}
-              className="flex-1 py-2.5 rounded-xl border border-[#E916E6]/40 text-[#E916E6] text-xs font-bold uppercase tracking-widest hover:bg-[#E916E6]/10 transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
+              className="flex-1 py-2.5 rounded-xl border border-[#E916E6]/40 text-[#E916E6] text-sm font-semibold hover:bg-[#E916E6]/10 transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5" /> Instructor
             </button>

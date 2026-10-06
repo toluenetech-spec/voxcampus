@@ -6,7 +6,7 @@ import Logo from '../components/Logo';
 import ParticleBackground from '../components/ParticleBackground';
 import Footer from '../components/Footer';
 
-const AnimatedCounter = ({ target, duration = 2000, suffix = "+" }) => {
+const AnimatedCounter = ({ target, duration = 2000, suffix ="+" }) => {
   const [count, setCount] = useState(0);
   const counterRef = useRef(null);
 
@@ -245,17 +245,17 @@ const LandingView = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-[#1F6AE1]/10 via-transparent to-[#E916E6]/10"></div>
             <div className="text-center relative z-10">
               <div className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-4"><AnimatedCounter target={10000} suffix="+" /></div>
-              <div className="text-xl text-slate-300 font-semibold uppercase tracking-widest">Active Students</div>
+              <div className="text-xl text-slate-300 font-semibold">Active Students</div>
             </div>
             <div className="hidden md:block w-px h-32 bg-white/10 relative z-10"></div>
             <div className="text-center relative z-10">
               <div className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1F6AE1] to-[#E916E6] mb-4"><AnimatedCounter target={500} suffix="+" /></div>
-              <div className="text-xl text-slate-300 font-semibold uppercase tracking-widest">Live Rooms</div>
+              <div className="text-xl text-slate-300 font-semibold">Live Rooms</div>
             </div>
             <div className="hidden md:block w-px h-32 bg-white/10 relative z-10"></div>
             <div className="text-center relative z-10">
               <div className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#E916E6] to-pink-500 mb-4"><AnimatedCounter target={50000} suffix="+" /></div>
-              <div className="text-xl text-slate-300 font-semibold uppercase tracking-widest">Hours Streamed</div>
+              <div className="text-xl text-slate-300 font-semibold">Hours Streamed</div>
             </div>
           </div>
         </div>
@@ -269,7 +269,7 @@ const LandingView = () => {
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 shadow-lg relative hover:-translate-y-2 transition-transform duration-300">
             <div className="text-6xl text-[#1F6AE1]/40 absolute top-6 right-6 font-serif">"</div>
             <p className="text-lg md:text-xl text-slate-300 leading-relaxed mb-8 relative z-10 italic">
-              "VoxCampus completely changed how I consume lectures. The audio clarity in live rooms is unmatched, and I can listen on the go."
+"VoxCampus completely changed how I consume lectures. The audio clarity in live rooms is unmatched, and I can listen on the go."
             </p>
             <div className="relative z-10">
               <div className="font-bold text-white text-xl">Sarah Jenkins</div>
@@ -280,7 +280,7 @@ const LandingView = () => {
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 shadow-lg relative hover:-translate-y-2 transition-transform duration-300">
             <div className="text-6xl text-[#E916E6]/40 absolute top-6 right-6 font-serif">"</div>
             <p className="text-lg md:text-xl text-slate-300 leading-relaxed mb-8 relative z-10 italic">
-              "Hosting virtual office hours has never been easier. My students love the interactive audio, and the setup is completely frictionless."
+"Hosting virtual office hours has never been easier. My students love the interactive audio, and the setup is completely frictionless."
             </p>
             <div className="relative z-10">
               <div className="font-bold text-white text-xl">Dr. Marcus Webb</div>
@@ -291,7 +291,7 @@ const LandingView = () => {
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 shadow-lg relative hover:-translate-y-2 transition-transform duration-300">
             <div className="text-6xl text-cyan-400/40 absolute top-6 right-6 font-serif">"</div>
             <p className="text-lg md:text-xl text-slate-300 leading-relaxed mb-8 relative z-10 italic">
-              "The trending algorithm is phenomenal. Our institution has seen a massive spike in cross-departmental lecture discovery."
+"The trending algorithm is phenomenal. Our institution has seen a massive spike in cross-departmental lecture discovery."
             </p>
             <div className="relative z-10">
               <div className="font-bold text-white text-xl">Elena Rostova</div>

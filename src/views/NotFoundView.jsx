@@ -19,13 +19,13 @@ const NotFoundView = () => (
     <div className="flex flex-col sm:flex-row gap-4">
       <Link
         to="/dashboard"
-        className="px-8 py-4 rounded-full bg-cyan-500 text-slate-950 font-bold uppercase tracking-widest text-xs hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(0,229,255,0.3)]"
+        className="px-8 py-4 rounded-full bg-cyan-500 text-slate-950 font-semibold text-sm hover:bg-cyan-400 transition-colors shadow-contact"
       >
         Go to dashboard
       </Link>
       <Link
         to="/"
-        className="px-8 py-4 rounded-full border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 font-bold uppercase tracking-widest text-xs hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+        className="px-8 py-4 rounded-full border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 font-semibold text-sm hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
       >
         Visit homepage
       </Link>

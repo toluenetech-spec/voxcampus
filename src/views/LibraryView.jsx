@@ -58,7 +58,7 @@ const LibraryPodcastCard = ({
   const playCount = pod.playCount || 0
 
   return (
-    <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-white/10 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/50 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.15)] group relative overflow-hidden flex flex-col">
+    <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border hairline transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/50 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.15)] group relative overflow-hidden flex flex-col">
       {/* Ranking Badge (If Trending) */}
       {activeTab === 'trending' && index < 3 && (
         <div className="absolute top-0 left-0 bg-cyan-500 text-slate-950 px-4 py-1.5 rounded-br-2xl font-black italic tracking-tighter shadow-[2px_2px_10px_rgba(0,229,255,0.3)] z-10">
@@ -81,12 +81,12 @@ const LibraryPodcastCard = ({
 
       {/* Metrics & Instructor Row */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <div className="flex items-center space-x-3 bg-slate-50 dark:bg-slate-950/50 p-2.5 pr-4 rounded-2xl border border-slate-200 dark:border-white/5 w-fit transition-colors">
+        <div className="flex items-center space-x-3 bg-slate-50 dark:bg-slate-950/50 p-2.5 pr-4 rounded-2xl border hairline w-fit transition-colors">
           <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
             <User className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
           </div>
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold mb-0.5 transition-colors">
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 font-bold mb-0.5 transition-colors">
               Instructor
             </p>
             <p className="text-sm font-semibold text-slate-900 dark:text-white transition-colors">
@@ -95,7 +95,7 @@ const LibraryPodcastCard = ({
           </div>
         </div>
 
-        <div className="flex items-center space-x-4 bg-slate-100 dark:bg-slate-950/50 px-4 py-2 rounded-2xl border border-slate-200 dark:border-white/5 transition-colors">
+        <div className="flex items-center space-x-4 bg-slate-100 dark:bg-slate-950/50 px-4 py-2 rounded-2xl border hairline transition-colors">
           <button
             type="button"
             onClick={() => onToggleLike(pod.id, hasLiked)}
@@ -121,11 +121,11 @@ const LibraryPodcastCard = ({
         <AudioPlayer key={pod.fileUrl ?? pod.id} src={pod.fileUrl} title={pod.title} onPlay={() => onAudioPlay(pod.id)} />
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center border-t border-slate-200 dark:border-white/10 pt-6 gap-4 transition-colors">
+      <div className="flex flex-col sm:flex-row justify-between items-center border-t hairline pt-6 gap-4 transition-colors">
         <button
           type="button"
           onClick={() => onToggleSpeech(pod.description)}
-          className="flex items-center justify-center w-full sm:w-auto space-x-2 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors bg-slate-100 dark:bg-white/5 px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 hover:border-cyan-500/30"
+          className="flex items-center justify-center w-full sm:w-auto space-x-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors bg-slate-100 dark:bg-white/5 px-4 py-3 rounded-xl border hairline hover:border-cyan-500/30"
         >
           {isSpeaking ? (
             <>
@@ -140,14 +140,14 @@ const LibraryPodcastCard = ({
 
         <div className="flex items-center space-x-3 w-full sm:w-auto">
           {isMyPodcast ? (
-            <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-600 dark:text-cyan-500 bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-500/20">
+            <span className="text-xs font-semibold text-cyan-600 dark:text-cyan-500 bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-500/20">
               Your Episode
             </span>
           ) : isEnrolled ? (
             <button
               type="button"
               onClick={() => navigate(`/course/${pod.courseId}`)}
-              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-3 bg-slate-800 text-white font-bold rounded-xl border border-slate-700 hover:bg-slate-700 transition-colors uppercase tracking-widest text-xs"
+              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-3 bg-slate-800 text-white font-bold rounded-xl border border-slate-700 hover:bg-slate-700 transition-colorstext-xs"
             >
               <CheckCircle2 className="w-4 h-4 text-green-400" /> <span>View Course</span>
             </button>
@@ -156,7 +156,7 @@ const LibraryPodcastCard = ({
               type="button"
               onClick={() => onEnroll(pod.courseId)}
               disabled={enrollingId === pod.courseId}
-              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-3 bg-cyan-500 text-slate-950 font-bold rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] transition-all uppercase tracking-widest text-xs hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-3 bg-cyan-500 text-slate-950 font-bold rounded-xl shadow-contact hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] transition-alltext-xs hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {enrollingId === pod.courseId ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -297,13 +297,13 @@ const LibraryView = () => {
   return (
     <div className="p-6 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors pb-32 max-w-6xl mx-auto w-full">
       {/* Global Discovery Hero Banner */}
-      <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] border border-slate-200 dark:border-white/10 relative overflow-hidden mb-10 shadow-lg dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] group transition-colors">
+      <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] border hairline relative overflow-hidden mb-10 shadow-lg dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] group transition-colors">
         <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full -translate-y-1/2 translate-x-1/3 -z-10 blur-3xl group-hover:bg-cyan-500/20 transition-colors duration-700" />
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex-1">
-            <div className="flex items-center space-x-3 mb-4 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-white/10 shadow-inner w-fit transition-colors">
+            <div className="flex items-center space-x-3 mb-4 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-2xl border hairline shadow-inner w-fit transition-colors">
               <Globe2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-              <span className="text-cyan-600 dark:text-cyan-400 text-[10px] font-bold uppercase tracking-widest">
+              <span className="text-cyan-600 dark:text-cyan-400 text-xs font-semibold">
                 Public Directory
               </span>
             </div>
@@ -387,21 +387,21 @@ const LibraryView = () => {
         </div>
       ) : displayedPodcasts.length === 0 ? (
         <div className="flex justify-center pt-10">
-          <div className="bg-white dark:bg-slate-900 backdrop-blur-xl border border-slate-200 dark:border-white/10 p-16 rounded-[2.5rem] text-center shadow-lg dark:shadow-2xl flex flex-col items-center justify-center transition-colors max-w-xl">
+          <div className="bg-white dark:bg-slate-900 backdrop-blur-xl border hairline p-16 rounded-[2.5rem] text-center shadow-lg dark:shadow-2xl flex flex-col items-center justify-center transition-colors max-w-xl">
             <Headphones className="w-20 h-20 text-slate-400 dark:text-slate-600 mb-6 opacity-50" />
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight transition-colors">
               No Public Podcasts Found
             </h2>
             <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto text-lg transition-colors">
               {searchTerm
-                ? "Try adjusting your search terms to find what you're looking for."
+                ?"Try adjusting your search terms to find what you're looking for."
                 : 'No public podcasts have been published by any instructors yet.'}
             </p>
             {searchTerm && (
               <button
                 type="button"
                 onClick={() => setSearchTerm('')}
-                className="text-cyan-600 dark:text-cyan-400 font-bold uppercase tracking-widest text-xs hover:underline"
+                className="text-cyan-600 dark:text-cyan-400 font-semibold text-sm hover:underline"
               >
                 Clear search
               </button>

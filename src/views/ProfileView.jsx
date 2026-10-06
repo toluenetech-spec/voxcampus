@@ -135,7 +135,7 @@ const ProfileView = () => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-8 rounded-[2rem] border border-slate-200 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colors duration-300">
+      <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-8 rounded-[2rem] border hairline shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colors duration-300">
         {successMsg && (
           <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 text-green-600 dark:text-green-400 rounded-xl font-semibold text-center text-sm transition-colors duration-300">
             {successMsg}
@@ -175,7 +175,7 @@ const ProfileView = () => {
                 )}
               </div>
             </div>
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-4">Change Photo</p>
+            <p className="text-sm font-semibold text-slate-400 mt-4">Change Photo</p>
             <input
               type="file"
               ref={fileInputRef}
@@ -190,7 +190,7 @@ const ProfileView = () => {
             <div>
               <label
                 htmlFor="profile-name"
-                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest"
+                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2"
               >
                 Full Name
               </label>
@@ -200,16 +200,16 @@ const ProfileView = () => {
                 value={valueOf('fullName')}
                 onChange={(e) => updateDraft('fullName', e.target.value)}
                 required
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium"
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-2xl px-5 py-4 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium"
               />
             </div>
 
             <div>
               <label
                 htmlFor="profile-email"
-                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest"
+                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2"
               >
-                Email <span className="text-[10px] text-slate-400 lowercase normal-case ml-2">(Read Only)</span>
+                Email <span className="text-xs text-slate-400 lowercase normal-case ml-2">(Read Only)</span>
               </label>
               <input
                 id="profile-email"
@@ -223,7 +223,7 @@ const ProfileView = () => {
             <div>
               <label
                 htmlFor="profile-institution"
-                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest"
+                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2"
               >
                 Institution
               </label>
@@ -233,12 +233,12 @@ const ProfileView = () => {
                 value={valueOf('institution')}
                 onChange={(e) => updateDraft('institution', e.target.value)}
                 placeholder="e.g. Bolmor Polytechnic"
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium"
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium"
               />
             </div>
 
             <div>
-              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest">
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">
                 Account Type
               </span>
               <div className="grid grid-cols-2 gap-3">
@@ -254,7 +254,7 @@ const ProfileView = () => {
                     className={`flex items-center justify-center gap-2 py-3.5 rounded-2xl border text-sm font-bold transition-all ${
                       currentUser.role === value
                         ? 'border-cyan-500 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400'
-                        : 'border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-cyan-500/50'
+                        : 'hairline text-slate-600 dark:text-slate-400 hover:border-cyan-500/50'
                     }`}
                   >
                     <Icon className="w-4 h-4" /> {label}
@@ -266,7 +266,7 @@ const ProfileView = () => {
             <div>
               <label
                 htmlFor="profile-bio"
-                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest"
+                className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2"
               >
                 Bio
               </label>
@@ -276,16 +276,16 @@ const ProfileView = () => {
                 value={valueOf('bio')}
                 onChange={(e) => updateDraft('bio', e.target.value)}
                 placeholder="Tell us a bit about yourself..."
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium resize-none"
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium resize-none"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-200 dark:border-white/10">
+          <div className="pt-4 border-t hairline">
             <button
               type="submit"
               disabled={isSaving || isUploading}
-              className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl hover:bg-cyan-400 transition-colors uppercase tracking-widest flex justify-center items-center shadow-[0_0_20px_rgba(0,229,255,0.3)] disabled:opacity-50"
+              className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl hover:bg-cyan-400 transition-colorsflex justify-center items-center shadow-contact disabled:opacity-50"
             >
               {isSaving ? (
                 <>
@@ -301,8 +301,8 @@ const ProfileView = () => {
         </form>
 
         {isDemo && (
-          <div className="mt-8 pt-6 border-t border-slate-200 dark:border-white/10">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Demo workspace</h3>
+          <div className="mt-8 pt-6 border-t hairline">
+            <h3 className="text-sm font-semibold text-slate-500 mb-3">Demo workspace</h3>
             <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 leading-relaxed">
               Demo data lives in this browser only. Reset it to restore the original sample courses, episodes and
               submissions.
@@ -310,7 +310,7 @@ const ProfileView = () => {
             <button
               type="button"
               onClick={resetDemoData}
-              className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-200 font-bold text-xs uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-200 font-bold text-xshover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
             >
               <RotateCcw size={16} /> Reset demo data
             </button>

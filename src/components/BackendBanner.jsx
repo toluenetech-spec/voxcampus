@@ -12,7 +12,7 @@ const BackendBanner = () => {
 
   if (isDemo) {
     return (
-      <div className="relative z-[300] bg-gradient-to-r from-[#1F6AE1] to-[#E916E6] text-white text-center px-12 py-2 text-[11px] font-bold uppercase tracking-[0.2em]">
+      <div className="relative z-[300] bg-aqua-500/12 border-b border-aqua-400/25 text-aqua-700 dark:text-aqua-300 text-center px-12 py-2 text-xs font-medium">
         Demo workspace — data is local to this browser and resets from Profile
       </div>
     )
@@ -21,9 +21,9 @@ const BackendBanner = () => {
   if (backendStatus !== 'unreachable' || dismissed || !backendError) return null
 
   return (
-    <div className="relative z-[300] bg-amber-500 text-slate-950 px-4 py-2.5 text-center text-xs font-bold flex items-center justify-center gap-3">
+    <div className="relative z-[300] bg-amber-500/15 border-b border-amber-500/30 text-amber-800 dark:text-amber-300 px-4 py-2.5 text-center text-xs font-medium flex items-center justify-center gap-3">
       <CloudOff className="w-4 h-4 shrink-0" />
-      <span className="tracking-wide">{backendError}</span>
+      <span>{backendError}</span>
       <button
         type="button"
         onClick={() => setDismissed(true)}

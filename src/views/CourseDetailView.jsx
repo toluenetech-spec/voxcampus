@@ -45,7 +45,7 @@ const formatDateTime = (value) => {
 }
 
 const CoursePodcastCard = ({ pod, isInstructor, openEditModal, requestDelete, speaking, onToggleSpeech }) => (
-  <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-white/10 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.15)] group relative overflow-hidden flex flex-col">
+  <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border hairline transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.15)] group relative overflow-hidden flex flex-col">
     <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-bl-full -z-10 group-hover:bg-cyan-500/10 transition-colors duration-500 blur-xl" />
 
     <div className="flex justify-between items-start mb-6 gap-3">
@@ -57,13 +57,13 @@ const CoursePodcastCard = ({ pod, isInstructor, openEditModal, requestDelete, sp
           {pod.description}
         </p>
         {pod.isPublic === false && (
-          <span className="inline-block mt-3 text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/10">
+          <span className="inline-block mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 px-2.5 py-1 rounded-lg border hairline">
             Private — enrolled students only
           </span>
         )}
       </div>
       {isInstructor && (
-        <div className="flex space-x-2 bg-slate-100 dark:bg-slate-950/50 p-1.5 rounded-xl border border-slate-200 dark:border-white/5 shrink-0">
+        <div className="flex space-x-2 bg-slate-100 dark:bg-slate-950/50 p-1.5 rounded-xl border hairline shrink-0">
           <button
             type="button"
             onClick={() => openEditModal(pod, 'podcasts')}
@@ -91,7 +91,7 @@ const CoursePodcastCard = ({ pod, isInstructor, openEditModal, requestDelete, sp
     <button
       type="button"
       onClick={onToggleSpeech}
-      className="flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors bg-cyan-500/10 px-4 py-3 rounded-xl border border-cyan-500/20 hover:bg-cyan-500/20 w-fit"
+      className="flex items-center space-x-2 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors bg-cyan-500/10 px-4 py-3 rounded-xl border border-cyan-500/20 hover:bg-cyan-500/20 w-fit"
     >
       {speaking ? (
         <>
@@ -123,7 +123,7 @@ const CourseDetailView = () => {
   const [assignments, setAssignments] = useState([])
   const [submissions, setSubmissions] = useState([])
   const [loadingMedia, setLoadingMedia] = useState(true)
-  // Refreshed on a timer so "Past Due" flips over without a manual reload.
+  // Refreshed on a timer so"Past Due" flips over without a manual reload.
   const [nowMs, setNowMs] = useState(() => Date.now())
   const [localError, setLocalError] = useState('')
   const [speakingId, setSpeakingId] = useState(null)
@@ -448,7 +448,7 @@ const CourseDetailView = () => {
   if (!canView) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center">
-        <div className="max-w-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-10 shadow-xl">
+        <div className="max-w-md material-regular rounded-panel p-10 shadow-xl">
           <Lock className="w-14 h-14 text-cyan-500 mx-auto mb-6" />
           <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-3">{course.title}</h1>
           <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
@@ -461,14 +461,14 @@ const CourseDetailView = () => {
               type="button"
               onClick={handleEnroll}
               disabled={enrolling}
-              className="flex-1 py-3.5 rounded-2xl bg-cyan-500 text-slate-950 font-bold uppercase tracking-widest text-xs hover:bg-cyan-400 transition-colors disabled:opacity-50 flex items-center justify-center"
+              className="flex-1 py-3.5 rounded-2xl bg-cyan-500 text-slate-950 font-semibold text-sm hover:bg-cyan-400 transition-colors disabled:opacity-50 flex items-center justify-center"
             >
               {enrolling ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Join this course'}
             </button>
             <button
               type="button"
               onClick={() => navigate('/dashboard')}
-              className="flex-1 py-3.5 rounded-2xl border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 font-bold uppercase tracking-widest text-xs hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              className="flex-1 py-3.5 rounded-2xl border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 font-semibold text-sm hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
             >
               Back to dashboard
             </button>
@@ -489,7 +489,7 @@ const CourseDetailView = () => {
       </button>
 
       {/* Premium Course Header */}
-      <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-8 md:p-10 rounded-[2.5rem] border border-slate-200 dark:border-white/10 relative overflow-hidden mb-8 shadow-lg dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] transition-colors">
+      <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-8 md:p-10 rounded-[2.5rem] border hairline relative overflow-hidden mb-8 shadow-lg dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] transition-colors">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-70" />
         <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-bl-full -z-10 blur-3xl" />
 
@@ -505,8 +505,8 @@ const CourseDetailView = () => {
               {course.description}
             </p>
           </div>
-          <div className="bg-slate-50 dark:bg-slate-950/80 backdrop-blur-md px-6 py-4 rounded-2xl border border-slate-200 dark:border-white/10 text-center shrink-0 shadow-inner transition-colors">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-widest block mb-1 transition-colors">
+          <div className="bg-slate-50 dark:bg-slate-950/80 backdrop-blur-md px-6 py-4 rounded-2xl border hairline text-center shrink-0 shadow-inner transition-colors">
+            <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-widest block mb-1 transition-colors">
               Course Code
             </span>
             <span className="text-2xl font-mono text-cyan-600 dark:text-cyan-400 tracking-widest">
@@ -522,7 +522,7 @@ const CourseDetailView = () => {
       <div
         role="tablist"
         aria-label="Course content"
-        className="flex space-x-2 mb-8 bg-slate-100 dark:bg-slate-950/50 p-1.5 rounded-2xl border border-slate-200 dark:border-white/5 w-full md:w-auto self-start transition-colors"
+        className="flex space-x-2 mb-8 bg-slate-100 dark:bg-slate-950/50 p-1.5 rounded-2xl border hairline w-full md:w-auto self-start transition-colors"
       >
         {[
           { key: 'podcasts', icon: Mic, label: 'Podcasts' },
@@ -580,10 +580,10 @@ const CourseDetailView = () => {
                 materials.map((mat) => (
                   <div
                     key={mat.id}
-                    className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 rounded-3xl border border-slate-200 dark:border-white/10 flex justify-between items-center gap-4 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.1)] group"
+                    className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 rounded-3xl border hairline flex justify-between items-center gap-4 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.1)] group"
                   >
                     <div className="flex items-start space-x-4 min-w-0">
-                      <div className="bg-slate-100 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-white/5 group-hover:border-cyan-500/30 transition-colors shrink-0">
+                      <div className="bg-slate-100 dark:bg-slate-950 p-4 rounded-2xl border hairline group-hover:border-cyan-500/30 transition-colors shrink-0">
                         <BookOpen className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
                       </div>
                       <div className="min-w-0">
@@ -608,7 +608,7 @@ const CourseDetailView = () => {
                         )}
                       </button>
                       {isInstructor && (
-                        <div className="flex space-x-1 bg-slate-100 dark:bg-slate-950/50 p-1 rounded-xl border border-slate-200 dark:border-white/5">
+                        <div className="flex space-x-1 bg-slate-100 dark:bg-slate-950/50 p-1 rounded-xl border hairline">
                           <button
                             type="button"
                             onClick={() => openEditModal(mat, 'materials')}
@@ -648,7 +648,7 @@ const CourseDetailView = () => {
                   return (
                     <div
                       key={asg.id}
-                      className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-white/10 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.15)] group relative overflow-hidden"
+                      className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border hairline transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg dark:hover:shadow-[0_10px_30px_rgba(0,229,255,0.15)] group relative overflow-hidden"
                     >
                       <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-bl-full -z-10 group-hover:bg-cyan-500/10 transition-colors duration-500 blur-xl" />
 
@@ -657,7 +657,7 @@ const CourseDetailView = () => {
                           <h3 className="font-bold text-2xl text-slate-900 dark:text-white mb-2 tracking-tight flex items-center space-x-3 flex-wrap transition-colors">
                             <span>{asg.title}</span>
                             {isLate && (
-                              <span className="bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-[10px] px-2 py-1 rounded-md uppercase tracking-widest font-bold border border-red-200 dark:border-red-500/30">
+                              <span className="bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-xs px-2 py-1 rounded-md font-semibold border border-red-200 dark:border-red-500/30">
                                 Past Due
                               </span>
                             )}
@@ -665,12 +665,12 @@ const CourseDetailView = () => {
                           <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 max-w-md leading-relaxed">
                             {asg.description}
                           </p>
-                          <p className="text-[11px] font-mono font-bold tracking-widest uppercase text-cyan-600 dark:text-cyan-500/80 bg-slate-100 dark:bg-slate-950/50 inline-block px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/5 transition-colors">
+                          <p className="text-xs font-mono font-bold tracking-widest uppercase text-cyan-600 dark:text-cyan-500/80 bg-slate-100 dark:bg-slate-950/50 inline-block px-3 py-1.5 rounded-lg border hairline transition-colors">
                             Due: {formatDateTime(asg.dueDate)}
                           </p>
                         </div>
                         {isInstructor && (
-                          <div className="flex space-x-2 bg-slate-100 dark:bg-slate-950/50 p-1.5 rounded-xl border border-slate-200 dark:border-white/5 shrink-0">
+                          <div className="flex space-x-2 bg-slate-100 dark:bg-slate-950/50 p-1.5 rounded-xl border hairline shrink-0">
                             <button
                               type="button"
                               onClick={() => openEditModal(asg, 'assignments')}
@@ -692,9 +692,9 @@ const CourseDetailView = () => {
                       </div>
 
                       {!isInstructor ? (
-                        <div className="mt-6 border-t border-slate-200 dark:border-white/10 pt-6 transition-colors">
+                        <div className="mt-6 border-t hairline pt-6 transition-colors">
                           {mySubmission ? (
-                            <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 dark:bg-slate-950/50 p-4 rounded-2xl border border-slate-200 dark:border-white/5 transition-colors">
+                            <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 dark:bg-slate-950/50 p-4 rounded-2xl border hairline transition-colors">
                               <span className="text-sm text-slate-700 dark:text-slate-300 flex items-center font-bold tracking-wide">
                                 {mySubmission.status === 'graded' ? (
                                   <CheckCircle2 className="w-5 h-5 text-green-500 mr-2" />
@@ -703,7 +703,7 @@ const CourseDetailView = () => {
                                 ) : (
                                   <Loader2 className="w-5 h-5 text-cyan-500 mr-2 animate-spin" />
                                 )}
-                                <span className="uppercase text-[11px] tracking-widest text-slate-500 mr-2">
+                                <span className="uppercase text-xs tracking-widest text-slate-500 mr-2">
                                   Status:
                                 </span>
                                 <span className="capitalize">{mySubmission.status}</span>
@@ -721,21 +721,21 @@ const CourseDetailView = () => {
                                 setActiveAssignmentId(asg.id)
                                 setShowSubmitModal(true)
                               }}
-                              className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:-translate-y-1 transition-all duration-300 uppercase tracking-widest text-xs"
+                              className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl shadow-contact hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:-translate-y-1 transition-all duration-300text-xs"
                             >
                               Submit Work
                             </button>
                           )}
                         </div>
                       ) : (
-                        <div className="mt-6 border-t border-slate-200 dark:border-white/10 pt-6 transition-colors">
+                        <div className="mt-6 border-t hairline pt-6 transition-colors">
                           <button
                             type="button"
                             onClick={() => {
                               setGradingAssignmentId(asg.id)
                               setShowGradingModal(true)
                             }}
-                            className="w-full py-4 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-white font-bold rounded-2xl border border-slate-200 dark:border-white/10 transition-all hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center space-x-2"
+                            className="w-full py-4 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-white font-bold rounded-2xl border hairline transition-all hover:-translate-y-1 text-xsflex items-center justify-center space-x-2"
                           >
                             <ClipboardList className="w-4 h-4" />
                             <span>
@@ -809,7 +809,7 @@ const CourseDetailView = () => {
             aria-modal="true"
             aria-label={`Upload ${uploadType}`}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors relative"
+            className="bg-white dark:bg-slate-900/90 border hairline rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors relative"
           >
             <button
               type="button"
@@ -832,7 +832,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="upload-title"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Title
                 </label>
@@ -848,7 +848,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="upload-desc"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Description
                 </label>
@@ -864,7 +864,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="upload-file"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   File
                 </label>
@@ -881,7 +881,7 @@ const CourseDetailView = () => {
               {uploadType === 'podcast' && (
                 <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-950/50 rounded-2xl border border-slate-300 dark:border-white/5 p-4 mt-2 transition-colors">
                   <div>
-                    <span className="block text-[11px] font-bold text-cyan-600 dark:text-cyan-400 mb-1 uppercase tracking-widest transition-colors">
+                    <span className="block text-xs font-bold text-cyan-600 dark:text-cyan-400 mb-1transition-colors">
                       Global Discovery
                     </span>
                     <span className="block text-xs font-medium text-slate-600 dark:text-slate-400 transition-colors">
@@ -909,7 +909,7 @@ const CourseDetailView = () => {
               <button
                 type="submit"
                 disabled={isUploading}
-                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colors uppercase tracking-widest flex justify-center items-center shadow-[0_0_20px_rgba(0,229,255,0.3)] disabled:opacity-50"
+                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colorsflex justify-center items-center shadow-contact disabled:opacity-50"
               >
                 {isUploading ? (
                   <>
@@ -934,7 +934,7 @@ const CourseDetailView = () => {
             aria-modal="true"
             aria-label="Create assignment"
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors relative"
+            className="bg-white dark:bg-slate-900/90 border hairline rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors relative"
           >
             <button
               type="button"
@@ -957,7 +957,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="asg-title"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Task Title
                 </label>
@@ -973,7 +973,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="asg-desc"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Instructions
                 </label>
@@ -989,7 +989,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="asg-due"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Due Date &amp; Time
                 </label>
@@ -1005,7 +1005,7 @@ const CourseDetailView = () => {
               <button
                 type="submit"
                 disabled={isCreatingAssignment}
-                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colors uppercase tracking-widest flex justify-center items-center shadow-[0_0_20px_rgba(0,229,255,0.3)] disabled:opacity-50"
+                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colorsflex justify-center items-center shadow-contact disabled:opacity-50"
               >
                 {isCreatingAssignment ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Post Assignment'}
               </button>
@@ -1024,7 +1024,7 @@ const CourseDetailView = () => {
             aria-modal="true"
             aria-label="Edit item"
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors relative"
+            className="bg-white dark:bg-slate-900/90 border hairline rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors relative"
           >
             <button
               type="button"
@@ -1042,7 +1042,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="edit-title"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Title
                 </label>
@@ -1058,7 +1058,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="edit-desc"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Description
                 </label>
@@ -1074,7 +1074,7 @@ const CourseDetailView = () => {
                 <div>
                   <label
                     htmlFor="edit-due"
-                    className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                    className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                   >
                     Due Date
                   </label>
@@ -1090,7 +1090,7 @@ const CourseDetailView = () => {
               <button
                 type="submit"
                 disabled={isEditing}
-                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colors uppercase tracking-widest flex justify-center items-center shadow-[0_0_20px_rgba(0,229,255,0.3)] disabled:opacity-50"
+                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colorsflex justify-center items-center shadow-contact disabled:opacity-50"
               >
                 {isEditing ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Changes'}
               </button>
@@ -1125,14 +1125,14 @@ const CourseDetailView = () => {
                 type="button"
                 onClick={confirmDelete}
                 disabled={isDeleting}
-                className="w-full py-4 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 transition-colors flex justify-center items-center uppercase tracking-widest text-sm shadow-[0_0_20px_rgba(239,68,68,0.4)] disabled:opacity-50"
+                className="w-full py-4 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 transition-colors flex justify-center items-centertext-sm shadow-[0_0_20px_rgba(239,68,68,0.4)] disabled:opacity-50"
               >
                 {isDeleting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Delete Permanently'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowDeleteConfirm(false)}
-                className="w-full py-4 bg-transparent text-slate-600 dark:text-slate-400 font-bold rounded-2xl hover:bg-slate-100 dark:hover:bg-white/5 transition-colors uppercase tracking-widest text-sm"
+                className="w-full py-4 bg-transparent text-slate-600 dark:text-slate-400 font-bold rounded-2xl hover:bg-slate-100 dark:hover:bg-white/5 transition-colorstext-sm"
               >
                 Cancel
               </button>
@@ -1151,7 +1151,7 @@ const CourseDetailView = () => {
             aria-modal="true"
             aria-label="Submit work"
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors relative"
+            className="bg-white dark:bg-slate-900/90 border hairline rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors relative"
           >
             <button
               type="button"
@@ -1169,7 +1169,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="submit-text"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Type Answer (Optional)
                 </label>
@@ -1185,7 +1185,7 @@ const CourseDetailView = () => {
               <div>
                 <label
                   htmlFor="submit-file"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Attach File (Optional)
                 </label>
@@ -1199,7 +1199,7 @@ const CourseDetailView = () => {
               <button
                 type="submit"
                 disabled={isSubmittingWork || (!submitText.trim() && !submitFile)}
-                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colors uppercase tracking-widest flex justify-center items-center shadow-[0_0_20px_rgba(0,229,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colorsflex justify-center items-center shadow-contact disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmittingWork ? (
                   <>
@@ -1224,9 +1224,9 @@ const CourseDetailView = () => {
             aria-modal="true"
             aria-label="Grading dashboard"
             onClick={(e) => e.stopPropagation()}
-            className="bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 rounded-[2.5rem] p-6 md:p-10 w-full max-w-4xl max-h-[85vh] overflow-y-auto relative shadow-[0_30px_60px_rgba(0,0,0,0.6)] custom-scrollbar animate-in fade-in zoom-in-95 duration-200 transition-colors"
+            className="bg-slate-50 dark:bg-slate-900/90 border hairline rounded-[2.5rem] p-6 md:p-10 w-full max-w-4xl max-h-[85vh] overflow-y-auto relative shadow-[0_30px_60px_rgba(0,0,0,0.6)] custom-scrollbar animate-in fade-in zoom-in-95 duration-200 transition-colors"
           >
-            <div className="sticky top-0 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md z-10 pb-6 mb-6 border-b border-slate-200 dark:border-white/10 flex justify-between items-center pt-2 transition-colors">
+            <div className="sticky top-0 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md z-10 pb-6 mb-6 border-b hairline flex justify-between items-center pt-2 transition-colors">
               <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center transition-colors">
                 <span className="w-3 h-10 bg-cyan-400 rounded-full mr-4 shadow-[0_0_15px_rgba(0,229,255,0.5)]" />
                 Grading Dashboard
@@ -1254,7 +1254,7 @@ const CourseDetailView = () => {
               {gradingSubmissions.map((sub) => (
                 <div
                   key={sub.id}
-                  className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-white/10 relative overflow-hidden group shadow-sm dark:shadow-none transition-colors"
+                  className="bg-white dark:bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border hairline relative overflow-hidden group shadow-sm dark:shadow-none transition-colors"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-bl-full -z-10 group-hover:bg-cyan-500/10 transition-colors duration-500 blur-xl" />
 
@@ -1263,12 +1263,12 @@ const CourseDetailView = () => {
                       <h4 className="font-bold text-slate-900 dark:text-white text-xl tracking-tight mb-1">
                         {sub.studentName}
                       </h4>
-                      <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 transition-colors">
+                      <p className="text-xs font-semibold text-slate-500 transition-colors">
                         Submitted: {formatDateTime(sub.submittedAt)}
                       </p>
                     </div>
                     <span
-                      className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border shrink-0 transition-colors ${
+                      className={`px-4 py-1.5 rounded-xl text-xs font-semibold border shrink-0 transition-colors ${
                         sub.status === 'graded'
                           ? 'bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-300 dark:border-green-500/30'
                           : sub.status === 'declined'
@@ -1281,7 +1281,7 @@ const CourseDetailView = () => {
                   </div>
 
                   {sub.textContent && (
-                    <div className="bg-slate-50 dark:bg-slate-950/50 p-6 rounded-2xl border border-slate-200 dark:border-white/5 mb-6 text-slate-700 dark:text-slate-300 text-sm whitespace-pre-wrap leading-relaxed font-medium transition-colors">
+                    <div className="bg-slate-50 dark:bg-slate-950/50 p-6 rounded-2xl border hairline mb-6 text-slate-700 dark:text-slate-300 text-sm whitespace-pre-wrap leading-relaxed font-medium transition-colors">
                       {sub.textContent}
                     </div>
                   )}
@@ -1290,17 +1290,17 @@ const CourseDetailView = () => {
                     <button
                       type="button"
                       onClick={() => window.open(sub.fileUrl, '_blank', 'noopener,noreferrer')}
-                      className="flex items-center justify-center space-x-2 w-full md:w-auto text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 px-6 py-4 rounded-2xl border border-cyan-500/30 hover:bg-cyan-500/20 transition-all mb-6 text-xs font-bold uppercase tracking-widest"
+                      className="flex items-center justify-center space-x-2 w-full md:w-auto text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 px-6 py-4 rounded-2xl border border-cyan-500/30 hover:bg-cyan-500/20 transition-all mb-6 text-sm font-semibold"
                     >
                       <Download className="w-4 h-4" /> <span>View Attached File</span>
                     </button>
                   )}
 
-                  <div className="border-t border-slate-200 dark:border-white/10 pt-6 flex flex-col sm:flex-row items-center gap-4 transition-colors">
-                    <div className="flex-1 w-full flex items-center space-x-4 bg-slate-50 dark:bg-slate-950/50 p-2 pl-4 rounded-2xl border border-slate-200 dark:border-white/5 transition-colors">
+                  <div className="border-t hairline pt-6 flex flex-col sm:flex-row items-center gap-4 transition-colors">
+                    <div className="flex-1 w-full flex items-center space-x-4 bg-slate-50 dark:bg-slate-950/50 p-2 pl-4 rounded-2xl border hairline transition-colors">
                       <label
                         htmlFor={`score-${sub.id}`}
-                        className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest transition-colors"
+                        className="text-slate-500 dark:text-slate-400 text-xs font-semibold transition-colors"
                       >
                         Score (0-100)
                       </label>
@@ -1319,7 +1319,7 @@ const CourseDetailView = () => {
                         type="button"
                         onClick={() => handleGradeSubmission(sub.id, 'declined')}
                         disabled={isGrading}
-                        className="flex-1 sm:flex-none px-6 py-4 bg-transparent hover:bg-red-50 dark:hover:bg-red-500/10 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 border border-slate-300 dark:border-white/10 hover:border-red-500/50 rounded-2xl transition-all font-bold text-xs uppercase tracking-widest disabled:opacity-50"
+                        className="flex-1 sm:flex-none px-6 py-4 bg-transparent hover:bg-red-50 dark:hover:bg-red-500/10 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 border border-slate-300 dark:border-white/10 hover:border-red-500/50 rounded-2xl transition-all font-bold text-xsdisabled:opacity-50"
                       >
                         Decline
                       </button>
@@ -1327,7 +1327,7 @@ const CourseDetailView = () => {
                         type="button"
                         onClick={() => handleGradeSubmission(sub.id, 'graded')}
                         disabled={isGrading}
-                        className="flex-1 sm:flex-none px-6 py-4 bg-cyan-500 text-slate-950 hover:bg-cyan-400 rounded-2xl transition-all hover:-translate-y-0.5 font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(0,229,255,0.3)] disabled:opacity-50"
+                        className="flex-1 sm:flex-none px-6 py-4 bg-cyan-500 text-slate-950 hover:bg-cyan-400 rounded-2xl transition-all hover:-translate-y-0.5 font-bold text-xsshadow-contact disabled:opacity-50"
                       >
                         Accept &amp; Grade
                       </button>

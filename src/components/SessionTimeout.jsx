@@ -115,7 +115,7 @@ const SessionTimeout = () => {
         <button
           type="button"
           onClick={handleStaySignedIn}
-          className="w-full py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-cyan-400 transition-colors"
+          className="w-full py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xshover:bg-cyan-400 transition-colors"
         >
           I&apos;m still here
         </button>

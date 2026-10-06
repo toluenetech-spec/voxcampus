@@ -80,7 +80,7 @@ const SignUpView = () => {
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-6 pb-16">
-      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.08)] w-full max-w-md p-8 rounded-3xl relative overflow-hidden transition-colors duration-300">
+      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-cyan-500/30 w-full max-w-md p-8 rounded-3xl relative overflow-hidden transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50" />
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 text-center">Create your account</h2>
@@ -101,7 +101,7 @@ const SignUpView = () => {
           <div>
             <label
               htmlFor="signup-name"
-              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide"
+              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1"
             >
               Full Name
             </label>
@@ -120,7 +120,7 @@ const SignUpView = () => {
           <div>
             <label
               htmlFor="signup-email"
-              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide"
+              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1"
             >
               Email
             </label>
@@ -139,7 +139,7 @@ const SignUpView = () => {
           <div>
             <label
               htmlFor="signup-password"
-              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide"
+              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1"
             >
               Password
             </label>
@@ -158,7 +158,7 @@ const SignUpView = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold uppercase tracking-widest text-slate-500 hover:text-cyan-500 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500 hover:text-cyan-500 transition-colors"
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
@@ -168,7 +168,7 @@ const SignUpView = () => {
           <div>
             <label
               htmlFor="signup-institution"
-              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide"
+              className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1"
             >
               Institution <span className="normal-case text-slate-400">(optional)</span>
             </label>
@@ -183,7 +183,7 @@ const SignUpView = () => {
           </div>
 
           <div>
-            <span className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wide">
+            <span className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
               I am a…
             </span>
             <div className="grid grid-cols-2 gap-3">
@@ -209,7 +209,7 @@ const SignUpView = () => {
                   >
                     {option.label}
                   </span>
-                  <span className="block text-[11px] text-slate-500 mt-0.5">{option.hint}</span>
+                  <span className="block text-xs text-slate-500 mt-0.5">{option.hint}</span>
                 </button>
               ))}
             </div>
@@ -226,7 +226,7 @@ const SignUpView = () => {
 
         <div className="relative flex items-center py-5">
           <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
-          <span className="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-widest">
+          <span className="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-xs font-semibold">
             Or
           </span>
           <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />

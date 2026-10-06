@@ -108,10 +108,10 @@ const AudioPlayer = ({ src, title, onPlay }) => {
           }}
         />
         <div className="flex items-center justify-between mt-2">
-          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
             {failed ? 'Playback failed' : isPlaying ? 'Now Playing' : 'Listen Now'}
           </p>
-          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono tabular-nums">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono tabular-nums">
             {formatTime(currentTime)} / {duration ? formatTime(duration) : '--:--'}
           </p>
         </div>

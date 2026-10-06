@@ -27,6 +27,24 @@ export default {
       fontFamily: {
         sans: ['Inter', 'Roboto', 'system-ui', 'sans-serif'],
       },
+      // One radius per surface class. Mixing radii at random is the single
+      // biggest thing that makes a UI read as unfinished.
+      borderRadius: {
+        card: '1rem',
+        panel: '1.25rem',
+        sheet: '1.75rem',
+      },
+      // Shadows read from the CSS material variables so light and dark stay
+      // in step without a `dark:` variant on every element.
+      boxShadow: {
+        material:
+          'inset 0 1px 0 0 var(--specular), var(--shadow-ambient), var(--shadow-contact)',
+        'material-lg': 'inset 0 1px 0 0 var(--specular), 0 24px 60px -12px rgb(0 0 0 / 0.45), var(--shadow-contact)',
+        contact: 'var(--shadow-contact)',
+      },
+      transitionTimingFunction: {
+        material: 'cubic-bezier(0.32, 0.72, 0, 1)',
+      },
       keyframes: {
         'fade-in': {
           from: { opacity: '0' },

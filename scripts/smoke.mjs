@@ -196,6 +196,15 @@ const afterTools = container.textContent || ''
 expect('AI assistant keeps its course context line', /course/i.test(afterTools), afterTools.slice(0, 300))
 for (const [label, ok, detail] of toolChecks) expect(label, ok, detail)
 
+/* ---------------- design system ---------------- */
+// Guards the material system: if the shell or panels fall back to ad-hoc
+// backgrounds the glass treatment has silently regressed.
+await visit('/ai')
+const shellHtml = container.innerHTML
+expect('shell uses the chrome material', shellHtml.includes('material-chrome'), 'material-chrome not rendered')
+expect('panels use the material tiers', /material-(regular|thick)/.test(shellHtml), 'no material-* panel found')
+expect('hairline borders applied', shellHtml.includes('hairline'), 'hairline not rendered')
+
 /* ---------------- instructor persona ---------------- */
 localStorage.setItem('voxcampus_demo_user', JSON.stringify({ uid: 'demo-instructor', role: 'instructor' }))
 const instructorText = await visit('/dashboard')

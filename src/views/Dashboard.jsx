@@ -51,7 +51,7 @@ const Dashboard = () => {
 
     try {
       let newCourseCode = generateCode()
-      // Extremely unlikely, but a duplicate code makes "join by code" ambiguous.
+      // Extremely unlikely, but a duplicate code makes"join by code" ambiguous.
       const taken = new Set(courses.map((c) => (c.courseCode ?? '').toUpperCase()))
       let guard = 0
       while (taken.has(newCourseCode) && guard < 10) {
@@ -134,7 +134,7 @@ const Dashboard = () => {
           toast.show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
         }`}
       >
-        <div className="bg-slate-900/90 backdrop-blur-xl border border-cyan-500/50 text-cyan-400 px-6 py-3 rounded-full shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center space-x-2 font-bold text-sm tracking-wide">
+        <div className="bg-slate-900/90 backdrop-blur-xl border border-cyan-500/50 text-cyan-400 px-6 py-3 rounded-full shadow-contact flex items-center space-x-2 font-bold text-sm tracking-wide">
           <CheckCircle2 size={16} />
           <span>{toast.message}</span>
         </div>
@@ -160,7 +160,7 @@ const Dashboard = () => {
                 setLocalError('')
                 setShowCreateModal(true)
               }}
-              className="py-4 px-8 bg-cyan-500 text-slate-950 font-bold rounded-2xl shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_30px_rgba(0,229,255,0.6)] hover:-translate-y-1 transition-all duration-300 uppercase tracking-widest flex items-center justify-center"
+              className="py-4 px-8 bg-cyan-500 text-slate-950 font-bold rounded-2xl shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_30px_rgba(0,229,255,0.6)] hover:-translate-y-1 transition-all duration-300flex items-center justify-center"
             >
               <Plus className="w-5 h-5 mr-2" /> Create Course
             </button>
@@ -171,7 +171,7 @@ const Dashboard = () => {
                 setJoinError('')
                 setShowJoinModal(true)
               }}
-              className="py-4 px-8 bg-cyan-500/10 border border-cyan-500/50 text-cyan-600 dark:text-cyan-400 font-bold rounded-2xl shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:bg-cyan-500/20 hover:-translate-y-1 transition-all duration-300 uppercase tracking-widest flex items-center justify-center"
+              className="py-4 px-8 bg-cyan-500/10 border border-cyan-500/50 text-cyan-600 dark:text-cyan-400 font-bold rounded-2xl shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:bg-cyan-500/20 hover:-translate-y-1 transition-all duration-300flex items-center justify-center"
             >
               <GraduationCap className="w-5 h-5 mr-2" /> Join Course
             </button>
@@ -180,7 +180,7 @@ const Dashboard = () => {
 
         {/* Empty States */}
         {displayedCourses.length === 0 && (
-          <div className="bg-white dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 p-12 rounded-3xl text-center shadow-lg dark:shadow-2xl flex flex-col items-center justify-center mt-10 transition-colors">
+          <div className="bg-white dark:bg-white/5 backdrop-blur-xl border hairline p-12 rounded-3xl text-center shadow-lg dark:shadow-2xl flex flex-col items-center justify-center mt-10 transition-colors">
             <BookOpen className="w-16 h-16 text-slate-400 dark:text-slate-600 mb-6 opacity-50" />
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
               Your curriculum is empty.
@@ -188,7 +188,7 @@ const Dashboard = () => {
             <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-md mx-auto">
               {isInstructor
                 ? 'Start building your digital classroom. Create a course to generate a unique invite code for your students.'
-                : "You haven't joined any classes yet. Ask your instructor for a Course Code to get started."}
+                :"You haven't joined any classes yet. Ask your instructor for a Course Code to get started."}
             </p>
             {isInstructor ? (
               <button
@@ -230,12 +230,12 @@ const Dashboard = () => {
                   navigate(`/course/${course.id}`)
                 }
               }}
-              className="bg-white dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 p-6 md:p-8 rounded-[2rem] shadow-lg dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-xl dark:hover:shadow-[0_10px_40px_rgba(0,229,255,0.15)] transition-all duration-300 hover:-translate-y-2 cursor-pointer group flex flex-col h-full relative overflow-hidden"
+              className="bg-white dark:bg-white/5 backdrop-blur-xl border hairline p-6 md:p-8 rounded-[2rem] shadow-lg dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-xl dark:hover:shadow-[0_10px_40px_rgba(0,229,255,0.15)] transition-all duration-300 hover:-translate-y-2 cursor-pointer group flex flex-col h-full relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-40 h-40 bg-cyan-500/10 rounded-bl-full -z-10 group-hover:bg-cyan-500/20 transition-colors duration-500 blur-xl" />
 
               <div className="flex justify-between items-start mb-6">
-                <div className="p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-white/5 text-cyan-500 dark:text-cyan-400 group-hover:scale-110 transition-transform duration-300">
+                <div className="p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border hairline text-cyan-500 dark:text-cyan-400 group-hover:scale-110 transition-transform duration-300">
                   <BookOpen size={28} strokeWidth={1.5} />
                 </div>
               </div>
@@ -250,15 +250,15 @@ const Dashboard = () => {
                 </p>
               </div>
 
-              <div className="border-t border-slate-200 dark:border-white/10 pt-5 mt-auto flex justify-between items-end transition-colors">
+              <div className="border-t hairline pt-5 mt-auto flex justify-between items-end transition-colors">
                 <div className="min-w-0 pr-3">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Instructor</p>
+                  <p className="text-xs font-medium text-slate-500 font-bold mb-1">Instructor</p>
                   <p className="text-slate-800 dark:text-slate-200 font-semibold truncate">{course.instructorName}</p>
                 </div>
 
                 {isInstructor && (
                   <div className="flex flex-col items-end shrink-0">
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Invite Code</p>
+                    <p className="text-xs font-medium text-slate-500 font-bold mb-1">Invite Code</p>
                     <button
                       type="button"
                       onClick={(e) => {
@@ -293,7 +293,7 @@ const Dashboard = () => {
             aria-modal="true"
             aria-label="Create course"
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors"
+            className="bg-white dark:bg-slate-900/90 border hairline w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors"
           >
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center transition-colors">
@@ -320,7 +320,7 @@ const Dashboard = () => {
               <div>
                 <label
                   htmlFor="course-title"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Course Title
                 </label>
@@ -337,7 +337,7 @@ const Dashboard = () => {
               <div>
                 <label
                   htmlFor="course-desc"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   Description
                 </label>
@@ -354,7 +354,7 @@ const Dashboard = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colors uppercase tracking-widest flex justify-center items-center disabled:opacity-50 shadow-[0_0_20px_rgba(0,229,255,0.3)]"
+                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colorsflex justify-center items-center disabled:opacity-50 shadow-contact"
               >
                 {isSubmitting ? (
                   <>
@@ -380,7 +380,7 @@ const Dashboard = () => {
             aria-modal="true"
             aria-label="Join course"
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors"
+            className="bg-white dark:bg-slate-900/90 border hairline w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-200 transition-colors"
           >
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center transition-colors">
@@ -407,7 +407,7 @@ const Dashboard = () => {
               <div>
                 <label
                   htmlFor="join-code"
-                  className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors"
+                  className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-2transition-colors"
                 >
                   6-Character Invite Code
                 </label>
@@ -425,7 +425,7 @@ const Dashboard = () => {
               <button
                 type="submit"
                 disabled={isJoining || joinCode.length !== 6}
-                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colors uppercase tracking-widest flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(0,229,255,0.3)]"
+                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl mt-4 hover:bg-cyan-400 transition-colorsflex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed shadow-contact"
               >
                 {isJoining ? (
                   <>

@@ -186,14 +186,14 @@ const ErrorPanel = ({ message, onRetry, onDismiss }) => {
       {message && state === 'error' && (
         <p className="text-xs text-slate-500 dark:text-slate-500 max-w-md">{message}</p>
       )}
-      <code className="text-[11px] font-mono px-2 py-1 rounded bg-slate-900/60 border border-white/10 text-slate-300">
+      <code className="text-xs font-mono px-2 py-1 rounded bg-slate-900/60 border border-white/10 text-slate-300">
         {hint}
       </code>
       {onRetry && (
         <button
           type="button"
           onClick={onRetry}
-          className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 text-xs font-bold uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+          className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
         >
           <RefreshCw className="w-3.5 h-3.5" /> Retry
         </button>
@@ -384,7 +384,7 @@ const AIAssistantView = () => {
           <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             {placeholder}. Grounded in the {myCourses.length || 'no'}{' '}
             {myCourses.length === 1 ? 'course' : 'courses'} you
-            {isInstructor ? ' teach' : "'re enrolled in"}.
+            {isInstructor ? ' teach' :"'re enrolled in"}.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -392,7 +392,7 @@ const AIAssistantView = () => {
             <button
               type="button"
               onClick={() => window.print()}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 text-xs font-bold uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-card border hairline text-slate-700 dark:text-slate-200 text-sm font-medium hover:bg-slate-900/[0.04] dark:hover:bg-white/[0.05] transition-colors"
             >
               <Printer className="w-3.5 h-3.5" /> Export
             </button>
@@ -400,7 +400,7 @@ const AIAssistantView = () => {
           <button
             type="button"
             onClick={startNewChat}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-aqua-500 text-slate-950 text-xs font-bold uppercase tracking-widest hover:bg-aqua-400 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-card bg-aqua-500 text-slate-950 text-sm font-semibold hover:bg-aqua-400 active:scale-[0.98] transition-all"
           >
             <Plus className="w-3.5 h-3.5" /> New chat
           </button>
@@ -408,7 +408,7 @@ const AIAssistantView = () => {
       </header>
 
       {isDemo && (
-        <p className="mb-4 text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-3">
+        <p className="mb-4 text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 inset-well rounded-card px-4 py-3">
           You are in the demo workspace. The AI endpoint is not available here — sign in with a real
           account to use the assistant.
         </p>
@@ -416,8 +416,8 @@ const AIAssistantView = () => {
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4">
         {/* ------------------------------------------------------ history */}
-        <aside className="hidden lg:flex flex-col min-h-0 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-4">
-          <h2 className="text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 px-1">
+        <aside className="hidden lg:flex flex-col min-h-0 material-regular rounded-panel p-4">
+          <h2 className="eyebrow mb-3 px-1">
             Chat history
           </h2>
           <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-1 pr-1">
@@ -461,8 +461,8 @@ const AIAssistantView = () => {
         </aside>
 
         {/* ---------------------------------------------------- transcript */}
-        <section className="flex flex-col min-h-0 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden">
-          <div className="flex gap-1.5 p-2 border-b border-slate-200 dark:border-white/10 overflow-x-auto custom-scrollbar">
+        <section className="flex flex-col min-h-0 material-regular rounded-panel overflow-hidden">
+          <div className="flex gap-1 p-2 border-b hairline overflow-x-auto custom-scrollbar">
             {TOOLS.map((tool) => {
               const Icon = tool.icon
               const selected = tool.id === task
@@ -471,7 +471,7 @@ const AIAssistantView = () => {
                   key={tool.id}
                   type="button"
                   onClick={() => setTask(tool.id)}
-                  className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors ${
+                  className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${
                     selected
                       ? 'bg-aqua-500 text-slate-950'
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
@@ -514,7 +514,7 @@ const AIAssistantView = () => {
                       className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                         mine
                           ? 'bg-aqua-500 text-slate-950'
-                          : 'bg-slate-100 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200'
+                          : 'inset-well rounded-card text-slate-800 dark:text-slate-200'
                       }`}
                     >
                       {message.text}
@@ -523,7 +523,7 @@ const AIAssistantView = () => {
                       <button
                         type="button"
                         onClick={() => copyMessage(message.id, message.text)}
-                        className="self-start text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-aqua-500 transition-colors inline-flex items-center gap-1"
+                        className="self-start text-xs font-semibold text-slate-400 hover:text-aqua-500 transition-colors inline-flex items-center gap-1"
                       >
                         {copiedId === message.id ? (
                           <>
@@ -571,7 +571,7 @@ const AIAssistantView = () => {
               event.preventDefault()
               submit()
             }}
-            className="p-3 border-t border-slate-200 dark:border-white/10"
+            className="p-3 border-t hairline"
           >
             <div className="flex items-end gap-2">
               <textarea
@@ -601,7 +601,7 @@ const AIAssistantView = () => {
                 )}
               </button>
             </div>
-            <p className="mt-2 px-1 text-[11px] text-slate-400 dark:text-slate-500">
+            <p className="mt-2 px-1 text-xs text-slate-400 dark:text-slate-500">
               Enter to send · Shift + Enter for a new line
               {messages.some((message) => message.role === 'assistant') && (
                 <>
@@ -610,7 +610,7 @@ const AIAssistantView = () => {
                     type="button"
                     onClick={regenerate}
                     disabled={pending}
-                    className="font-bold uppercase tracking-widest hover:text-aqua-500 disabled:opacity-50"
+                    className="font-semibold hover:text-aqua-500 disabled:opacity-50"
                   >
                     Regenerate
                   </button>

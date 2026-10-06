@@ -31,7 +31,7 @@ const InviteBox = ({ roomId }) => {
     <button
       type="button"
       onClick={copy}
-      className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-300/80 bg-slate-950/70 border border-white/10 px-3 py-1.5 rounded-lg hover:border-cyan-500/50 transition-colors w-fit"
+      className="text-xs font-mono font-semibold text-cyan-300/80 bg-slate-950/70 border border-white/10 px-3 py-1.5 rounded-lg hover:border-cyan-500/50 transition-colors w-fit"
     >
       {copied ? 'Copied!' : `Invite ID: ${roomId}`}
     </button>
@@ -193,7 +193,7 @@ const LiveRoomDetailView = () => {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center">
         <Loader2 className="w-12 h-12 text-cyan-400 animate-spin mb-4" />
-        <p className="text-cyan-500/50 text-sm font-bold uppercase tracking-widest">Verifying Access…</p>
+        <p className="text-cyan-500/50 text-sm font-semibold">Verifying Access…</p>
       </div>
     )
   }
@@ -212,7 +212,7 @@ const LiveRoomDetailView = () => {
           <button
             type="button"
             onClick={() => navigate('/live', { replace: true })}
-            className="w-full py-4 bg-red-500/10 border border-red-500/30 text-red-400 font-bold rounded-2xl hover:bg-red-500/20 transition-all uppercase tracking-widest text-sm shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+            className="w-full py-4 bg-red-500/10 border border-red-500/30 text-red-400 font-bold rounded-2xl hover:bg-red-500/20 transition-alltext-sm shadow-[0_0_15px_rgba(239,68,68,0.2)]"
           >
             Back to Live Rooms
           </button>
@@ -228,7 +228,7 @@ const LiveRoomDetailView = () => {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-10 text-center text-white">
         <Loader2 className="w-12 h-12 text-cyan-400 animate-spin mb-4" />
-        <p className="text-cyan-500/50 text-sm font-bold uppercase tracking-widest">
+        <p className="text-cyan-500/50 text-sm font-semibold">
           Closing session and releasing your microphone…
         </p>
       </div>
@@ -258,7 +258,7 @@ const LiveRoomDetailView = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
               </span>
-              <span className="text-green-400 text-[10px] font-bold uppercase tracking-widest">Live Room</span>
+              <span className="text-green-400 text-xs font-semibold">Live Room</span>
             </div>
           </div>
           <h1 className="text-2xl md:text-3xl font-black tracking-tight drop-shadow-md mb-2">{room.topic}</h1>
@@ -281,7 +281,7 @@ const LiveRoomDetailView = () => {
               type="button"
               onClick={handleEndClass}
               disabled={isEnding}
-              className="flex items-center space-x-2 bg-slate-950/80 hover:bg-red-500/20 text-red-500 border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)] px-6 py-3 rounded-2xl font-bold uppercase tracking-widest text-xs transition-all disabled:opacity-50"
+              className="flex items-center space-x-2 bg-slate-950/80 hover:bg-red-500/20 text-red-500 border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)] px-6 py-3 rounded-2xl font-semibold text-sm transition-all disabled:opacity-50"
             >
               {isEnding ? <Loader2 className="w-4 h-4 animate-spin" /> : <PhoneOff className="w-4 h-4" />}
               <span>End Class</span>
