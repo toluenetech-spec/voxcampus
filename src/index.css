@@ -3,39 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    color-scheme: light;
-  }
-
-  html.dark {
-    color-scheme: dark;
-  }
-
-  html,
-  body,
-  #root {
-    min-height: 100%;
-  }
-
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased overflow-x-hidden transition-colors duration-300;
-  }
-
-  html.dark body {
-    @apply bg-slate-950 text-white;
-  }
-
-  /* Consistent, visible keyboard focus across the whole app. */
-  :focus-visible {
-    @apply outline-none ring-2 ring-cyan-500 ring-offset-2 ring-offset-slate-50;
-  }
-
-  html.dark :focus-visible {
-    @apply ring-offset-slate-950;
-  }
-
-  ::selection {
-    @apply bg-cyan-500/30;
+    @apply bg-slate-950 text-white min-h-screen font-sans overflow-x-hidden;
   }
 }
 
@@ -43,62 +12,20 @@
   .glass {
     @apply bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-2xl;
   }
-
   .neon-text {
     @apply text-cyan-400 drop-shadow-[0_0_12px_rgba(0,229,255,0.8)];
   }
-
   .neon-border {
     @apply border border-cyan-400/50 shadow-[0_0_15px_rgba(0,229,255,0.4)];
   }
-
   .neon-button {
     @apply bg-cyan-600 hover:bg-cyan-500 text-white shadow-[0_0_20px_rgba(0,229,255,0.6)] hover:shadow-[0_0_25px_rgba(0,229,255,0.8)] transition-all duration-300;
   }
-
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-
-  /* Used by the shell scroll containers and the grading dashboard. */
-  .custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: rgb(34 211 238 / 0.35) transparent;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-slate-300 dark:bg-cyan-500/25;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-400 dark:bg-cyan-500/50;
-  }
-
-  /* iOS safe-area helpers (referenced by the app shell and live room header). */
-  .pt-safe {
-    padding-top: max(1rem, env(safe-area-inset-top));
-  }
-
-  .pb-safe {
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-  }
-
-  .px-safe {
-    padding-left: max(1rem, env(safe-area-inset-left));
-    padding-right: max(1rem, env(safe-area-inset-right));
   }
 }

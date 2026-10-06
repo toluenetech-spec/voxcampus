@@ -1,37 +1,12 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="mask-icon" href="/masked-icon.svg" color="#0f172a" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f172a" />
-    <meta name="color-scheme" content="dark light" />
-    <meta
-      name="description"
-      content="VoxCampus — stream academic lectures, join live interactive audio rooms, and discover trending podcasts from instructors across campus."
-    />
-    <meta property="og:title" content="VoxCampus — Audio Learning for Campus" />
-    <meta
-      property="og:description"
-      content="Stream lectures, join live audio rooms, and discover trending academic podcasts."
-    />
-    <meta property="og:image" content="/pwa-512x512.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <title>VoxCampus — Academic Podcasts &amp; Live Audio Rooms</title>
-    <script>
-      // Apply the stored theme before first paint so there is no light/dark flash.
-      try {
-        var stored = localStorage.getItem('voxcampus_theme')
-        var theme = stored === 'light' || stored === 'dark'
-          ? stored
-          : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
-        document.documentElement.classList.toggle('dark', theme === 'dark')
-      } catch (e) {
-        /* keep the default */
-      }
-    </script>
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>voxcampus</title>
   </head>
   <body>
     <div id="root"></div>

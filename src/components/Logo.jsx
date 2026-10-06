@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Logo = ({ className = "" }) => {
   return (
     <div className={`flex items-center font-bold tracking-tight ${className}`}>
