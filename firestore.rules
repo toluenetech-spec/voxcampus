@@ -60,7 +60,14 @@ service cloud.firestore {
     match /podcasts/{podcastId} {
       allow read: if isSignedIn();
       allow create: if teachesCourse(request.resource.data.courseId);
-      allow update, delete: if teachesCourse(resource.data.courseId);
+      // Instructors may edit a podcast freely. Students may only toggle their
+      // own like and bump the play counter — those are the two fields the
+      // library writes back, and blocking them would silently break liking and
+      // play counts for everyone except the instructor.
+      allow update: if teachesCourse(resource.data.courseId)
+        || (isSignedIn()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'playCount']));
+      allow delete: if teachesCourse(resource.data.courseId);
     }
 
     match /materials/{materialId} {
