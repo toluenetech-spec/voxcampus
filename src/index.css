@@ -44,6 +44,27 @@
     @apply bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-2xl;
   }
 
+  /* Frosted panels from the newer design system. `glass-panel` is the light
+     counterpart of `glass`, matching the newer build's tokens exactly. */
+  .glass-lg {
+    @apply bg-slate-900/40 backdrop-blur-2xl border border-slate-800;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  }
+
+  .glass-panel {
+    background-color: rgb(255 255 255 / 0.7);
+    border: 1px solid rgb(226 232 240 / 0.8);
+    box-shadow: 0 8px 32px rgb(0 0 0 / 0.37);
+    --tw-backdrop-blur: blur(40px);
+    -webkit-backdrop-filter: var(--tw-backdrop-blur);
+    backdrop-filter: var(--tw-backdrop-blur);
+  }
+
+  html.dark .glass-panel {
+    background-color: rgb(15 23 42 / 0.4);
+    border-color: rgb(30 41 59 / 0.9);
+  }
+
   .neon-text {
     @apply text-cyan-400 drop-shadow-[0_0_12px_rgba(0,229,255,0.8)];
   }

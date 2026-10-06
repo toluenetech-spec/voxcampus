@@ -6,6 +6,24 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      // Palette recovered from the newer VoxCampus build so both versions can
+      // share the same design tokens.
+      colors: {
+        aqua: {
+          300: '#67e8f9',
+          400: '#22d3ee',
+          500: '#06b6d4',
+        },
+        aurora: {
+          400: '#a78bfa',
+          500: '#8b5cf6',
+        },
+        electric: {
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+        },
+      },
       fontFamily: {
         sans: ['Inter', 'Roboto', 'system-ui', 'sans-serif'],
       },

@@ -378,7 +378,7 @@ const AIAssistantView = () => {
       <header className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-            <Sparkles className="w-6 h-6 text-cyan-500 dark:text-cyan-400" />
+            <Sparkles className="w-6 h-6 text-aqua-500 dark:text-aqua-400" />
             AI Assistant
           </h1>
           <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
@@ -400,7 +400,7 @@ const AIAssistantView = () => {
           <button
             type="button"
             onClick={startNewChat}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-500 text-slate-950 text-xs font-bold uppercase tracking-widest hover:bg-cyan-400 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-aqua-500 text-slate-950 text-xs font-bold uppercase tracking-widest hover:bg-aqua-400 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" /> New chat
           </button>
@@ -431,7 +431,7 @@ const AIAssistantView = () => {
                 key={chat.id}
                 className={`group flex items-center gap-2 rounded-xl px-3 py-2.5 transition-colors ${
                   chat.id === activeId
-                    ? 'bg-cyan-500/10 border border-cyan-500/30'
+                    ? 'bg-aqua-500/10 border border-aqua-400/30'
                     : 'hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent'
                 }`}
               >
@@ -473,7 +473,7 @@ const AIAssistantView = () => {
                   onClick={() => setTask(tool.id)}
                   className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors ${
                     selected
-                      ? 'bg-cyan-500 text-slate-950'
+                      ? 'bg-aqua-500 text-slate-950'
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
                   }`}
                 >
@@ -487,8 +487,8 @@ const AIAssistantView = () => {
           <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-5 space-y-5">
             {messages.length === 0 && !error && (
               <div className="h-full flex flex-col items-center justify-center text-center gap-3">
-                <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
-                  <Sparkles className="w-8 h-8 text-cyan-500 dark:text-cyan-400" />
+                <div className="w-16 h-16 rounded-2xl bg-aqua-500/10 border border-aqua-400/30 flex items-center justify-center">
+                  <Sparkles className="w-8 h-8 text-aqua-500 dark:text-aqua-400" />
                 </div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                   {isInstructor ? 'Plan, draft and assess' : 'Study smarter'}
@@ -505,15 +505,15 @@ const AIAssistantView = () => {
               return (
                 <div key={message.id} className={`flex gap-3 ${mine ? 'justify-end' : ''}`}>
                   {!mine && (
-                    <span className="w-8 h-8 shrink-0 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
-                      <Bot className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />
+                    <span className="w-8 h-8 shrink-0 rounded-xl bg-aqua-500/10 border border-aqua-400/30 flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-aqua-500 dark:text-aqua-400" />
                     </span>
                   )}
                   <div className={`max-w-[85%] ${mine ? 'items-end' : ''} flex flex-col gap-1.5`}>
                     <div
                       className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                         mine
-                          ? 'bg-cyan-500 text-slate-950'
+                          ? 'bg-aqua-500 text-slate-950'
                           : 'bg-slate-100 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200'
                       }`}
                     >
@@ -523,7 +523,7 @@ const AIAssistantView = () => {
                       <button
                         type="button"
                         onClick={() => copyMessage(message.id, message.text)}
-                        className="self-start text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-cyan-500 transition-colors inline-flex items-center gap-1"
+                        className="self-start text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-aqua-500 transition-colors inline-flex items-center gap-1"
                       >
                         {copiedId === message.id ? (
                           <>
@@ -548,8 +548,8 @@ const AIAssistantView = () => {
 
             {pending && (
               <div className="flex gap-3">
-                <span className="w-8 h-8 shrink-0 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />
+                <span className="w-8 h-8 shrink-0 rounded-xl bg-aqua-500/10 border border-aqua-400/30 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-aqua-500 dark:text-aqua-400" />
                 </span>
                 <div className="rounded-2xl px-4 py-3 bg-slate-100 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                   <Loader2 className="w-4 h-4 animate-spin" /> Thinking…
@@ -586,13 +586,13 @@ const AIAssistantView = () => {
                 rows={2}
                 placeholder={placeholder}
                 aria-label={placeholder}
-                className="flex-1 resize-none bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 custom-scrollbar"
+                className="flex-1 resize-none bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 custom-scrollbar"
               />
               <button
                 type="submit"
                 disabled={pending || !draft.trim()}
                 aria-label="Send message"
-                className="h-11 w-11 shrink-0 rounded-2xl bg-cyan-500 text-slate-950 flex items-center justify-center hover:bg-cyan-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-11 w-11 shrink-0 rounded-2xl bg-aqua-500 text-slate-950 flex items-center justify-center hover:bg-aqua-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {pending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -610,7 +610,7 @@ const AIAssistantView = () => {
                     type="button"
                     onClick={regenerate}
                     disabled={pending}
-                    className="font-bold uppercase tracking-widest hover:text-cyan-500 disabled:opacity-50"
+                    className="font-bold uppercase tracking-widest hover:text-aqua-500 disabled:opacity-50"
                   >
                     Regenerate
                   </button>
