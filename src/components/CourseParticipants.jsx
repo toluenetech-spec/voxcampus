@@ -45,19 +45,19 @@ const CourseParticipants = ({ courseId }) => {
   const remaining = totalStudents - displayLimit;
 
   return (
-    <div className="bg-white dark:bg-white/5 border hairline p-6 rounded-2xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-md transition-colors duration-300 w-full">
+    <div className="bg-white dark:bg-white/5 border hairline p-6 rounded-card mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-md transition-colors duration-300 w-full">
       <div>
         <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight transition-colors">
           Enrolled Students
         </h3>
         <p className="text-slate-500 dark:text-slate-400 font-semibold mt-1 transition-colors">
-          <span className="text-2xl text-cyan-600 dark:text-cyan-400 mr-2">{totalStudents}</span>
+          <span className="text-2xl text-aqua-600 dark:text-aqua-400 mr-2">{totalStudents}</span>
           Students
         </p>
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center p-2 text-cyan-600 dark:text-cyan-400 font-semibold text-sm animate-pulse">
+        <div className="flex items-center justify-center p-2 text-aqua-600 dark:text-aqua-400 font-semibold text-sm animate-pulse">
           Loading…
         </div>
       ) : totalStudents > 0 ? (
@@ -67,12 +67,12 @@ const CourseParticipants = ({ courseId }) => {
               key={student.id}
               src={student.avatarUrl || avatarDataUri(student.displayName)}
               alt={student.displayName}
-              className="inline-block h-10 w-10 rounded-full ring-2 ring-white dark:ring-slate-950 object-cover hover:z-10 hover:scale-110 transition-transform cursor-pointer"
+              className="inline-block h-10 w-10 rounded-full ring-2 ring-white dark:ring-slate-950 object-cover hover:z-10 hover:opacity-90 transition-transform cursor-pointer"
               title={student.displayName}
             />
           ))}
           {remaining > 0 && (
-            <div className="flex items-center justify-center h-10 w-10 rounded-full ring-2 ring-white dark:ring-slate-950 bg-slate-200 dark:bg-slate-800 text-xs font-bold text-cyan-600 dark:text-cyan-400 z-0 cursor-default">
+            <div className="flex items-center justify-center h-10 w-10 rounded-full ring-2 ring-white dark:ring-slate-950 bg-slate-200 dark:bg-slate-800 text-xs font-bold text-aqua-600 dark:text-aqua-400 z-0 cursor-default">
               +{remaining}
             </div>
           )}

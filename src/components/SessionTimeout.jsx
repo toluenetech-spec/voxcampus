@@ -76,9 +76,9 @@ const SessionTimeout = () => {
   if (isExpired) {
     return (
       <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-2xl p-6 md:p-8 max-w-sm w-full relative animate-in fade-in zoom-in-95 duration-300 flex flex-col items-center text-center transition-colors">
-          <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center mb-6">
-            <Lock className="text-cyan-500 w-8 h-8" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-card p-6 md:p-8 max-w-sm w-full relative animate-in fade-in zoom-in-95 duration-300 flex flex-col items-center text-center transition-colors">
+          <div className="w-16 h-16 bg-aqua-500/10 rounded-full flex items-center justify-center mb-6">
+            <Lock className="text-aqua-500 w-8 h-8" />
           </div>
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Session Expired</h3>
           <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed text-sm">
@@ -87,7 +87,7 @@ const SessionTimeout = () => {
           <button
             type="button"
             onClick={handleDismiss}
-            className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 px-6 rounded-xl transition-all"
+            className="w-full bg-aqua-500 hover:bg-aqua-400 text-slate-950 font-bold py-3 px-6 rounded-xl transition-all"
           >
             Log In Again
           </button>
@@ -102,7 +102,7 @@ const SessionTimeout = () => {
     <div className="fixed bottom-6 right-6 z-[9998] w-[min(22rem,calc(100vw-3rem))]">
       <div
         role="alert"
-        className="bg-white dark:bg-slate-900 border border-amber-500/40 shadow-2xl rounded-2xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-300 transition-colors"
+        className="bg-white dark:bg-slate-900 border border-amber-500/40 shadow-2xl rounded-card p-5 animate-in fade-in slide-in-from-bottom-4 duration-300 transition-colors"
       >
         <div className="flex items-center gap-3 mb-2">
           <Timer className="w-5 h-5 text-amber-500 shrink-0" />
@@ -115,7 +115,7 @@ const SessionTimeout = () => {
         <button
           type="button"
           onClick={handleStaySignedIn}
-          className="w-full py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xshover:bg-cyan-400 transition-colors"
+          className="w-full py-2.5 rounded-xl bg-aqua-500 text-slate-950 font-bold text-xshover:bg-aqua-400 transition-colors"
         >
           I&apos;m still here
         </button>

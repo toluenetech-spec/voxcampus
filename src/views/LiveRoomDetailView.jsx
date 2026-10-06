@@ -31,7 +31,7 @@ const InviteBox = ({ roomId }) => {
     <button
       type="button"
       onClick={copy}
-      className="text-xs font-mono font-semibold text-cyan-300/80 bg-slate-950/70 border border-white/10 px-3 py-1.5 rounded-lg hover:border-cyan-500/50 transition-colors w-fit"
+      className="text-xs font-mono font-semibold text-aqua-300/80 bg-slate-950/70 border border-white/10 px-3 py-1.5 rounded-lg hover:border-aqua-500/50 transition-colors w-fit"
     >
       {copied ? 'Copied!' : `Invite ID: ${roomId}`}
     </button>
@@ -192,8 +192,8 @@ const LiveRoomDetailView = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center">
-        <Loader2 className="w-12 h-12 text-cyan-400 animate-spin mb-4" />
-        <p className="text-cyan-500/50 text-sm font-semibold">Verifying Access…</p>
+        <Loader2 className="w-12 h-12 text-aqua-400 animate-spin mb-4" />
+        <p className="text-aqua-500/50 text-sm font-semibold">Verifying Access…</p>
       </div>
     );
   }
@@ -202,7 +202,7 @@ const LiveRoomDetailView = () => {
   if (!room || accessDenied) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col items-center justify-center p-6 text-center">
-        <div className="bg-white/5 backdrop-blur-xl border border-red-500/30 p-10 rounded-3xl max-w-md shadow-[0_20px_50px_rgba(239,68,68,0.1)] relative overflow-hidden">
+        <div className="bg-white/5 backdrop-blur-xl border border-red-500/30 p-10 rounded-panel max-w-md shadow-[0_20px_50px_rgba(239,68,68,0.1)] relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-bl-full -z-10 blur-xl" />
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-6 opacity-80" />
           <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
@@ -212,7 +212,7 @@ const LiveRoomDetailView = () => {
           <button
             type="button"
             onClick={() => navigate('/live', { replace: true })}
-            className="w-full py-4 bg-red-500/10 border border-red-500/30 text-red-400 font-bold rounded-2xl hover:bg-red-500/20 transition-alltext-sm shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+            className="w-full py-4 bg-red-500/10 border border-red-500/30 text-red-400 font-bold rounded-card hover:bg-red-500/20 transition-alltext-sm shadow-[0_0_15px_rgba(239,68,68,0.2)]"
           >
             Back to Live Rooms
           </button>
@@ -227,8 +227,8 @@ const LiveRoomDetailView = () => {
   if (room.status === 'ended' || isExiting) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-10 text-center text-white">
-        <Loader2 className="w-12 h-12 text-cyan-400 animate-spin mb-4" />
-        <p className="text-cyan-500/50 text-sm font-semibold">Closing session and releasing your microphone…</p>
+        <Loader2 className="w-12 h-12 text-aqua-400 animate-spin mb-4" />
+        <p className="text-aqua-500/50 text-sm font-semibold">Closing session and releasing your microphone…</p>
       </div>
     );
   }
@@ -236,9 +236,7 @@ const LiveRoomDetailView = () => {
   const liveAudioAvailable = ZEGO_CONFIGURED && !isDemo;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 text-white flex flex-col relative overflow-hidden selection:bg-cyan-500/30">
-      <div className="absolute top-[-10%] left-[50%] -translate-x-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
-
+    <div className="min-h-screen bg-slate-950 text-white flex flex-col relative overflow-hidden selection:bg-aqua-500/30">
       {/* Top Header */}
       <header className="px-6 py-6 md:px-10 flex flex-col md:flex-row md:items-center justify-between text-center md:text-left relative z-10 pt-safe mb-4 gap-4 w-full max-w-5xl mx-auto">
         <div className="flex flex-col items-center md:items-start">
@@ -247,11 +245,11 @@ const LiveRoomDetailView = () => {
               type="button"
               onClick={handleGracefulExit}
               aria-label="Leave room"
-              className="p-2 rounded-xl bg-slate-950/80 border border-white/10 text-slate-300 hover:text-white hover:border-cyan-500/50 transition-colors"
+              className="p-2 rounded-xl bg-slate-950/80 border border-white/10 text-slate-300 hover:text-white hover:border-aqua-500/50 transition-colors"
             >
               <ArrowLeft size={18} />
             </button>
-            <div className="flex items-center space-x-3 bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 shadow-inner w-fit">
+            <div className="flex items-center space-x-3 bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-card border border-white/10 shadow-inner w-fit">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
@@ -259,10 +257,10 @@ const LiveRoomDetailView = () => {
               <span className="text-green-400 text-xs font-semibold">Live Room</span>
             </div>
           </div>
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight drop-shadow-md mb-2">{room.topic}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">{room.topic}</h1>
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
             {relatedCourse && (
-              <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase bg-cyan-500/10 px-3 py-1.5 rounded-xl border border-cyan-500/20 w-fit">
+              <p className="text-aqua-400 text-xs font-bold bg-aqua-500/10 px-3 py-1.5 rounded-xl border border-aqua-500/20 w-fit">
                 {relatedCourse.title}
               </p>
             )}
@@ -279,7 +277,7 @@ const LiveRoomDetailView = () => {
               type="button"
               onClick={handleEndClass}
               disabled={isEnding}
-              className="flex items-center space-x-2 bg-slate-950/80 hover:bg-red-500/20 text-red-500 border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)] px-6 py-3 rounded-2xl font-semibold text-sm transition-all disabled:opacity-50"
+              className="flex items-center space-x-2 bg-slate-950/80 hover:bg-red-500/20 text-red-500 border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)] px-6 py-3 rounded-card font-semibold text-sm transition-all disabled:opacity-50"
             >
               {isEnding ? <Loader2 className="w-4 h-4 animate-spin" /> : <PhoneOff className="w-4 h-4" />}
               <span>End Class</span>
@@ -290,15 +288,15 @@ const LiveRoomDetailView = () => {
 
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-5xl mx-auto px-4 md:px-8 pb-8 z-10 flex flex-col items-center justify-center">
-        <div className="w-full h-[70vh] bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden relative group p-1">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-bl-full -z-10 group-hover:bg-cyan-500/20 transition-colors duration-500 blur-3xl" />
+        <div className="w-full h-[70vh] bg-white/5 backdrop-blur-2xl border border-white/10 rounded-sheet shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden relative group p-1">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-aqua-500/10 rounded-bl-full -z-10 group-hover:bg-aqua-500/20 transition-colors duration-500 blur-3xl" />
 
           {liveAudioAvailable ? (
-            <div ref={joinMeeting} className="w-full h-full rounded-2xl overflow-hidden glass" />
+            <div ref={joinMeeting} className="w-full h-full rounded-card overflow-hidden glass" />
           ) : (
-            <div className="w-full h-full rounded-2xl flex flex-col items-center justify-center text-center p-8 gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
-                <Radio className="w-8 h-8 text-cyan-400" />
+            <div className="w-full h-full rounded-card flex flex-col items-center justify-center text-center p-8 gap-4">
+              <div className="w-16 h-16 rounded-card bg-aqua-500/10 border border-aqua-500/30 flex items-center justify-center">
+                <Radio className="w-8 h-8 text-aqua-400" />
               </div>
               <h2 className="text-xl font-bold text-white">Room is open, audio bridge is not</h2>
               <p className="text-slate-400 text-sm max-w-md leading-relaxed">

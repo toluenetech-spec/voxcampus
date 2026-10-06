@@ -80,8 +80,8 @@ const SignUpView = () => {
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-6 pb-16">
-      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-cyan-500/30 w-full max-w-md p-8 rounded-3xl relative overflow-hidden transition-colors duration-300">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50" />
+      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-aqua-500/30 w-full max-w-md p-8 rounded-panel relative overflow-hidden transition-colors duration-300">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-aqua-400 to-transparent opacity-50" />
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 text-center">Create your account</h2>
         <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-6">
@@ -112,7 +112,7 @@ const SignUpView = () => {
               autoComplete="name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
               placeholder="Ada Lovelace"
             />
           </div>
@@ -131,7 +131,7 @@ const SignUpView = () => {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
               placeholder="user@voxcampus.edu"
             />
           </div>
@@ -152,13 +152,13 @@ const SignUpView = () => {
                 autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 pr-16 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 pr-16 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 placeholder="At least 6 characters"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500 hover:text-cyan-500 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500 hover:text-aqua-500 transition-colors"
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
@@ -177,7 +177,7 @@ const SignUpView = () => {
               type="text"
               value={institution}
               onChange={(e) => setInstitution(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
               placeholder="Bolmor Polytechnic"
             />
           </div>
@@ -194,15 +194,15 @@ const SignUpView = () => {
                   type="button"
                   onClick={() => setRole(option.value)}
                   aria-pressed={role === option.value}
-                  className={`p-4 rounded-2xl border text-left transition-all ${
+                  className={`p-4 rounded-card border text-left transition-all ${
                     role === option.value
-                      ? 'border-cyan-500 bg-cyan-500/10 shadow-[0_0_15px_rgba(0,229,255,0.15)]'
-                      : 'border-slate-300 dark:border-slate-700 hover:border-cyan-500/50'
+                      ? 'border-aqua-500 bg-aqua-500/10'
+                      : 'border-slate-300 dark:border-slate-700 hover:border-aqua-500/50'
                   }`}
                 >
                   <span
                     className={`block font-bold text-sm ${
-                      role === option.value ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-700 dark:text-slate-200'
+                      role === option.value ? 'text-aqua-600 dark:text-aqua-400' : 'text-slate-700 dark:text-slate-200'
                     }`}
                   >
                     {option.label}
@@ -216,7 +216,7 @@ const SignUpView = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full mt-2 py-4 rounded-xl font-bold tracking-wider text-sm bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition-colors uppercase flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full mt-2 py-4 rounded-xl font-bold text-sm bg-aqua-500 hover:bg-aqua-400 text-slate-950 transition-colors flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Create Account'}
           </button>
@@ -233,7 +233,7 @@ const SignUpView = () => {
           onClick={handleGoogleSignUp}
           disabled={isLoading || !isFirebaseConfigured}
           title={isFirebaseConfigured ? undefined : 'Add Firebase keys to enable Google sign-up'}
-          className="w-full py-4 rounded-xl font-bold tracking-wider text-sm bg-white text-slate-900 border border-slate-300 hover:bg-slate-100 transition-colors uppercase flex justify-center items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-4 rounded-xl font-bold text-sm bg-white text-slate-900 border border-slate-300 hover:bg-slate-100 transition-colors flex justify-center items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -259,7 +259,7 @@ const SignUpView = () => {
         <div className="mt-6 pt-5 border-t border-slate-200 dark:border-slate-800 text-center">
           <p className="text-sm text-slate-500 dark:text-slate-400">
             Already have an account?{' '}
-            <Link to="/login" className="text-cyan-600 dark:text-cyan-400 hover:underline font-semibold">
+            <Link to="/login" className="text-aqua-600 dark:text-aqua-400 hover:underline font-semibold">
               Sign in
             </Link>
           </p>

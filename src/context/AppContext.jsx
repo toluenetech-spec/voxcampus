@@ -392,9 +392,9 @@ export const AppProvider = ({ children }) => {
   if (loadingAuth) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center px-6 text-center transition-colors duration-300">
-        <Loader2 className="w-12 h-12 text-cyan-500 animate-spin mb-6" />
+        <Loader2 className="w-12 h-12 text-aqua-500 animate-spin mb-6" />
         <Logo className="scale-[0.8]" />
-        <p className="text-cyan-600/70 dark:text-cyan-500/50 text-sm mt-2 font-semibold tracking-wide">
+        <p className="text-aqua-600/70 dark:text-aqua-500/50 text-sm mt-2 font-semibold tracking-wide">
           Restoring your session…
         </p>
       </div>
@@ -406,9 +406,9 @@ export const AppProvider = ({ children }) => {
   if (!isFirebaseConfigured && !currentUser && !isDemo) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center px-6 text-center transition-colors duration-300">
-        <div className="max-w-md w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-10 shadow-xl">
+        <div className="max-w-md w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-panel p-10 shadow-xl">
           <CloudOff className="w-14 h-14 text-amber-500 mx-auto mb-6" />
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-3">VoxCampus is not connected</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">VoxCampus is not connected</h1>
           <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">{backendError}</p>
           <div className="flex flex-col sm:flex-row gap-3">
             <button

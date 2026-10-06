@@ -85,7 +85,7 @@ const AudioPlayer = ({ src, title, onPlay }) => {
         type="button"
         onClick={togglePlay}
         aria-label={isPlaying ? `Pause ${title ?? 'episode'}` : `Play ${title ?? 'episode'}`}
-        className={`w-14 h-14 rounded-full flex items-center justify-center text-white bg-cyan-500 transition-all duration-300 ease-in-out cursor-pointer hover:scale-105 shrink-0 ${
+        className={`w-14 h-14 rounded-full flex items-center justify-center text-white bg-aqua-500 transition-all duration-300 ease-in-out cursor-pointer hover:scale-105 shrink-0 ${
           isPlaying ? 'shadow-[0_0_20px_rgba(6,182,212,0.8)]' : ''
         }`}
       >
@@ -102,7 +102,7 @@ const AudioPlayer = ({ src, title, onPlay }) => {
           onChange={handleSeek}
           disabled={!duration}
           aria-label="Seek"
-          className="w-full h-1.5 appearance-none rounded-full bg-slate-200 dark:bg-slate-700 accent-cyan-500 cursor-pointer disabled:cursor-default [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-500 [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(0,229,255,0.7)]"
+          className="w-full h-1.5 appearance-none rounded-full bg-slate-200 dark:bg-slate-700 accent-aqua-500 cursor-pointer disabled:cursor-default [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-aqua-500 [&::-webkit-slider-thumb]:"
           style={{
             background: `linear-gradient(to right, rgb(6 182 212) ${progress}%, transparent ${progress}%)`,
           }}

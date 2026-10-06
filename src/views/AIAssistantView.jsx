@@ -167,7 +167,7 @@ const ErrorPanel = ({ message, onRetry, onDismiss }) => {
   const state = classifyAiError(message);
   const { icon: Icon, title, body, hint } = ERROR_PRESENTATION[state];
   return (
-    <div className="relative flex flex-col items-center justify-center text-center p-8 gap-3 rounded-3xl border border-amber-500/30 bg-amber-500/5">
+    <div className="relative flex flex-col items-center justify-center text-center p-8 gap-3 rounded-panel border border-amber-500/30 bg-amber-500/5">
       {onDismiss && (
         <button
           type="button"
@@ -178,7 +178,7 @@ const ErrorPanel = ({ message, onRetry, onDismiss }) => {
           <X className="w-4 h-4" />
         </button>
       )}
-      <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
+      <div className="w-14 h-14 rounded-card bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
         <Icon className="w-7 h-7 text-amber-400" />
       </div>
       <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
@@ -476,7 +476,7 @@ const AIAssistantView = () => {
           <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-5 space-y-5">
             {messages.length === 0 && !error && (
               <div className="h-full flex flex-col items-center justify-center text-center gap-3">
-                <div className="w-16 h-16 rounded-2xl bg-aqua-500/10 border border-aqua-400/30 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-card bg-aqua-500/10 border border-aqua-400/30 flex items-center justify-center">
                   <Sparkles className="w-8 h-8 text-aqua-500 dark:text-aqua-400" />
                 </div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -499,7 +499,7 @@ const AIAssistantView = () => {
                   )}
                   <div className={`max-w-[85%] ${mine ? 'items-end' : ''} flex flex-col gap-1.5`}>
                     <div
-                      className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+                      className={`rounded-card px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                         mine
                           ? 'bg-aqua-500 text-slate-950'
                           : 'inset-well rounded-card text-slate-800 dark:text-slate-200'
@@ -539,7 +539,7 @@ const AIAssistantView = () => {
                 <span className="w-8 h-8 shrink-0 rounded-xl bg-aqua-500/10 border border-aqua-400/30 flex items-center justify-center">
                   <Bot className="w-4 h-4 text-aqua-500 dark:text-aqua-400" />
                 </span>
-                <div className="rounded-2xl px-4 py-3 bg-slate-100 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                <div className="rounded-card px-4 py-3 bg-slate-100 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                   <Loader2 className="w-4 h-4 animate-spin" /> Thinking…
                 </div>
               </div>
@@ -574,13 +574,13 @@ const AIAssistantView = () => {
                 rows={2}
                 placeholder={placeholder}
                 aria-label={placeholder}
-                className="flex-1 resize-none bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 custom-scrollbar"
+                className="flex-1 resize-none bg-slate-50 dark:bg-slate-950/50 border border-slate-300 dark:border-slate-700 rounded-card px-4 py-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 custom-scrollbar"
               />
               <button
                 type="submit"
                 disabled={pending || !draft.trim()}
                 aria-label="Send message"
-                className="h-11 w-11 shrink-0 rounded-2xl bg-aqua-500 text-slate-950 flex items-center justify-center hover:bg-aqua-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-11 w-11 shrink-0 rounded-card bg-aqua-500 text-slate-950 flex items-center justify-center hover:bg-aqua-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {pending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               </button>

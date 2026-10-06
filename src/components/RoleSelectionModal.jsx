@@ -49,17 +49,17 @@ const RoleSelectionModal = () => {
         role="dialog"
         aria-modal="true"
         aria-labelledby="role-modal-title"
-        className="max-w-3xl w-full bg-slate-900/50 border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl flex flex-col items-center"
+        className="max-w-3xl w-full bg-slate-900/50 border border-white/10 rounded-panel p-8 md:p-12 shadow-2xl flex flex-col items-center"
       >
-        <h2 id="role-modal-title" className="text-3xl md:text-4xl font-extrabold text-white mb-4 text-center">
-          Welcome to VoxCampus! <span className="text-cyan-400">Choose your path.</span>
+        <h2 id="role-modal-title" className="text-3xl md:text-4xl font-bold text-white mb-4 text-center">
+          Welcome to VoxCampus! <span className="text-aqua-400">Choose your path.</span>
         </h2>
         <p className="text-slate-400 text-center mb-10 max-w-lg">
           Select how you want to use VoxCampus. You can change this later in your profile settings.
         </p>
 
         {error && (
-          <div className="mb-8 w-full max-w-lg bg-red-500/10 border border-red-500/40 text-red-300 p-4 rounded-2xl text-sm font-semibold flex items-start gap-3">
+          <div className="mb-8 w-full max-w-lg bg-red-500/10 border border-red-500/40 text-red-300 p-4 rounded-card text-sm font-semibold flex items-start gap-3">
             <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -72,13 +72,11 @@ const RoleSelectionModal = () => {
               type="button"
               onClick={() => handleSelectRole(role)}
               disabled={Boolean(loadingRole)}
-              className={`relative group flex flex-col items-center text-center p-8 rounded-2xl border border-white/5 bg-white/5 hover:border-cyan-500 hover:bg-white/10 transition-all cursor-pointer overflow-hidden disabled:cursor-wait ${
+              className={`relative group flex flex-col items-center text-center p-8 rounded-card border border-white/5 bg-white/5 hover:border-aqua-500 hover:bg-white/10 transition-all cursor-pointer overflow-hidden disabled:cursor-wait ${
                 loadingRole && loadingRole !== role ? 'opacity-50' : ''
               }`}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-              <div className="w-20 h-20 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-aqua-500/12 text-aqua-400 transition-colors group-hover:bg-aqua-500/20">
                 {loadingRole === role ? <Loader2 className="w-10 h-10 animate-spin" /> : <Icon className="w-10 h-10" />}
               </div>
 

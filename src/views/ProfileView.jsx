@@ -124,8 +124,8 @@ const ProfileView = () => {
   return (
     <div className="p-6 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-950 pb-32 max-w-4xl mx-auto w-full transition-colors duration-300">
       <div className="flex items-center mb-8">
-        <div className="p-3 bg-cyan-500/10 rounded-2xl mr-4 border border-cyan-500/30">
-          <User className="text-cyan-600 dark:text-cyan-400 w-8 h-8" />
+        <div className="p-3 bg-aqua-500/10 rounded-card mr-4 border border-aqua-500/30">
+          <User className="text-aqua-600 dark:text-aqua-400 w-8 h-8" />
         </div>
         <div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-wide">Your Profile</h1>
@@ -135,7 +135,7 @@ const ProfileView = () => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-8 rounded-[2rem] border hairline shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colors duration-300">
+      <div className="bg-white dark:bg-white/5 backdrop-blur-xl p-8 rounded-sheet border hairline shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colors duration-300">
         {successMsg && (
           <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 text-green-600 dark:text-green-400 rounded-xl font-semibold text-center text-sm transition-colors duration-300">
             {successMsg}
@@ -160,7 +160,7 @@ const ProfileView = () => {
                   handleAvatarClick();
                 }
               }}
-              className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 bg-slate-200 dark:bg-slate-900 cursor-pointer group shadow-xl transition-all hover:border-cyan-400"
+              className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 bg-slate-200 dark:bg-slate-900 cursor-pointer group shadow-xl transition-all hover:border-aqua-400"
             >
               <img
                 src={valueOf('avatarUrl') || avatarDataUri(valueOf('fullName') || currentUser.email || 'User')}
@@ -197,7 +197,7 @@ const ProfileView = () => {
                 value={valueOf('fullName')}
                 onChange={(e) => updateDraft('fullName', e.target.value)}
                 required
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-2xl px-5 py-4 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium"
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-card px-5 py-4 text-slate-900 dark:text-white focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all font-medium"
               />
             </div>
 
@@ -213,7 +213,7 @@ const ProfileView = () => {
                 type="email"
                 value={currentUser.email ?? ''}
                 readOnly
-                className="w-full bg-slate-100 dark:bg-slate-900/80 border border-transparent rounded-2xl px-5 py-4 text-slate-500 focus:outline-none cursor-not-allowed font-medium"
+                className="w-full bg-slate-100 dark:bg-slate-900/80 border border-transparent rounded-card px-5 py-4 text-slate-500 focus:outline-none cursor-not-allowed font-medium"
               />
             </div>
 
@@ -230,7 +230,7 @@ const ProfileView = () => {
                 value={valueOf('institution')}
                 onChange={(e) => updateDraft('institution', e.target.value)}
                 placeholder="e.g. Bolmor Polytechnic"
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium"
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-card px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all font-medium"
               />
             </div>
 
@@ -246,10 +246,10 @@ const ProfileView = () => {
                     type="button"
                     onClick={() => handleRoleChange(value)}
                     aria-pressed={currentUser.role === value}
-                    className={`flex items-center justify-center gap-2 py-3.5 rounded-2xl border text-sm font-bold transition-all ${
+                    className={`flex items-center justify-center gap-2 py-3.5 rounded-card border text-sm font-bold transition-all ${
                       currentUser.role === value
-                        ? 'border-cyan-500 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400'
-                        : 'hairline text-slate-600 dark:text-slate-400 hover:border-cyan-500/50'
+                        ? 'border-aqua-500 bg-aqua-500/10 text-aqua-600 dark:text-aqua-400'
+                        : 'hairline text-slate-600 dark:text-slate-400 hover:border-aqua-500/50'
                     }`}
                   >
                     <Icon className="w-4 h-4" /> {label}
@@ -268,7 +268,7 @@ const ProfileView = () => {
                 value={valueOf('bio')}
                 onChange={(e) => updateDraft('bio', e.target.value)}
                 placeholder="Tell us a bit about yourself..."
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-medium resize-none"
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border hairline rounded-card px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-aqua-400 focus:ring-1 focus:ring-aqua-400 transition-all font-medium resize-none"
               />
             </div>
           </div>
@@ -277,7 +277,7 @@ const ProfileView = () => {
             <button
               type="submit"
               disabled={isSaving || isUploading}
-              className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-2xl hover:bg-cyan-400 transition-colorsflex justify-center items-center shadow-contact disabled:opacity-50"
+              className="w-full py-4 bg-aqua-500 text-slate-950 font-bold rounded-card hover:bg-aqua-400 transition-colorsflex justify-center items-center shadow-contact disabled:opacity-50"
             >
               {isSaving ? (
                 <>

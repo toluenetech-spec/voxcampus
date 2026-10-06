@@ -59,8 +59,8 @@ const GuidedTour = () => {
       aria-modal="true"
       aria-labelledby="guided-tour-title"
     >
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 shadow-[0_0_40px_rgba(6,182,212,0.15)] rounded-2xl p-8 max-w-md w-full relative animate-in fade-in zoom-in-95 duration-300 transition-colors">
-        <div className="text-cyan-600 dark:text-cyan-400 text-sm font-bold tracking-wider uppercase mb-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-aqua-500/30 shadow-[0_0_40px_rgba(6,182,212,0.15)] rounded-card p-8 max-w-md w-full relative animate-in fade-in zoom-in-95 duration-300 transition-colors">
+        <div className="text-aqua-600 dark:text-aqua-400 text-sm font-bold mb-4">
           Step {currentStep + 1} of {steps.length}
         </div>
 
@@ -81,7 +81,7 @@ const GuidedTour = () => {
           <button
             type="button"
             onClick={handleNext}
-            className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 px-6 rounded-lg transition-all"
+            className="bg-aqua-500 hover:bg-aqua-400 text-slate-950 font-bold py-2.5 px-6 rounded-lg transition-all"
           >
             {currentStep === steps.length - 1 ? 'Get Started' : 'Next'}
           </button>

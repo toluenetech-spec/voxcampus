@@ -50,9 +50,7 @@ const AuthLayout = () => {
         <div className="mb-4">
           <Logo className="scale-110 md:scale-125" />
         </div>
-        <p className="text-slate-500 dark:text-slate-400 text-sm tracking-widest uppercase font-bold">
-          Universal E-Learning
-        </p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm font-bold">Universal E-Learning</p>
       </div>
       <Outlet />
     </div>

@@ -119,6 +119,19 @@
     border-color: var(--hairline);
   }
 
+  /* Surfaces that are dark by design (the landing page, the live room) need
+     the dark material tokens even when the user's theme is light, otherwise
+     glass panels turn white underneath dark text. */
+  .material-force-dark {
+    --fill-thin: rgb(30 41 59 / 0.55);
+    --fill-regular: rgb(30 41 59 / 0.72);
+    --fill-thick: rgb(30 41 59 / 0.88);
+    --hairline: rgb(255 255 255 / 0.08);
+    --specular: rgb(255 255 255 / 0.06);
+    --shadow-ambient: 0 16px 40px -12px rgb(0 0 0 / 0.55);
+    --shadow-contact: 0 2px 8px -2px rgb(0 0 0 / 0.4);
+  }
+
   /* ---------------------------------------------------------------------
    * Surfaces for content that sits on top of a material.
    * ------------------------------------------------------------------- */

@@ -1,65 +1,168 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { ArrowRight, BookOpen, Check, GraduationCap, Headphones, Mic, Radio, Sparkles } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { Mic, Globe, BookOpen, Headphones, Sparkles, Database, Terminal, Code } from 'lucide-react';
 import Logo from '../components/Logo';
-import ParticleBackground from '../components/ParticleBackground';
 import Footer from '../components/Footer';
 
-const AnimatedCounter = ({ target, duration = 2000, suffix = '+' }) => {
-  const [count, setCount] = useState(0);
-  const counterRef = useRef(null);
+/* ------------------------------------------------------------------ copy */
 
-  useEffect(() => {
-    const node = counterRef.current;
-    if (!node) return;
+const FEATURES = [
+  {
+    icon: Radio,
+    title: 'Live rooms',
+    body: 'Your instructor goes live, you get a push-in join. Host controls, listener counts, and the room closes when the class does.',
+  },
+  {
+    icon: Headphones,
+    title: 'A library per course',
+    body: 'Every lecture lands in its course, newest first. Private to enrolled students unless your instructor publishes it.',
+  },
+  {
+    icon: Sparkles,
+    title: 'An assistant that read the syllabus',
+    body: 'Ask it about your courses, get a lecture outline, generate a quiz, or turn a topic into flashcards — grounded in your own material.',
+  },
+  {
+    icon: BookOpen,
+    title: 'Assignments that close the loop',
+    body: 'Submit text or a file against a deadline. Your instructor grades it in place and it shows up against the assignment.',
+  },
+];
 
-    let startTime;
-    let animationFrame;
-    let hasStarted = false;
+const STEPS = [
+  {
+    title: 'Join with a code',
+    body: 'Your instructor shares a six-character code. Paste it in and the course appears on your dashboard.',
+  },
+  {
+    title: 'Listen on your own schedule',
+    body: 'Stream at whatever speed gets you through it. Pick up mid-commute, finish on the bus home.',
+  },
+  {
+    title: 'Turn up when it goes live',
+    body: 'Live rooms are announced on your dashboard. Join as a listener, or host one if you teach.',
+  },
+];
 
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = timestamp - startTime;
-      const percentage = Math.min(progress / duration, 1);
+const AUDIENCES = [
+  {
+    icon: GraduationCap,
+    who: 'If you study',
+    points: [
+      'Every lecture for your courses in one place',
+      'Playback speed and background listening',
+      'Join live rooms without installing anything',
+      'Ask the assistant instead of re-scrubbing a recording',
+    ],
+  },
+  {
+    icon: Mic,
+    who: 'If you teach',
+    points: [
+      'Publish a lecture to just your enrolled students',
+      'Go live for office hours or a revision session',
+      'Set assignments with real deadlines and collect submissions',
+      'Grade in place, with the submission alongside the rubric',
+    ],
+  },
+];
 
-      const easeOut = percentage === 1 ? 1 : 1 - Math.pow(2, -10 * percentage);
+/* ------------------------------------------------------- product preview */
 
-      setCount(Math.floor(easeOut * target));
+/** A still of the real product — the dashboard, roughly as it ships. */
+const ProductPreview = () => (
+  <div className="relative mx-auto w-full max-w-4xl">
+    <div className="material-thick rounded-sheet overflow-hidden">
+      {/* Window chrome */}
+      <div className="flex items-center gap-2 px-4 py-3 border-b hairline">
+        <span className="h-2.5 w-2.5 rounded-full bg-slate-600/60" />
+        <span className="h-2.5 w-2.5 rounded-full bg-slate-600/60" />
+        <span className="h-2.5 w-2.5 rounded-full bg-slate-600/60" />
+        <span className="ml-3 text-xs text-slate-500">voxcampus.app/dashboard</span>
+      </div>
 
-      if (progress < duration) {
-        animationFrame = requestAnimationFrame(animate);
-      } else {
-        setCount(target);
-      }
-    };
+      <div className="grid gap-4 p-5 sm:grid-cols-[200px_1fr]">
+        {/* Sidebar */}
+        <div className="hidden sm:flex flex-col gap-1.5">
+          {['Home', 'Library', 'Live', 'AI Assistant', 'Profile'].map((item, index) => (
+            <div
+              key={item}
+              className={`rounded-card px-3 py-2 text-xs font-medium ${
+                index === 0 ? 'bg-aqua-500/12 text-aqua-300' : 'text-slate-500'
+              }`}
+            >
+              {item}
+            </div>
+          ))}
+          <div className="mt-auto rounded-card bg-slate-800/60 p-3">
+            <div className="h-2 w-16 rounded-full bg-slate-600" />
+            <div className="mt-2 h-2 w-24 rounded-full bg-slate-700" />
+          </div>
+        </div>
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && !hasStarted) {
-          hasStarted = true;
-          animationFrame = requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.1 },
-    );
+        {/* Content */}
+        <div className="space-y-3">
+          <div>
+            <div className="h-4 w-40 rounded-full bg-slate-700" />
+            <div className="mt-2 h-2.5 w-64 rounded-full bg-slate-800" />
+          </div>
 
-    observer.observe(node);
+          {/* Course cards */}
+          {[
+            { title: 'Signals & Systems 301', meta: 'Dr. Amara Okafor', live: true },
+            { title: 'Introduction to Machine Learning', meta: 'Dr. Amara Okafor', live: false },
+          ].map((course) => (
+            <div key={course.title} className="rounded-card border border-white/[0.06] bg-slate-900/60 p-3.5">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-slate-200">{course.title}</p>
+                  <p className="mt-0.5 text-xs text-slate-500">{course.meta}</p>
+                </div>
+                {course.live && (
+                  <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-rose-500/12 px-2 py-1 text-[11px] font-medium text-rose-300">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rose-400" />
+                    Live
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
 
-    return () => {
-      if (animationFrame) cancelAnimationFrame(animationFrame);
-      if (node) observer.unobserve(node);
-    };
-  }, [target, duration]);
+          {/* Player */}
+          <div className="rounded-card border border-white/[0.06] bg-slate-900/60 p-3.5">
+            <div className="flex items-center gap-3">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-aqua-500/15 text-aqua-300">
+                <Headphones size={16} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-medium text-slate-300">Lecture 03 — The Fourier series</p>
+                <div className="mt-2 flex items-center gap-1">
+                  {Array.from({ length: 28 }).map((_, index) => (
+                    <span
+                      key={index}
+                      className={`w-full rounded-full ${index < 11 ? 'bg-aqua-400' : 'bg-slate-700'}`}
+                      style={{ height: `${6 + ((index * 7) % 9)}px` }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <span className="shrink-0 text-[11px] tabular-nums text-slate-500">18:24</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  return (
-    <span ref={counterRef}>
-      {count.toLocaleString()}
-      {suffix}
-    </span>
-  );
-};
+    {/* Soft light source behind the panel */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute -inset-x-16 -top-16 -z-10 h-64 rounded-full bg-aqua-500/15 blur-[100px]"
+    />
+  </div>
+);
+
+/* ------------------------------------------------------------------ view */
 
 const LandingView = () => {
   const { currentUser, startDemo } = useAppContext();
@@ -67,336 +170,194 @@ const LandingView = () => {
   const [startingDemo, setStartingDemo] = useState(false);
 
   useEffect(() => {
-    if (currentUser) {
-      navigate('/dashboard', { replace: true });
-    }
+    if (currentUser) navigate('/dashboard', { replace: true });
   }, [currentUser, navigate]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white relative flex flex-col font-sans">
-      {/* Navbar (Minimal) */}
-      <nav className="relative z-20 w-full p-6 flex justify-between items-center max-w-7xl mx-auto">
-        <Logo className="scale-75 md:scale-100 origin-left" />
-        <div className="space-x-4 flex items-center">
-          <Link to="/login" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="text-sm font-semibold bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white px-5 py-2 rounded-full transition-all"
-          >
-            Get Started
-          </Link>
-        </div>
-      </nav>
+    <div className="material-force-dark relative min-h-screen overflow-x-hidden bg-slate-950 text-white">
+      {/* Ambient wash — static, so it costs nothing to scroll. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-x-0 top-0 -z-0 h-[600px] bg-[radial-gradient(120%_100%_at_50%_0%,rgba(34,211,238,0.10),transparent_70%)]"
+      />
 
-      {/* Hero Section */}
-      <main className="relative flex-grow flex flex-col items-center justify-center px-6 py-16 md:px-12 md:py-32 overflow-hidden">
-        {/* Particle Animation Background */}
-        <ParticleBackground />
+      <div className="relative z-10 flex flex-col">
+        {/* ---------------------------------------------------------- nav */}
+        <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-slate-950/70 backdrop-blur-xl">
+          <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+            <Logo className="scale-[0.62] origin-left" />
+            <div className="flex items-center gap-2 sm:gap-4">
+              <Link
+                to="/login"
+                className="rounded-card px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:text-white"
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/signup"
+                className="rounded-card bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-slate-200"
+              >
+                Create account
+              </Link>
+            </div>
+          </nav>
+        </header>
 
-        <div className="text-center max-w-5xl mx-auto w-full relative z-10">
-          {/* Bouncing Icons Animation */}
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center -z-10 hidden md:flex">
-            <div className="absolute top-10 left-10 animate-bounce [animation-duration:3s]">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md text-cyan-400">
-                <Mic size={24} />
+        {/* --------------------------------------------------------- hero */}
+        <main className="flex flex-col">
+          <section className="relative px-6 pb-16 pt-20 sm:pt-28">
+            <div className="relative z-10 mx-auto max-w-3xl text-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-slate-300">
+                <Sparkles size={13} className="text-aqua-400" />
+                Now with an AI assistant for every course
+              </span>
+
+              <h1 className="mt-7 text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
+                Every lecture,
+                <br />
+                on your own schedule.
+              </h1>
+
+              <p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-slate-400">
+                VoxCampus puts your course audio somewhere you'll actually use it — stream lectures at your own speed,
+                drop into a live room when your instructor goes on air, and ask the assistant about anything you missed.
+              </p>
+
+              <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  to="/signup"
+                  className="group inline-flex w-full items-center justify-center gap-2 rounded-card bg-aqua-500 px-6 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-aqua-400 sm:w-auto"
+                >
+                  Create an account
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-flex w-full items-center justify-center rounded-card border border-white/15 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/[0.06] sm:w-auto"
+                >
+                  I already have one
+                </Link>
+              </div>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  setStartingDemo(true);
+                  try {
+                    await startDemo('student');
+                    navigate('/dashboard', { replace: true });
+                  } catch (error) {
+                    console.error(error);
+                    setStartingDemo(false);
+                  }
+                }}
+                disabled={startingDemo}
+                className="mt-5 text-sm text-slate-500 underline underline-offset-4 transition-colors hover:text-slate-300 disabled:opacity-60"
+              >
+                {startingDemo ? 'Opening the demo…' : 'Or look around the demo workspace first'}
+              </button>
+            </div>
+
+            <div className="mt-16">
+              <ProductPreview />
+            </div>
+          </section>
+
+          {/* ----------------------------------------------------- features */}
+          <section className="px-6 py-20 sm:py-28">
+            <div className="mx-auto max-w-6xl">
+              <h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
+                Built around how a course actually runs
+              </h2>
+              <p className="mt-4 max-w-xl text-slate-400">
+                Not a podcast app with a login screen. Lectures belong to courses, deadlines belong to assignments, and
+                live rooms belong to the person teaching.
+              </p>
+
+              <div className="mt-12 grid gap-4 sm:grid-cols-2">
+                {FEATURES.map(({ icon: Icon, title, body }) => (
+                  <div
+                    key={title}
+                    className="material-regular rounded-panel p-6 transition-colors hover:bg-white/[0.06]"
+                  >
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-card bg-aqua-500/12 text-aqua-400">
+                      <Icon size={19} />
+                    </span>
+                    <h3 className="mt-5 text-base font-semibold text-white">{title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-400">{body}</p>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="absolute top-20 right-10 animate-bounce [animation-duration:4s] [animation-delay:1s]">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md text-[#E916E6]">
-                <Headphones size={24} />
+          </section>
+
+          {/* -------------------------------------------------------- steps */}
+          <section className="border-y border-white/[0.06] bg-white/[0.02] px-6 py-20 sm:py-28">
+            <div className="mx-auto max-w-6xl">
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Three steps, then you're caught up</h2>
+              <div className="mt-12 grid gap-8 sm:grid-cols-3">
+                {STEPS.map((step, index) => (
+                  <div key={step.title}>
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-sm font-semibold text-aqua-400">
+                      {index + 1}
+                    </span>
+                    <h3 className="mt-5 text-base font-semibold text-white">{step.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-400">{step.body}</p>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="absolute bottom-20 left-10 animate-bounce [animation-duration:3.5s] [animation-delay:0.5s]">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md text-[#1F6AE1]">
-                <Sparkles size={24} />
+          </section>
+
+          {/* ---------------------------------------------------- audiences */}
+          <section className="px-6 py-20 sm:py-28">
+            <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-2">
+              {AUDIENCES.map(({ icon: Icon, who, points }) => (
+                <div key={who} className="material-regular rounded-panel p-8">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-card bg-white/[0.06] text-slate-300">
+                    <Icon size={19} />
+                  </span>
+                  <h3 className="mt-5 text-lg font-semibold text-white">{who}</h3>
+                  <ul className="mt-5 space-y-3">
+                    {points.map((point) => (
+                      <li key={point} className="flex gap-3 text-sm text-slate-400">
+                        <Check size={16} className="mt-0.5 shrink-0 text-aqua-400" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ---------------------------------------------------------- cta */}
+          <section className="px-6 pb-24">
+            <div className="mx-auto max-w-3xl rounded-sheet border border-white/[0.08] bg-white/[0.03] px-8 py-14 text-center">
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Start with one course</h2>
+              <p className="mx-auto mt-4 max-w-md text-slate-400">
+                Create an account, join with a code, and see whether it survives a week of your actual timetable.
+              </p>
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  to="/signup"
+                  className="inline-flex w-full items-center justify-center rounded-card bg-aqua-500 px-6 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-aqua-400 sm:w-auto"
+                >
+                  Create an account
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-flex w-full items-center justify-center rounded-card border border-white/15 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/[0.06] sm:w-auto"
+                >
+                  Sign in
+                </Link>
               </div>
             </div>
-            <div className="absolute bottom-10 right-20 animate-bounce [animation-duration:4.5s] [animation-delay:1.5s]">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md text-cyan-400">
-                <Database size={24} />
-              </div>
-            </div>
-            <div className="absolute top-1/2 -left-10 -translate-y-1/2 animate-bounce [animation-duration:3s] [animation-delay:2s]">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md text-[#E916E6]">
-                <Terminal size={24} />
-              </div>
-            </div>
-            <div className="absolute top-1/2 -right-10 -translate-y-1/2 animate-bounce [animation-duration:4s] [animation-delay:0.5s]">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md text-[#1F6AE1]">
-                <Code size={24} />
-              </div>
-            </div>
-          </div>
+          </section>
+        </main>
 
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-            The Future of <br className="md:hidden" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-[#1F6AE1] to-[#E916E6]">
-              Audio Learning.
-            </span>
-          </h1>
-          <p className="text-lg md:text-xl leading-relaxed mt-6 mb-10 max-w-3xl mx-auto text-slate-300">
-            Welcome to VoxCampus. Stream lectures, join live interactive audio rooms, and discover trending academic
-            podcasts from top instructors.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24">
-            <Link
-              to="/signup"
-              className="w-full sm:w-auto bg-[#1F6AE1] hover:bg-blue-600 text-white font-semibold text-lg md:text-xl py-4 px-10 rounded-full transition-all duration-300 shadow-[0_0_15px_rgba(31,106,225,0.4)] hover:shadow-[0_0_25px_rgba(31,106,225,0.6)] hover:scale-105"
-            >
-              Get Started
-            </Link>
-            <Link
-              to="/login"
-              className="w-full sm:w-auto bg-transparent border border-slate-600 hover:border-slate-400 text-white font-semibold text-lg md:text-xl py-4 px-10 rounded-full transition-all duration-300 hover:bg-white/5"
-            >
-              Login
-            </Link>
-          </div>
-
-          <button
-            type="button"
-            onClick={async () => {
-              setStartingDemo(true);
-              try {
-                await startDemo('student');
-                navigate('/dashboard', { replace: true });
-              } catch (error) {
-                console.error(error);
-                setStartingDemo(false);
-              }
-            }}
-            disabled={startingDemo}
-            className="text-sm font-semibold text-slate-400 hover:text-cyan-300 transition-colors underline underline-offset-8 mb-24 disabled:opacity-60"
-          >
-            {startingDemo ? 'Opening the demo…' : 'Or explore the demo workspace — no account needed'}
-          </button>
-        </div>
-
-        {/* Features Grid */}
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8 pb-12 relative z-10">
-          <div className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 md:p-12 hover:-translate-y-2 hover:border-[#1F6AE1]/50 hover:bg-white/10 transition-all duration-300 flex flex-col items-start shadow-lg relative overflow-hidden">
-            <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#1F6AE1] blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-            <div className="bg-[#1F6AE1]/20 p-4 rounded-2xl mb-6 text-cyan-400 group-hover:scale-110 transition-transform duration-300 relative z-10">
-              <Mic size={32} />
-            </div>
-            <h3 className="text-xl font-bold mb-4 text-white relative z-10">Live Audio Rooms</h3>
-            <p className="text-base text-slate-300 leading-relaxed relative z-10">
-              Engage in real-time interaction during live broadcasts. Perfect for virtual office hours, study groups,
-              and interactive Q&A sessions.
-            </p>
-          </div>
-
-          <div className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 md:p-12 hover:-translate-y-2 hover:border-[#E916E6]/50 hover:bg-white/10 transition-all duration-300 flex flex-col items-start shadow-lg relative overflow-hidden">
-            <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#E916E6] blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-            <div className="bg-[#E916E6]/20 p-4 rounded-2xl mb-6 text-[#E916E6] group-hover:scale-110 transition-transform duration-300 relative z-10">
-              <Globe size={32} />
-            </div>
-            <h3 className="text-xl font-bold mb-4 text-white relative z-10">Global Discovery Hub</h3>
-            <p className="text-base text-slate-300 leading-relaxed relative z-10">
-              Explore a Spotify-style trending algorithm that surfaces the most popular lectures and allows for instant,
-              on-demand streaming.
-            </p>
-          </div>
-
-          <div className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 md:p-12 hover:-translate-y-2 hover:border-cyan-400/50 hover:bg-white/10 transition-all duration-300 flex flex-col items-start shadow-lg relative overflow-hidden">
-            <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-400 blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-            <div className="bg-cyan-400/20 p-4 rounded-2xl mb-6 text-cyan-400 group-hover:scale-110 transition-transform duration-300 relative z-10">
-              <BookOpen size={32} />
-            </div>
-            <h3 className="text-xl font-bold mb-4 text-white relative z-10">Instructor Podcasts</h3>
-            <p className="text-base text-slate-300 leading-relaxed relative z-10">
-              Access dedicated course materials seamlessly. Instructors can easily upload and manage their podcasts to
-              build comprehensive audio libraries.
-            </p>
-          </div>
-        </div>
-      </main>
-
-      {/* SPONSORS/PARTNERS SECTION */}
-      <section className="w-full max-w-7xl mx-auto py-20 md:py-32 border-t border-white/10 text-center relative z-10 px-6">
-        <p className="text-slate-400 font-semibold tracking-widest uppercase mb-12">
-          Trusted by Top Institutions & Tech Academies
-        </p>
-        <div className="overflow-hidden w-full relative flex items-center [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex gap-16 md:gap-24 animate-marquee w-max py-4">
-            {/* FIRST SET */}
-            <span
-              className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold tracking-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse"
-              style={{ animationDuration: '3s' }}
-            >
-              Google
-            </span>
-            <span
-              className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold tracking-tight text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)] animate-pulse"
-              style={{ animationDuration: '4s' }}
-            >
-              Gemini
-            </span>
-            <span
-              className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold tracking-tight text-blue-400 drop-shadow-[0_0_15px_rgba(96,165,250,0.8)] animate-pulse"
-              style={{ animationDuration: '3.5s' }}
-            >
-              Cloudinary
-            </span>
-            <span
-              className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold italic font-serif text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-pulse"
-              style={{ animationDuration: '4.5s' }}
-            >
-              3BF & Co.
-            </span>
-            <img
-              src="/bolmor-logo.png"
-              alt="Bolmor Polytechnic"
-              className="h-16 md:h-24 object-contain flex-shrink-0 drop-shadow-[0_0_15px_rgba(225,29,72,0.8)] animate-pulse"
-              style={{ animationDuration: '3.2s' }}
-            />
-            <img
-              src="/nacos-logo.png"
-              alt="NACOS"
-              className="h-16 md:h-24 object-contain flex-shrink-0 drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] animate-pulse"
-              style={{ animationDuration: '4.2s' }}
-            />
-
-            {/* SECOND SET */}
-            <span
-              className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold tracking-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse"
-              style={{ animationDuration: '3s' }}
-            >
-              Google
-            </span>
-            <span
-              className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold tracking-tight text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)] animate-pulse"
-              style={{ animationDuration: '4s' }}
-            >
-              Gemini
-            </span>
-            <span
-              className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold tracking-tight text-blue-400 drop-shadow-[0_0_15px_rgba(96,165,250,0.8)] animate-pulse"
-              style={{ animationDuration: '3.5s' }}
-            >
-              Cloudinary
-            </span>
-            <span
-              className="text-3xl md:text-5xl whitespace-nowrap flex-shrink-0 font-bold italic font-serif text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-pulse"
-              style={{ animationDuration: '4.5s' }}
-            >
-              3BF & Co.
-            </span>
-            <img
-              src="/bolmor-logo.png"
-              alt="Bolmor Polytechnic"
-              className="h-16 md:h-24 object-contain flex-shrink-0 drop-shadow-[0_0_15px_rgba(225,29,72,0.8)] animate-pulse"
-              style={{ animationDuration: '3.2s' }}
-            />
-            <img
-              src="/nacos-logo.png"
-              alt="NACOS"
-              className="h-16 md:h-24 object-contain flex-shrink-0 drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] animate-pulse"
-              style={{ animationDuration: '4.2s' }}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* STATS SECTION */}
-      <section className="w-full py-20 md:py-32 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-12 md:p-24 shadow-2xl flex flex-col md:flex-row justify-around items-center gap-12 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1F6AE1]/10 via-transparent to-[#E916E6]/10"></div>
-            <div className="text-center relative z-10">
-              <div className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-4">
-                <AnimatedCounter target={10000} suffix="+" />
-              </div>
-              <div className="text-xl text-slate-300 font-semibold">Active Students</div>
-            </div>
-            <div className="hidden md:block w-px h-32 bg-white/10 relative z-10"></div>
-            <div className="text-center relative z-10">
-              <div className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1F6AE1] to-[#E916E6] mb-4">
-                <AnimatedCounter target={500} suffix="+" />
-              </div>
-              <div className="text-xl text-slate-300 font-semibold">Live Rooms</div>
-            </div>
-            <div className="hidden md:block w-px h-32 bg-white/10 relative z-10"></div>
-            <div className="text-center relative z-10">
-              <div className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#E916E6] to-pink-500 mb-4">
-                <AnimatedCounter target={50000} suffix="+" />
-              </div>
-              <div className="text-xl text-slate-300 font-semibold">Hours Streamed</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS SECTION */}
-      <section className="w-full max-w-7xl mx-auto py-20 md:py-32 px-6 md:px-12 relative z-10">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-16 tracking-tight">
-          What Our Community Says
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 shadow-lg relative hover:-translate-y-2 transition-transform duration-300">
-            <div className="text-6xl text-[#1F6AE1]/40 absolute top-6 right-6 font-serif">"</div>
-            <p className="text-lg md:text-xl text-slate-300 leading-relaxed mb-8 relative z-10 italic">
-              "VoxCampus completely changed how I consume lectures. The audio clarity in live rooms is unmatched, and I
-              can listen on the go."
-            </p>
-            <div className="relative z-10">
-              <div className="font-bold text-white text-xl">Sarah Jenkins</div>
-              <div className="text-cyan-400 font-medium">Graduate Student</div>
-            </div>
-          </div>
-
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 shadow-lg relative hover:-translate-y-2 transition-transform duration-300">
-            <div className="text-6xl text-[#E916E6]/40 absolute top-6 right-6 font-serif">"</div>
-            <p className="text-lg md:text-xl text-slate-300 leading-relaxed mb-8 relative z-10 italic">
-              "Hosting virtual office hours has never been easier. My students love the interactive audio, and the setup
-              is completely frictionless."
-            </p>
-            <div className="relative z-10">
-              <div className="font-bold text-white text-xl">Dr. Marcus Webb</div>
-              <div className="text-[#E916E6] font-medium">Professor of Physics</div>
-            </div>
-          </div>
-
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 shadow-lg relative hover:-translate-y-2 transition-transform duration-300">
-            <div className="text-6xl text-cyan-400/40 absolute top-6 right-6 font-serif">"</div>
-            <p className="text-lg md:text-xl text-slate-300 leading-relaxed mb-8 relative z-10 italic">
-              "The trending algorithm is phenomenal. Our institution has seen a massive spike in cross-departmental
-              lecture discovery."
-            </p>
-            <div className="relative z-10">
-              <div className="font-bold text-white text-xl">Elena Rostova</div>
-              <div className="text-cyan-400 font-medium">Department Head</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FINAL CTA SECTION */}
-      <section className="w-full py-20 md:py-40 relative z-10 text-center px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1F6AE1]/20 to-transparent pointer-events-none"></div>
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight">
-            Join the{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1F6AE1] to-[#E916E6]">Future</span>{' '}
-            of Campus Audio
-          </h2>
-          <p className="text-xl md:text-2xl text-slate-300 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Ready to elevate your learning experience? Sign up today and get instant access to thousands of live rooms
-            and podcasts.
-          </p>
-          <Link
-            to="/signup"
-            className="inline-block bg-[#1F6AE1] hover:bg-blue-600 text-white font-bold py-5 px-12 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(31,106,225,0.5)] hover:shadow-[0_0_35px_rgba(31,106,225,0.8)] hover:scale-105 text-xl"
-          >
-            Get Started Now
-          </Link>
-        </div>
-      </section>
-
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 };

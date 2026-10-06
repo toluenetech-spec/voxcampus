@@ -1,64 +1,59 @@
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
+const COLUMNS = [
+  {
+    heading: 'Platform',
+    links: [
+      { label: 'Live rooms', to: '/live' },
+      { label: 'Lecture library', to: '/library' },
+      { label: 'AI assistant', to: '/ai' },
+    ],
+  },
+  {
+    heading: 'Account',
+    links: [
+      { label: 'Create an account', to: '/signup' },
+      { label: 'Sign in', to: '/login' },
+      { label: 'Dashboard', to: '/dashboard' },
+    ],
+  },
+];
+
 const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/10 bg-slate-950 pt-20 pb-8 mt-24">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-12">
-        {/* Column 1 (Brand) */}
-        <div className="flex flex-col items-start">
-          <Logo className="scale-75 origin-left mb-2" />
-          <p className="text-slate-400 mt-4 leading-relaxed">The next generation of interactive audio learning.</p>
+    <footer className="border-t border-white/[0.06] bg-slate-950">
+      <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="grid gap-12 sm:grid-cols-3">
+          <div>
+            <Logo className="scale-[0.62] origin-left" />
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-500">
+              Course audio, live rooms and an assistant that knows your syllabus.
+            </p>
+          </div>
+
+          {COLUMNS.map((column) => (
+            <div key={column.heading}>
+              <h4 className="text-sm font-semibold text-slate-200">{column.heading}</h4>
+              <ul className="mt-4 space-y-3">
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <Link to={link.to} className="text-sm text-slate-500 transition-colors hover:text-slate-300">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Column 2 (Platform) */}
-        <div className="flex flex-col gap-3">
-          <h4 className="text-white font-bold mb-2 tracking-wide uppercase text-sm">Platform</h4>
-          <Link to="/live" className="text-slate-400 hover:text-cyan-400 transition-colors">
-            Live Rooms
-          </Link>
-          <Link to="/library" className="text-slate-400 hover:text-cyan-400 transition-colors">
-            Discover Podcasts
-          </Link>
-          <Link to="/library" className="text-slate-400 hover:text-cyan-400 transition-colors">
-            Trending
-          </Link>
-          <Link to="/signup" className="text-slate-400 hover:text-cyan-400 transition-colors">
-            For Instructors
-          </Link>
+        <div className="mt-14 flex flex-col gap-3 border-t border-white/[0.06] pt-8 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+          <p>&copy; {year} VoxCampus</p>
+          <p>Built by Toluwalase Samuel</p>
         </div>
-
-        {/* Column 3 (Resources) */}
-        <div className="flex flex-col gap-3">
-          <h4 className="text-white font-bold mb-2 tracking-wide uppercase text-sm">Get Started</h4>
-          <Link to="/signup" className="text-slate-400 hover:text-cyan-400 transition-colors">
-            Create an account
-          </Link>
-          <Link to="/login" className="text-slate-400 hover:text-cyan-400 transition-colors">
-            Sign in
-          </Link>
-          <Link to="/login" className="text-slate-400 hover:text-cyan-400 transition-colors">
-            Explore the demo
-          </Link>
-          <Link to="/dashboard" className="text-slate-400 hover:text-cyan-400 transition-colors">
-            Your dashboard
-          </Link>
-        </div>
-
-        {/* Column 4 (Legal) */}
-        <div className="flex flex-col gap-3">
-          <h4 className="text-white font-bold mb-2 tracking-wide uppercase text-sm">Legal</h4>
-          <span className="text-slate-500 cursor-default">Privacy Policy</span>
-          <span className="text-slate-500 cursor-default">Terms of Service</span>
-          <span className="text-slate-500 cursor-default">Cookie Guidelines</span>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 md:px-12 mt-16 border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 gap-4">
-        <div>&copy; {year} VoxCampus. All rights reserved.</div>
-        <div>Designed &amp; Developed by Toluwalase Samuel.</div>
       </div>
     </footer>
   );

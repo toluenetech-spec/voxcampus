@@ -11,6 +11,8 @@
  * regression net while working on the UI.
  */
 import { JSDOM } from 'jsdom';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 const dom = new JSDOM('<!doctype html><html><body><div id="root"></div></body></html>', {
   url: 'http://localhost:5173/dashboard',
@@ -219,11 +221,41 @@ expect('assignments listed', /Problem Set 2/i.test(tasksText), tasksText.slice(4
 localStorage.removeItem('voxcampus_demo_user');
 localStorage.removeItem('voxcampus_mode');
 const landingText = await visit('/');
-expect('landing page renders hero', /Audio Learning/i.test(landingText), landingText.slice(0, 300));
+expect('landing page renders hero', /Every lecture/i.test(landingText), landingText.slice(0, 300));
+expect(
+  'landing page shows the product preview',
+  /voxcampus.app\/dashboard/i.test(landingText),
+  landingText.slice(0, 400),
+);
+expect(
+  'landing page makes no fabricated social claims',
+  !/Trusted by|10,000|50,000/.test(landingText),
+  'fabricated stats or vendor-logos-as-customers are back',
+);
 const signInText = await visit('/login');
 expect('sign-in form renders', /Sign in to VoxCampus/i.test(signInText), signInText.slice(0, 300));
 const signUpText = await visit('/signup');
 expect('sign-up form renders', /Create your account/i.test(signUpText), signUpText.slice(0, 300));
+
+// Class-string hygiene. Collapsed whitespace can weld two utilities into one
+// dead token ("duration-300 flex" -> "duration-300flex"): neither half applies
+// and nothing throws, so this has to be caught by scanning the source.
+const SRC = join(process.cwd(), 'src');
+const listFiles = (dir) =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? listFiles(join(dir, e.name)) : [join(dir, e.name)],
+  );
+const WELDED = /(?:^|["'\s])((?:[a-z]+(?:-[a-z0-9.]+)*)-\d+(?:\.\d+)?[a-z]{3,})(?=["'\s])/;
+const welds = [];
+for (const file of listFiles(SRC).filter((f) => /\.jsx?$/.test(f))) {
+  readFileSync(file, 'utf8')
+    .split(/\n/)
+    .forEach((line, i) => {
+      const m = line.match(WELDED);
+      if (m) welds.push(`${file.slice(SRC.length + 1)}:${i + 1} ${m[1]}`);
+    });
+}
+expect('no welded class tokens in source', welds.length === 0, welds.slice(0, 6).join(' | '));
 
 /* ---------------- report ---------------- */
 let failed = false;
