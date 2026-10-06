@@ -1,0 +1,55 @@
+functionsDirectory = "/home/toluenesamuel/Downloads/voxcampus/voxcampus/netlify/functions"
+functionsDirectoryOrigin = "config-v1"
+redirectsOrigin = "config"
+plugins = []
+headers = []
+
+[build]
+publish = "/home/toluenesamuel/Downloads/voxcampus/voxcampus/dist"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "npm run build"
+functions = "/home/toluenesamuel/Downloads/voxcampus/voxcampus/netlify/functions"
+
+  [build.environment]
+
+  [build.processing]
+
+    [build.processing.css]
+
+    [build.processing.html]
+
+    [build.processing.images]
+
+    [build.processing.js]
+
+  [build.services]
+
+[functions]
+
+  [functions."*"]
+  node_bundler = "esbuild"
+
+[[redirects]]
+from = "/api/ai"
+to = "/.netlify/functions/ai"
+status = 200
+force = false
+
+  [redirects.query]
+
+  [redirects.conditions]
+
+  [redirects.headers]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = false
+
+  [redirects.query]
+
+  [redirects.conditions]
+
+  [redirects.headers]
