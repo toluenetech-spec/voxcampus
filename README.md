@@ -138,6 +138,21 @@ still renders — it just shows an explanatory panel instead of the audio bridge
 > the account. Before enabling live rooms, move token minting into a serverless
 > function that reads a non-prefixed `ZEGO_SERVER_SECRET`.
 
+### Firestore rules
+
+`firestore.rules` is checked in but is **not** deployed by Vercel — Firestore
+rules live in your Firebase project, not in the build. Deploy them once with the
+Firebase CLI, or paste the file into **Firestore Database → Rules**:
+
+```bash
+npm i -g firebase-tools
+firebase login
+firebase deploy --only firestore:rules
+```
+
+If the deployed app shows *"Missing or insufficient permissions"*, the project's
+rules are still the defaults (usually either fully open or fully closed).
+
 ### Other notes
 
 - `vercel.json` rewrites every path to `index.html`, which client-side routing
