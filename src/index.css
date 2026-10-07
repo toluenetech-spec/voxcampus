@@ -3,29 +3,228 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: light;
+
+    /* Material fills — layered translucency, never flat. */
+    --fill-thin: rgb(255 255 255 / 0.6);
+    --fill-regular: rgb(255 255 255 / 0.72);
+    --fill-thick: rgb(255 255 255 / 0.85);
+
+    /* Hairlines. Light mode uses a dark hairline with a white specular top. */
+    --hairline: rgb(15 23 42 / 0.08);
+    --specular: rgb(255 255 255 / 0.9);
+
+    /* Contact + ambient shadow pair: near shadow for lift, far for depth. */
+    --shadow-ambient: 0 8px 24px -8px rgb(15 23 42 / 0.1);
+    --shadow-contact: 0 2px 6px -2px rgb(15 23 42 / 0.08);
+  }
+
+  html.dark {
+    color-scheme: dark;
+
+    --fill-thin: rgb(30 41 59 / 0.55);
+    --fill-regular: rgb(30 41 59 / 0.72);
+    --fill-thick: rgb(30 41 59 / 0.88);
+
+    --hairline: rgb(255 255 255 / 0.08);
+    --specular: rgb(255 255 255 / 0.06);
+
+    --shadow-ambient: 0 16px 40px -12px rgb(0 0 0 / 0.55);
+    --shadow-contact: 0 2px 8px -2px rgb(0 0 0 / 0.4);
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
   body {
-    @apply bg-slate-950 text-white min-h-screen font-sans overflow-x-hidden;
+    @apply bg-slate-100 text-slate-900 font-sans antialiased overflow-x-hidden transition-colors duration-300;
+  }
+
+  html.dark body {
+    @apply bg-slate-950 text-white;
+  }
+
+  /* One consistent focus treatment everywhere. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-aqua-400/70 ring-offset-2 ring-offset-slate-100;
+  }
+
+  html.dark :focus-visible {
+    @apply ring-offset-slate-950;
+  }
+
+  ::selection {
+    @apply bg-aqua-400/30;
   }
 }
 
 @layer utilities {
+  /* ---------------------------------------------------------------------
+   * Materials
+   *
+   * Three tiers mirroring Apple's: thin for toolbars, regular for cards,
+   * thick for sheets and modals. Each one is translucent, blurs and
+   * saturates what's behind it (the saturate is what reads as "glass"
+   * rather than "frosted plastic"), carries a hairline border, and gets a
+   * specular highlight along the top edge so it catches the light.
+   * ------------------------------------------------------------------- */
+
+  .material-thin {
+    background-color: var(--fill-thin);
+    border: 1px solid var(--hairline);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    box-shadow:
+      inset 0 1px 0 0 var(--specular),
+      var(--shadow-contact);
+  }
+
+  .material-regular {
+    background-color: var(--fill-regular);
+    border: 1px solid var(--hairline);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(24px) saturate(180%);
+    box-shadow:
+      inset 0 1px 0 0 var(--specular),
+      var(--shadow-ambient),
+      var(--shadow-contact);
+  }
+
+  .material-thick {
+    background-color: var(--fill-thick);
+    border: 1px solid var(--hairline);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter: blur(40px) saturate(180%);
+    box-shadow:
+      inset 0 1px 0 0 var(--specular),
+      0 24px 60px -12px rgb(0 0 0 / 0.45),
+      var(--shadow-contact);
+  }
+
+  /* A material that sits flush against an edge — no ambient shadow, so it
+     reads as part of the chrome rather than floating above it. */
+  .material-chrome {
+    background-color: var(--fill-regular);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    backdrop-filter: blur(28px) saturate(180%);
+    box-shadow: inset 0 1px 0 0 var(--specular);
+  }
+
+  /* Hairline divider that works on both materials and flat backgrounds. */
+  .hairline {
+    border-color: var(--hairline);
+  }
+
+  /* Surfaces that are dark by design (the landing page, the live room) need
+     the dark material tokens even when the user's theme is light, otherwise
+     glass panels turn white underneath dark text. */
+  .material-force-dark {
+    --fill-thin: rgb(30 41 59 / 0.55);
+    --fill-regular: rgb(30 41 59 / 0.72);
+    --fill-thick: rgb(30 41 59 / 0.88);
+    --hairline: rgb(255 255 255 / 0.08);
+    --specular: rgb(255 255 255 / 0.06);
+    --shadow-ambient: 0 16px 40px -12px rgb(0 0 0 / 0.55);
+    --shadow-contact: 0 2px 8px -2px rgb(0 0 0 / 0.4);
+  }
+
+  /* ---------------------------------------------------------------------
+   * Surfaces for content that sits on top of a material.
+   * ------------------------------------------------------------------- */
+
+  .inset-well {
+    background-color: rgb(15 23 42 / 0.04);
+    box-shadow: inset 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  }
+
+  html.dark .inset-well {
+    background-color: rgb(0 0 0 / 0.25);
+    box-shadow: inset 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  }
+
+  /* ---------------------------------------------------------------------
+   * Text helpers
+   * ------------------------------------------------------------------- */
+
+  .eyebrow {
+    @apply text-xs font-semibold text-slate-500 dark:text-slate-400;
+  }
+
+  /* ---------------------------------------------------------------------
+   * Legacy aliases — kept so existing components keep working while views
+   * migrate to the material tiers above.
+   * ------------------------------------------------------------------- */
+
   .glass {
-    @apply bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-2xl;
+    @apply material-regular;
   }
+
+  .glass-lg {
+    @apply material-thick;
+  }
+
+  .glass-panel {
+    @apply material-regular;
+  }
+
   .neon-text {
-    @apply text-cyan-400 drop-shadow-[0_0_12px_rgba(0,229,255,0.8)];
+    @apply text-aqua-400;
   }
+
   .neon-border {
-    @apply border border-cyan-400/50 shadow-[0_0_15px_rgba(0,229,255,0.4)];
+    @apply border border-aqua-400/40;
   }
+
   .neon-button {
-    @apply bg-cyan-600 hover:bg-cyan-500 text-white shadow-[0_0_20px_rgba(0,229,255,0.6)] hover:shadow-[0_0_25px_rgba(0,229,255,0.8)] transition-all duration-300;
+    @apply bg-aqua-500 hover:bg-aqua-400 text-slate-950 transition-colors duration-200;
   }
+
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(34 211 238 / 0.35) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300 dark:bg-aqua-400/20;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400 dark:bg-aqua-400/40;
+  }
+
+  /* iOS safe-area helpers (referenced by the app shell and live room header). */
+  .pt-safe {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  .pb-safe {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  .px-safe {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
   }
 }
